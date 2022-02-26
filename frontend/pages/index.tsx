@@ -1,7 +1,8 @@
 import Layout from '@/components/shared/Layout';
 import Head from 'next/head';
+import Home from '@/components/home/Home';
 
-export default function Home() {
+export default function HomePage() {
 	return (
 		<>
 			<Head>
@@ -9,7 +10,9 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Layout>Home page</Layout>
+			<Layout>
+				<Home />
+			</Layout>
 		</>
 	);
 }
