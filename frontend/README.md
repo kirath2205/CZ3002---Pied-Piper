@@ -1,23 +1,39 @@
-# Next.js + Jest
+# VolunteerGoWhere
 
-This example shows how to configure Jest to work with Next.js.
+This repo contains the frontend code for the VolunteerGoWhere application.
 
-This includes Next.js' built-in support for Global CSS, CSS Modules and TypeScript.
+## Setting up the development Environment
 
-## How to Use
-
-Quickly get started using [Create Next App](https://github.com/vercel/next.js/tree/canary/packages/create-next-app#readme)!
-
-In your terminal, run the following command:
+Make sure you have yarn installed.
 
 ```bash
-npx create-next-app --example with-jest with-jest-app
-# or
-yarn create next-app --example with-jest with-jest-app
+npm install --global yarn
 ```
 
-## Run Jest Tests
+To install all the required dependencies, run the following command:
 
 ```bash
-npm test
+yarn install
+```
+
+To start the frontend application, run the following command:
+
+```bash
+yarn dev
+```
+
+Next.js has [Fast Refresh](https://nextjs.org/docs/basic-features/fast-refresh) enabled, so you don't need to restart the dev server everytime you update the code, just hit Save (Ctrl + S).
+
+## Dependencies
+
+Consult with the official documentation below if you have any problems
+
+-   [MaterialUI](https://mui.com/)
+-   [NextJS](https://nextjs.org/)
+-   [Formik](https://formik.org/)
+
+## Running tests
+
+```bash
+yarn test
 ```

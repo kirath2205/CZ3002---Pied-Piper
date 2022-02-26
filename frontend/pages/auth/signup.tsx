@@ -1,7 +1,8 @@
+import SignUpForm from '@/components/auth/SignUpForm';
 import Layout from '@/components/shared/Layout';
 import Head from 'next/head';
 
-export default function Home() {
+export default function SignIn() {
 	return (
 		<>
 			<Head>
@@ -9,7 +10,9 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Layout>Home page</Layout>
+			<Layout>
+				<SignUpForm />
+			</Layout>
 		</>
 	);
 }
