@@ -83,7 +83,7 @@ const SignUpForm = (): JSX.Element => {
 						Already have an account? <Link href='/auth/signin'>Sign In</Link>
 					</Box>
 					<Button
-						sx={{ marginTop: 2, width: '40%', backgroundColor: '#03c2fc' }}
+						sx={{ marginTop: 2, width: '40%', backgroundColor: '#12CDD4' }}
 						color='primary'
 						variant='contained'
 						fullWidth

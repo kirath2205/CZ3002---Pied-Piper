@@ -5,7 +5,7 @@ import { AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Typography, CssBaseli
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 //components
-import SidebarLinks from '@/components/shared/SidebarLinks';
+import Sidebar from '@/components/shared/Sidebar';
 import UnstyledLink from '@/components/shared/UnstyledLink';
 
 interface LayoutProps {
@@ -49,7 +49,7 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
 						<MenuIcon />
 					</IconButton>
 					<Drawer open={drawerOpen} onClose={closeDrawer}>
-						<SidebarLinks />
+						<Sidebar closeSidebar={closeDrawer} />
 					</Drawer>
 
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>

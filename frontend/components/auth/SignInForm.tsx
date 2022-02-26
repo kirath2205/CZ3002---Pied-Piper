@@ -68,7 +68,7 @@ const SignInForm = (): JSX.Element => {
 						Forgot your password? <Link href='/'>Reset here</Link>
 					</Box>
 					<Button
-						sx={{ marginTop: 2, width: '40%', backgroundColor: '#03c2fc' }}
+						sx={{ marginTop: 2, width: '40%', backgroundColor: '#12CDD4' }}
 						color='primary'
 						variant='contained'
 						fullWidth

@@ -1,13 +1,20 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface LinkProps {
+interface UnstyledLinkProps {
 	children: React.ReactNode;
+	href?: string;
 }
 
-const UnstyledLink = ({ children }: LinkProps): JSX.Element => {
+/**
+ * Renders a Next.js link component without the default styling
+ *
+ * @param {UnstyledLinkProps} props - The children and href
+ * @returns {JSX.Element} - The UnstyledLink component
+ */
+const UnstyledLink = ({ children, href }: UnstyledLinkProps): JSX.Element => {
 	return (
-		<Link href='/'>
+		<Link href={href || '/'}>
 			<a
 				style={{
 					textDecoration: 'none',
