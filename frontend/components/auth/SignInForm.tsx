@@ -73,6 +73,7 @@ const SignInForm = (): JSX.Element => {
 						variant='contained'
 						fullWidth
 						type='submit'
+						aria-label='sign-in'
 					>
 						Sign In
 					</Button>

@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
 //mui
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 /**
  * The yup validation for the sign up form
@@ -11,7 +11,7 @@ import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem,
 const validationSchema = yup.object({
 	email: yup.string().required('Email is required'),
 	password: yup.string().required('Password is required'),
-	accountType: yup.string().oneOf(['volunteer', 'organization']),
+	accountType: yup.string().oneOf(['volunteer', 'organization']).required('Account Type is required'),
 });
 
 /**
@@ -63,7 +63,7 @@ const SignUpForm = (): JSX.Element => {
 					error={formik.touched.password && Boolean(formik.errors.password)}
 					helperText={formik.touched.password && formik.errors.password}
 				/>
-				<FormControl fullWidth sx={{ marginY: '0.3rem', mt: 1 }}>
+				<FormControl fullWidth sx={{ marginY: '0.3rem', mt: 1 }} error={formik.touched.accountType && Boolean(formik.errors.accountType)}>
 					<InputLabel id='account-type'>Account Type</InputLabel>
 					<Select
 						labelId='account-type'
@@ -76,6 +76,7 @@ const SignUpForm = (): JSX.Element => {
 						<MenuItem value={'volunteer'}>Volunteer</MenuItem>
 						<MenuItem value={'organization'}>Organization</MenuItem>
 					</Select>
+					<FormHelperText>{formik.errors.accountType}</FormHelperText>
 				</FormControl>
 				<Stack>
 					<Box sx={{ marginTop: 2 }}>
@@ -87,6 +88,7 @@ const SignUpForm = (): JSX.Element => {
 						variant='contained'
 						fullWidth
 						type='submit'
+						aria-label='sign-up'
 					>
 						Sign Up
 					</Button>
