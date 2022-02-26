@@ -1,11 +1,13 @@
-interface Campaign {
+export interface Campaign {
 	id: string;
 	location: string;
 	skills: string[];
-	datetime: string;
+	date: string;
+	time: string;
 	description: string;
 	minimumAge: number;
-	duration: string;
-	vacancies: string;
+	duration: number;
+	vacancies: number;
 	title: string;
+	organization: string;
 }
