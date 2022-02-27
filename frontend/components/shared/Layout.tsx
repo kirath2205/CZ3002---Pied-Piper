@@ -9,7 +9,7 @@ import Sidebar from '@/components/shared/Sidebar';
 import UnstyledLink from '@/components/shared/UnstyledLink';
 
 interface LayoutProps {
-	children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 /**
@@ -20,75 +20,75 @@ interface LayoutProps {
  * @returns {JSX.Element} - The Layout component
  */
 const Layout = ({ children }: LayoutProps): JSX.Element => {
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
-	const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
+    const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-	const closeAccountMenu = () => {
-		setAnchorEl(null);
-	};
+    const closeAccountMenu = () => {
+        setAnchorEl(null);
+    };
 
-	const openDrawer = () => {
-		setDrawerOpen(true);
-	};
+    const openDrawer = () => {
+        setDrawerOpen(true);
+    };
 
-	const closeDrawer = () => {
-		setDrawerOpen(false);
-	};
+    const closeDrawer = () => {
+        setDrawerOpen(false);
+    };
 
-	return (
-		<main>
-			<CssBaseline />
+    return (
+        <main>
+            <CssBaseline />
 
-			<AppBar position='sticky' sx={{ backgroundColor: '#78b9c4', color: '#fff' }}>
-				<Toolbar>
-					<IconButton size='large' edge='start' color='inherit' aria-label='sidenav' onClick={openDrawer}>
-						<MenuIcon />
-					</IconButton>
-					<Drawer open={drawerOpen} onClose={closeDrawer}>
-						<Sidebar closeSidebar={closeDrawer} />
-					</Drawer>
+            <AppBar position='sticky' sx={{ backgroundColor: '#78b9c4', color: '#fff' }}>
+                <Toolbar>
+                    <IconButton size='large' edge='start' color='inherit' aria-label='sidenav' onClick={openDrawer}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Drawer open={drawerOpen} onClose={closeDrawer}>
+                        <Sidebar closeSidebar={closeDrawer} />
+                    </Drawer>
 
-					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-						<UnstyledLink>VolunteerGoWhere</UnstyledLink>
-					</Typography>
-					<IconButton
-						size='large'
-						aria-label='account of current user'
-						aria-controls='menu-account'
-						aria-haspopup='true'
-						onClick={openAccountMenu}
-						color='inherit'
-					>
-						<AccountCircle />
-					</IconButton>
-					<Menu
-						id='menu-account'
-						anchorEl={anchorEl}
-						anchorOrigin={{
-							vertical: 'bottom',
-							horizontal: 'right',
-						}}
-						transformOrigin={{
-							vertical: 'bottom',
-							horizontal: 'right',
-						}}
-						keepMounted
-						open={Boolean(anchorEl)}
-						onClose={closeAccountMenu}
-					>
-						<MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
-						<MenuItem onClick={closeAccountMenu}>My account</MenuItem>
-					</Menu>
-				</Toolbar>
-			</AppBar>
+                    <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+                        <UnstyledLink>VolunteerGoWhere</UnstyledLink>
+                    </Typography>
+                    <IconButton
+                        size='large'
+                        aria-label='account of current user'
+                        aria-controls='menu-account'
+                        aria-haspopup='true'
+                        onClick={openAccountMenu}
+                        color='inherit'
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                    <Menu
+                        id='menu-account'
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={closeAccountMenu}
+                    >
+                        <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
+                        <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
+                    </Menu>
+                </Toolbar>
+            </AppBar>
 
-			{children}
-		</main>
-	);
+            {children}
+        </main>
+    );
 };
 
 export default Layout;

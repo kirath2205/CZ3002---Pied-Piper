@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 
 interface UnstyledLinkProps {
-	children: React.ReactNode;
-	href?: string;
+    children: React.ReactNode;
+    href?: string;
 }
 
 /**
@@ -13,18 +13,18 @@ interface UnstyledLinkProps {
  * @returns {JSX.Element} - The UnstyledLink component
  */
 const UnstyledLink = ({ children, href }: UnstyledLinkProps): JSX.Element => {
-	return (
-		<Link href={href || '/'}>
-			<a
-				style={{
-					textDecoration: 'none',
-					color: 'inherit',
-				}}
-			>
-				{children}
-			</a>
-		</Link>
-	);
+    return (
+        <Link href={href || '/'}>
+            <a
+                style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                }}
+            >
+                {children}
+            </a>
+        </Link>
+    );
 };
 
 export default UnstyledLink;

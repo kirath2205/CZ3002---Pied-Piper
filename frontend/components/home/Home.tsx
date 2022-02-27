@@ -9,12 +9,12 @@ import Accolades from '@/components/home/Accolades';
  * @returns {JSX.Element} - The home component
  */
 const Home = (): JSX.Element => {
-	return (
-		<Stack marginBottom={2}>
-			<Hero />
-			<Accolades />
-		</Stack>
-	);
+    return (
+        <Stack marginBottom={2}>
+            <Hero />
+            <Accolades />
+        </Stack>
+    );
 };
 
 export default Home;
