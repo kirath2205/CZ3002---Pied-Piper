@@ -7,8 +7,8 @@ describe('auth/SignInForm', () => {
 		//title
 		expect(screen.getByText('Sign in to VolunteerGoWhere')).toBeInTheDocument();
 		//fields
-		expect(screen.getByLabelText('Email')).toBeInTheDocument();
-		expect(screen.getByLabelText('Password')).toBeInTheDocument();
+		const fields = ['Email', 'Password'];
+		fields.forEach(field => expect(screen.getByLabelText(field)).toBeInTheDocument());
 		//sign in button
 		expect(
 			screen.getByRole('button', {
@@ -26,8 +26,7 @@ describe('auth/SignInForm', () => {
 				})
 			);
 		});
-
-		expect(screen.getByText('Email is required')).toBeInTheDocument();
-		expect(screen.getByText('Password is required')).toBeInTheDocument();
+		const errorMessages = ['Email is required', 'Password is required']
+		errorMessages.forEach(message => expect(screen.getByText(message)).toBeInTheDocument())
 	});
 });
