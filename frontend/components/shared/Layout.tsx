@@ -7,6 +7,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 //components
 import Sidebar from '@/components/shared/Sidebar';
 import UnstyledLink from '@/components/shared/UnstyledLink';
+import ProfileMenu from '@/components/shared/ProfileMenu';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -64,25 +65,8 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
                         color='inherit'
                     >
                         <AccountCircle />
+                        <ProfileMenu closeAccountMenu={closeAccountMenu} anchorEl={anchorEl} />
                     </IconButton>
-                    <Menu
-                        id='menu-account'
-                        anchorEl={anchorEl}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={closeAccountMenu}
-                    >
-                        <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
-                        <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
-                    </Menu>
                 </Toolbar>
             </AppBar>
 

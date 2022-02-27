@@ -19,7 +19,7 @@ const Accolades = (): JSX.Element => {
                 <Typography variant='body1'>
                     Find a volunteer activity that you're interested in, and use the skills you have right here in Singapore.
                 </Typography>
-                <UnstyledLink href='auth/signup'>
+                <UnstyledLink href='/auth/signup'>
                     <Button sx={{ marginY: 2, width: '30%', backgroundColor: '#12CDD4' }} color='primary' variant='contained'>
                         Be a volunteer
                     </Button>
