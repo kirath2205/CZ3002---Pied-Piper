@@ -15,12 +15,16 @@ const Hero = () => {
 			<Box sx={{ color: '#fff' }} className={styles.containerInfo}>
 				<Typography variant='h4'>Be a volunteer Today</Typography>
 				<Typography variant='subtitle1'>We rise by lifting others</Typography>
-				<Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
-					<UnstyledLink>About us</UnstyledLink>
-				</Button>
-				<Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
-					<UnstyledLink href='/auth/signup'>Sign up</UnstyledLink>
-				</Button>
+				<UnstyledLink>
+					<Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
+						About us
+					</Button>
+				</UnstyledLink>
+				<UnstyledLink href='/auth/signup'>
+					<Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
+						Sign up
+					</Button>
+				</UnstyledLink>
 			</Box>
 		</Box>
 	);
