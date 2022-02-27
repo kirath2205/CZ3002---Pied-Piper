@@ -1,13 +1,18 @@
 //lib
 import { useState } from 'react';
+import Router from 'next/router';
 //mui
 import { AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Typography, CssBaseline, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
 //components
 import Sidebar from '@/components/shared/Sidebar';
 import UnstyledLink from '@/components/shared/UnstyledLink';
 import ProfileMenu from '@/components/shared/ProfileMenu';
+//state
+import { useAppSelector } from '@/app/hooks';
+import { selectLoggedIn } from '@/app/slices/authSlice';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -23,6 +28,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps): JSX.Element => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+    const loggedIn = useAppSelector(selectLoggedIn);
 
     const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -56,17 +62,25 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
                     <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
                         <UnstyledLink>VolunteerGoWhere</UnstyledLink>
                     </Typography>
-                    <IconButton
-                        size='large'
-                        aria-label='account of current user'
-                        aria-controls='menu-account'
-                        aria-haspopup='true'
-                        onClick={openAccountMenu}
-                        color='inherit'
-                    >
-                        <AccountCircle />
-                        <ProfileMenu closeAccountMenu={closeAccountMenu} anchorEl={anchorEl} />
-                    </IconButton>
+                    {loggedIn ? (
+                        <>
+                            <IconButton
+                                size='large'
+                                aria-label='account of current user'
+                                aria-controls='menu-account'
+                                aria-haspopup='true'
+                                onClick={openAccountMenu}
+                                color='inherit'
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <ProfileMenu closeAccountMenu={closeAccountMenu} anchorEl={anchorEl} />
+                        </>
+                    ) : (
+                        <IconButton size='large' color='inherit' onClick={() => Router.push('/auth/signup')}>
+                            <LoginIcon />
+                        </IconButton>
+                    )}
                 </Toolbar>
             </AppBar>
 
