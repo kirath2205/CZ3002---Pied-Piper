@@ -27,3 +27,6 @@ def invalid_refresh_token():
 
 def invalid_credentials():
     return '216'
+
+def invalid_jwt_token():
+    return '217'

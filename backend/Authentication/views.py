@@ -136,7 +136,6 @@ def register(request):
                 org_login = Login(email=email,password=hashed_password)
                 org_login.save()
             
-            HttpResponse.status_code = int(error_codes.api_success())
             return HttpResponse('Registered Successfully')
             
 
@@ -153,14 +152,10 @@ def verify_jwt_token(access_token):
     decoded_access_token=jwt.decode(access_token,SECRET_KEY,algorithm="HS256")
 
     try:
-        current_user=UserAccount.objects.get(email=decoded_access_token['id'])
+        current_user=Login.objects.get(email=decoded_access_token['id'])
     
-    except UserAccount.DoesNotExist as e:
-        try:
-            current_user=OrgAccount.objects.get(email=decoded_access_token['id'])
-        
-        except OrgAccount.DoesNotExist as e:
-            return False
+    except Login.DoesNotExist as e:
+        return False
     
     current_time=json.dumps(datetime.now().isoformat())
     token_expiry=decoded_access_token['expiry']
@@ -198,7 +193,6 @@ def refresh_jwt_token(request):
                 access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
                 access_token_payload={'id':current_user.email,'expiry':access_token_expiry}
                 access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
-                HttpResponse.status_code=int(error_codes.api_success())
                 return JsonResponse({
                 'access_token' : access_token.decode('utf-8')})
         
@@ -227,17 +221,17 @@ def login(request):
                 return HttpResponse("Invalid Credentials")
 
             password = data.get('password')
+
             if(not pbkdf2_sha256.verify(password,current_user.password)):
                 HttpResponse.status_code=int(error_codes.invalid_credentials())
                 return HttpResponse("Invalid Credentials")
+
             access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
             refresh_token_expiry=json.dumps((datetime.now()+timedelta(hours=200*24)).isoformat())
             access_token_payload={'id':current_user.email,'expiry':access_token_expiry}
             refresh_token_payload={'id':current_user.email,'expiry':refresh_token_expiry}
             access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
             refresh_token=jwt.encode(refresh_token_payload,SECRET_KEY,algorithm="HS256")
-
-            #HttpResponse.status_code = error_codes.api_success()
             return JsonResponse({'access_token':access_token.decode('utf-8'),'refresh_token':refresh_token.decode('utf-8')})
         
         except Exception as e:
@@ -248,5 +242,37 @@ def login(request):
         HttpResponse.status_code=int(error_codes.server_error())
         return HttpResponse("Server Error")
 
-            
-            
+@csrf_exempt            
+def verify_jwt_token(request):
+
+    if(request.method=="POST"):
+
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            access_token = data.get('access_token')
+            decoded_access_token=jwt.decode(access_token,SECRET_KEY,algorithm="HS256")
+
+            try:
+                current_user=Login.objects.get(email=decoded_access_token['id'])
+    
+            except Login.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+
+    
+            current_time=json.dumps(datetime.now().isoformat())
+            token_expiry=decoded_access_token['expiry']
+
+            if(current_time>token_expiry):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Expired token")
+
+            return HttpResponse("Valid Jwt token")
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code=int(error_codes.server_error())
+        return HttpResponse("Server Error")
