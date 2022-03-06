@@ -21,3 +21,9 @@ def weak_password():
 
 def invalid_phone_number():
     return '214'
+
+def invalid_refresh_token():
+    return '215'
+
+def invalid_credentials():
+    return '216'

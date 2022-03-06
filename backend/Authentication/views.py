@@ -30,14 +30,12 @@ def index(request):
 
 @csrf_exempt
 def register(request):
-    USER='USER'
-    ORG='ORG'
     account_sid=ACCOUNT_SID
     auth_token=AUTH_TOKEN
     client=Client(account_sid,auth_token)
     if(request.method=="POST"):
+
         try:
-        
             data = json.loads(request.body.decode('utf-8'))
             type = data.get('type')
 
@@ -150,3 +148,105 @@ def register(request):
         HttpResponse.status_code=error_codes.server_error()
         return HttpResponse('Server error')
         
+def verify_jwt_token(access_token):
+
+    decoded_access_token=jwt.decode(access_token,SECRET_KEY,algorithm="HS256")
+
+    try:
+        current_user=UserAccount.objects.get(email=decoded_access_token['id'])
+    
+    except UserAccount.DoesNotExist as e:
+        try:
+            current_user=OrgAccount.objects.get(email=decoded_access_token['id'])
+        
+        except OrgAccount.DoesNotExist as e:
+            return False
+    
+    current_time=json.dumps(datetime.now().isoformat())
+    token_expiry=decoded_access_token['expiry']
+
+    if(current_time>token_expiry):
+        return False
+
+    else:
+        return True
+
+@csrf_exempt
+def refresh_jwt_token(request):
+
+    if(request.method=='POST'):
+        try:
+            header_data=request.headers
+            refresh_token=header_data['Authorization']
+            decoded_refresh_token=jwt.decode(refresh_token,SECRET_KEY,algorithm="HS256")
+
+            try:
+                current_user=Login.objects.get(email=decoded_refresh_token['id'])
+
+            except Login.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_refresh_token())
+                return HttpResponse("Invalid refresh token")
+
+            current_time=json.dumps(datetime.now().isoformat())
+            token_expiry=decoded_refresh_token['expiry']
+
+            if(current_time>token_expiry):
+                HttpResponse.status_code=int(error_codes.invalid_refresh_token())
+                return HttpResponse("Expired token")
+        
+            else:
+                access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
+                access_token_payload={'id':current_user.email,'expiry':access_token_expiry}
+                access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
+                HttpResponse.status_code=int(error_codes.api_success())
+                return JsonResponse({
+                'access_token' : access_token.decode('utf-8')})
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code=int(error_codes.server_error())
+        return HttpResponse("Server Error")
+
+@csrf_exempt
+def login(request):
+
+    if(request.method=="POST"):
+
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            email = data.get('email')
+
+            try:
+                current_user = Login.objects.get(email=email)
+            
+            except Login.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_credentials())
+                return HttpResponse("Invalid Credentials")
+
+            password = data.get('password')
+            if(not pbkdf2_sha256.verify(password,current_user.password)):
+                HttpResponse.status_code=int(error_codes.invalid_credentials())
+                return HttpResponse("Invalid Credentials")
+            access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
+            refresh_token_expiry=json.dumps((datetime.now()+timedelta(hours=200*24)).isoformat())
+            access_token_payload={'id':current_user.email,'expiry':access_token_expiry}
+            refresh_token_payload={'id':current_user.email,'expiry':refresh_token_expiry}
+            access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
+            refresh_token=jwt.encode(refresh_token_payload,SECRET_KEY,algorithm="HS256")
+
+            #HttpResponse.status_code = error_codes.api_success()
+            return JsonResponse({'access_token':access_token.decode('utf-8'),'refresh_token':refresh_token.decode('utf-8')})
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code=int(error_codes.server_error())
+        return HttpResponse("Server Error")
+
+            
+            
