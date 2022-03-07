@@ -65,7 +65,7 @@ const SignInForm = (): JSX.Element => {
                         Don't have an account yet? <Link href='/auth/signup'>Sign up here</Link>
                     </Box>
                     <Box sx={{ marginTop: 2 }}>
-                        Forgot your password? <Link href='/'>Reset here</Link>
+                        Forgot your password? <Link href='/auth/forgot-password'>Reset here</Link>
                     </Box>
                     <Button
                         sx={{ marginTop: 2, width: '40%', backgroundColor: '#12CDD4' }}
