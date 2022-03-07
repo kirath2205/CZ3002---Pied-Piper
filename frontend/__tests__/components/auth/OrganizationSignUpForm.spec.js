@@ -5,7 +5,7 @@ describe('auth/SignInForm', () => {
     it('should render the form title, fields, sign up button', () => {
         render(<OrganizationSignUpForm />);
         //title
-        expect(screen.getByText('Organization Sign up')).toBeInTheDocument();
+        expect(screen.getByText('Sign up')).toBeInTheDocument();
         //fields
         const fields = ['Organization Name', 'Password', 'Email', 'Address', 'Phone'];
         fields.forEach((field) => expect(screen.getByLabelText(field)).toBeInTheDocument());

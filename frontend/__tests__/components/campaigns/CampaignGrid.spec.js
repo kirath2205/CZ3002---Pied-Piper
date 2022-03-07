@@ -1,5 +1,4 @@
 import CampaignGrid from '@/components/campaigns/CampaignGrid';
-import CampaignCard from '@/components/campaigns/CampaignCard';
 import { screen, render } from '@testing-library/react';
 
 jest.mock('@/components/campaigns/CampaignCard', () => ({ id }) => <div key={id}>CampaignCard</div>);

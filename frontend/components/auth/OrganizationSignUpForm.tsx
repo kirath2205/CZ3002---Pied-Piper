@@ -39,10 +39,10 @@ const OrganizationSignUpForm = (): JSX.Element => {
     });
 
     return (
-        <Container maxWidth='sm' sx={{ mt: 10 }}>
+        <Container maxWidth='sm' sx={{ mt: 1 }}>
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
-                    Organization Sign up
+                    Sign up
                 </Typography>
                 <TextField
                     fullWidth
@@ -102,12 +102,11 @@ const OrganizationSignUpForm = (): JSX.Element => {
                     helperText={formik.touched.password && formik.errors.password}
                 />
                 <Stack>
-                    <Box sx={{ mt: 2 }}>
+                    <Box sx={{ mt: 0.8 }}>
                         Already have an account? <Link href='/auth/signin'>Sign In</Link>
                     </Box>
-                    <Link href='/auth/signup/volunteer'>Sign up as volunteer instead</Link>
                     <Button
-                        sx={{ mt: 2, width: '40%', backgroundColor: '#12CDD4' }}
+                        sx={{ mt: 0.8, width: '40%', backgroundColor: '#12CDD4' }}
                         color='primary'
                         variant='contained'
                         fullWidth
