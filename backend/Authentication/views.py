@@ -8,7 +8,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-#from .token_generator import account_activation_token
+from .token_generator import account_activation_token
 import json
 from twilio.rest import Client
 import random
@@ -276,3 +276,95 @@ def verify_jwt_token(request):
     else:
         HttpResponse.status_code=int(error_codes.server_error())
         return HttpResponse("Server Error")
+
+@csrf_exempt
+def verify_email(request):
+
+    if(request.method=="POST"):
+
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            type = data.get('type')
+
+            if(type!=ORG and type!=USER):
+                HttpResponse.status_code = int(error_codes.bad_request())
+                return HttpResponse('Invalid account type')
+
+            email=data.get('email')
+
+            if(type==ORG):
+                try:
+                    temp=OrgAccount.objects.get(email=email)
+                    details=OrgAccount.objects.filter(email=email).values('user_id','email_confirmed')
+
+                except OrgAccount.DoesNotExist:
+                    HttpResponse.status_code = int(error_codes.bad_request())
+                    return HttpResponse('Email does not exist')
+            
+            else:
+                try:
+                    temp=UserAccount.objects.get(email=email)
+                    details=UserAccount.objects.filter(email=email).values('user_id','email_confirmed')
+
+                except UserAccount.DoesNotExist:
+                    HttpResponse.status_code = int(error_codes.bad_request())
+                    return HttpResponse('Email does not exist')
+            
+            id=details[0].get('user_id')
+            uid=urlsafe_base64_encode(force_bytes(id))
+            token=account_activation_token.make_token(details[0])
+            domain=str(get_current_site(request))
+            url='http://'+domain+'/'+'auth/'+'activate/'+uid+'/'+token+'/'+type
+            subject = 'Volunteer Account Activation'
+            message = f'Please click on the below link to activate your account\n'+url+f'\nThis link is valid only for 24 hours'
+            recepient = email
+            send_mail(subject, 
+                message, DEFAULT_FROM_EMAIL, [recepient])
+        
+            HttpResponse.status_code=int(error_codes.api_success())
+            return HttpResponse(error_codes.verification_email_sent())
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code=int(error_codes.server_error())
+        return HttpResponse(error_codes.server_error())
+
+def activate_account(request,uidb64,token,type):
+
+    if(request.method == 'GET'):
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+
+        if(type==ORG):
+            details=OrgAccount.objects.filter(user_id=uid).values('user_id','email_confirmed')
+            
+            if(len(OrgAccount.objects.filter(user_id=uid))>0 and account_activation_token.check_token(details[0],token)):
+                temp_details=OrgAccount.objects.get(user_id=uid)
+                temp_details.email_confirmed=True
+                temp_details.save()
+                HttpResponse.status_code=int(error_codes.email_verified())
+                return HttpResponse('Thankyou for verifying')
+
+            else:
+                HttpResponse.status_code=int(error_codes.server_error())
+                return HttpResponse(error_codes.server_error())
+    
+        if(type==USER):
+            details=UserAccount.objects.filter(user_id=uid).values('user_id','email_confirmed')
+            
+            if(len(UserAccount.objects.filter(user_id=uid))>0 and account_activation_token.check_token(details[0],token)):
+                temp_details=UserAccount.objects.get(user_id=uid)
+                temp_details.email_confirmed=True
+                temp_details.save()
+                HttpResponse.status_code=int(error_codes.email_verified())
+                return HttpResponse('Thankyou for verifying')
+
+        else:
+            HttpResponse.status_code=int(error_codes.server_error())
+            return HttpResponse(error_codes.server_error())
+    
+    else:
+        HttpResponse.status_code=int(error_codes.server_error())
+        return HttpResponse(error_codes.server_error())

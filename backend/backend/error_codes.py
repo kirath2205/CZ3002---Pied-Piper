@@ -30,3 +30,9 @@ def invalid_credentials():
 
 def invalid_jwt_token():
     return '217'
+
+def verification_email_sent():
+    return '218'
+
+def email_verified():
+    return '219'
