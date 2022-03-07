@@ -1,8 +1,8 @@
-import SignUpForm from '@/components/auth/SignUpForm';
+import SignUpChoice from '@/components/auth/SignUpChoice';
 import Layout from '@/components/shared/Layout';
 import Head from 'next/head';
 
-export default function SignIn() {
+export default function SignUp() {
     return (
         <>
             <Head>
@@ -11,7 +11,7 @@ export default function SignIn() {
             </Head>
 
             <Layout>
-                <SignUpForm />
+                <SignUpChoice />
             </Layout>
         </>
     );

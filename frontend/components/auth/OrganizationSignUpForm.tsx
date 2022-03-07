@@ -1,0 +1,125 @@
+//lib
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Link from 'next/link';
+//mui
+import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
+
+/**
+ * The yup validation for the sign up form for organizations
+ */
+const validationSchema = yup.object({
+    email: yup.string().required('Email is required'),
+    password: yup.string().required('Password is required'),
+    orgName: yup.string().required('Organization Name is required'),
+    phone: yup.string().required('Phone is required'),
+    address: yup.string().min(10).required('Address is required'),
+});
+
+/**
+ * Renders the sign up form for organizations
+ *
+ *
+ * @returns {JSX.Element} - The sign up form for organizations
+ */
+const OrganizationSignUpForm = (): JSX.Element => {
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            orgName: '',
+            address: '',
+            phone: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            formik.resetForm();
+            console.dir(values);
+        },
+    });
+
+    return (
+        <Container maxWidth='sm' sx={{ mt: 10 }}>
+            <form onSubmit={formik.handleSubmit}>
+                <Typography variant='h6' align='center'>
+                    Organization Sign up
+                </Typography>
+                <TextField
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    id='orgName'
+                    name='orgName'
+                    label='Organization Name'
+                    value={formik.values.orgName}
+                    onChange={formik.handleChange}
+                    error={formik.touched.orgName && Boolean(formik.errors.orgName)}
+                    helperText={formik.touched.orgName && formik.errors.orgName}
+                />
+                <TextField
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    id='address'
+                    name='address'
+                    label='Address'
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    error={formik.touched.address && Boolean(formik.errors.address)}
+                    helperText={formik.touched.address && formik.errors.address}
+                />
+                <TextField
+                    sx={{ mt: 2 }}
+                    fullWidth
+                    id='phone'
+                    name='phone'
+                    label='Phone'
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    type='phone'
+                    error={formik.touched.phone && Boolean(formik.errors.phone)}
+                    helperText={formik.touched.phone && formik.errors.phone}
+                />
+                <TextField
+                    sx={{ mt: 2 }}
+                    fullWidth
+                    id='email'
+                    name='email'
+                    label='Email'
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                />
+                <TextField
+                    sx={{ mt: 2 }}
+                    fullWidth
+                    id='password'
+                    name='password'
+                    label='Password'
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    type='password'
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                />
+                <Stack>
+                    <Box sx={{ mt: 2 }}>
+                        Already have an account? <Link href='/auth/signin'>Sign In</Link>
+                    </Box>
+                    <Link href='/auth/signup/volunteer'>Sign up as volunteer instead</Link>
+                    <Button
+                        sx={{ mt: 2, width: '40%', backgroundColor: '#12CDD4' }}
+                        color='primary'
+                        variant='contained'
+                        fullWidth
+                        type='submit'
+                        aria-label='sign-up'
+                    >
+                        Sign Up
+                    </Button>
+                </Stack>
+            </form>
+        </Container>
+    );
+};
+
+export default OrganizationSignUpForm;

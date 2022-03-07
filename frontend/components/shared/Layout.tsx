@@ -77,7 +77,7 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
                             <ProfileMenu closeAccountMenu={closeAccountMenu} anchorEl={anchorEl} />
                         </>
                     ) : (
-                        <IconButton size='large' color='inherit' onClick={() => Router.push('/auth/signup')}>
+                        <IconButton size='large' color='inherit' onClick={() => Router.push('/auth/signin')}>
                             <LoginIcon />
                         </IconButton>
                     )}
