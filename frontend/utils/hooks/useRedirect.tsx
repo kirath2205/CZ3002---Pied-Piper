@@ -7,7 +7,7 @@ const useRedirect = () => {
     const loggedIn = useAppSelector(selectLoggedIn);
     useEffect(() => {
         if (loggedIn) {
-            Router.push('/');
+            Router.replace('/');
         }
     }, [loggedIn]);
 };

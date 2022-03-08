@@ -20,10 +20,14 @@ export const authSlice = createSlice({
             localStorage.setItem('refresh_token', refresh_token as string);
             return { access_token, refresh_token, loggedIn: true };
         },
+        logout: (state) => {
+            localStorage.removeItem('refresh_token');
+            return { loggedIn: false, refresh_token: null, access_token: null };
+        },
     },
 });
 
-export const { login } = authSlice.actions;
+export const { login, logout } = authSlice.actions;
 
 export const selectAuthState = (state: RootState) => state.auth;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
