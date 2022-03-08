@@ -5,7 +5,7 @@ import useRedirect from '@/utils/hooks/useRedirect';
 import Head from 'next/head';
 
 export default function SignIn() {
-    const loading = useRedirect();
+    const [loggedIn, redirecting] = useRedirect();
     return (
         <>
             <Head>
@@ -13,7 +13,10 @@ export default function SignIn() {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-            <Layout>{loading ? <ProgressBar /> : <SignInForm />}</Layout>
+            <Layout>
+                {redirecting && <ProgressBar />}
+                {!redirecting && !loggedIn && <SignInForm />}
+            </Layout>
         </>
     );
 }

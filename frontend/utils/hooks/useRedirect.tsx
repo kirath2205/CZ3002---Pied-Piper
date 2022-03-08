@@ -4,15 +4,17 @@ import { selectLoggedIn } from '@/app/slices/authSlice';
 import Router from 'next/router';
 //hack
 const useRedirect = () => {
-    const [loading, setLoading] = useState(true);
+    const [redirecting, setRedirecting] = useState(true);
     const loggedIn = useAppSelector(selectLoggedIn);
     useEffect(() => {
         if (loggedIn) {
-            Router.replace('/').then(() => setLoading(false));
+            Router.replace('/').then(() => setRedirecting(false));
+        } else {
+            setRedirecting(false);
         }
     }, [loggedIn]);
 
-    return loading;
+    return [loggedIn, redirecting];
 };
 
 export default useRedirect;

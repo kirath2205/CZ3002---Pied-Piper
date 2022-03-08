@@ -30,7 +30,6 @@ const validationSchema = yup.object({
  */
 const SignInForm = (): JSX.Element => {
     const [error, setError] = useState<string>();
-    const authState = useAppSelector(selectAuthState);
     const dispatch = useAppDispatch();
     const formik = useFormik({
         initialValues: {
