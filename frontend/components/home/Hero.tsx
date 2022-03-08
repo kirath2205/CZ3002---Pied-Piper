@@ -4,12 +4,16 @@ import styles from '@/styles/home.module.css';
 import React from 'react';
 import UnstyledLink from '@/components/shared/UnstyledLink';
 
+import { useAppSelector } from '@/app/hooks';
+import { selectLoggedIn } from '@/app/slices/authSlice';
+
 /**
  * The hero section for home page
  *
  * @returns {JSX.Element} - The hero section for home page
  */
 const Hero = () => {
+    const loggedIn = useAppSelector(selectLoggedIn);
     return (
         <Box className={styles.imageContainer}>
             <Box sx={{ color: '#fff' }} className={styles.containerInfo}>
@@ -20,9 +24,9 @@ const Hero = () => {
                         About us
                     </Button>
                 </UnstyledLink>
-                <UnstyledLink href='/auth/signup'>
+                <UnstyledLink href={loggedIn ? '/campaigns' : '/auth/signup'}>
                     <Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
-                        Sign up
+                        {loggedIn ? 'Browse Campaigns' : 'Sign Up'}
                     </Button>
                 </UnstyledLink>
             </Box>

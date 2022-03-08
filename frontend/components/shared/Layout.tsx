@@ -13,6 +13,7 @@ import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn } from '@/app/slices/authSlice';
+import useLogin from '@/utils/hooks/useLogin';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -26,6 +27,7 @@ interface LayoutProps {
  * @returns {JSX.Element} - The Layout component
  */
 const Layout = ({ children }: LayoutProps): JSX.Element => {
+    useLogin();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const loggedIn = useAppSelector(selectLoggedIn);
