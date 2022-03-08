@@ -36,3 +36,15 @@ def verification_email_sent():
 
 def email_verified():
     return '219'
+
+def otp_sent():
+    return '220'
+
+def twilio_error():
+    return '221'
+
+def invalid_otp():
+    return '222'
+
+def expired_otp():
+    return '223'

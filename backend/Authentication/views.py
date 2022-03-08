@@ -19,7 +19,7 @@ from twilio.base.exceptions import TwilioRestException
 import requests
 import re
 import jwt
-from datetime import date, datetime,timedelta
+from datetime import date, datetime,timedelta, tzinfo
 
 from .models import *
 from backend.settings import *
@@ -126,7 +126,7 @@ def register(request):
                 new_user_account.save()
                 user_login = Login(email=email,password=hashed_password)
                 user_login.save()
-                otp_verify = OTPVerfification(phone_number=phone_number)
+                otp_verify = OTPVerification(phone_number=phone_number)
                 otp_verify.save()
 
             else:
@@ -144,8 +144,8 @@ def register(request):
             return HttpResponse('Deserialisation error '+str(e))
 
     else:
-        HttpResponse.status_code=error_codes.server_error()
-        return HttpResponse('Server error')
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
         
 def verify_jwt_token(access_token):
 
@@ -201,8 +201,8 @@ def refresh_jwt_token(request):
             return HttpResponse('Deserialisation error '+str(e))
 
     else:
-        HttpResponse.status_code=int(error_codes.server_error())
-        return HttpResponse("Server Error")
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
 
 @csrf_exempt
 def login(request):
@@ -239,8 +239,8 @@ def login(request):
             return HttpResponse('Deserialisation error '+str(e))
     
     else:
-        HttpResponse.status_code=int(error_codes.server_error())
-        return HttpResponse("Server Error")
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
 
 @csrf_exempt            
 def verify_jwt_token(request):
@@ -274,8 +274,8 @@ def verify_jwt_token(request):
             return HttpResponse('Deserialisation error '+str(e))
     
     else:
-        HttpResponse.status_code=int(error_codes.server_error())
-        return HttpResponse("Server Error")
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
 
 @csrf_exempt
 def verify_email(request):
@@ -329,8 +329,8 @@ def verify_email(request):
             return HttpResponse('Deserialisation error '+str(e))
 
     else:
-        HttpResponse.status_code=int(error_codes.server_error())
-        return HttpResponse(error_codes.server_error())
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
 
 def activate_account(request,uidb64,token,type):
 
@@ -366,5 +366,106 @@ def activate_account(request,uidb64,token,type):
             return HttpResponse(error_codes.server_error())
     
     else:
-        HttpResponse.status_code=int(error_codes.server_error())
-        return HttpResponse(error_codes.server_error())
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+def __generate_otp():
+
+    otp=random.randint(100000,999999)
+
+    return otp
+
+@csrf_exempt
+def send_otp(request):
+
+    if(request.method=='POST'):
+
+        try:
+            client = Client(ACCOUNT_SID,AUTH_TOKEN)
+            data=json.loads(request.body.decode('utf-8'))
+            phone_number = str(data.get('phone_number'))
+            generated_otp = __generate_otp()
+
+            try:
+                message=client.messages.create(
+                body=f'Your OTP is {generated_otp}, this OTP is only valid for 10 minutes' ,
+                from_ = TWILIO_PHONE_NUMBER,
+                to="+65"+f'{phone_number}')
+
+                try:
+                    current_user = OTPVerification.objects.get(phone_number=phone_number)
+                
+                except Exception as e:
+                    HttpResponse.status_code=int(error_codes.invalid_phone_number())
+                    return HttpResponse("Invalid phone number")
+                
+                current_user.otp = generated_otp
+                current_user.time_of_otp =datetime.now()
+                current_user.save()
+                HttpResponse.status_code = int(error_codes.otp_sent())
+                return HttpResponse("OTP sent")
+            
+            except TwilioRestException as e:
+                HttpResponse.status_code = int(error_codes.server_error())
+                return HttpResponse('Twilio error')
+        
+        except:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def verify_otp(request):
+
+    if(request.method=='POST'):
+        try:
+            data=json.loads(request.body.decode('utf-8'))
+            otp=data.get('otp')
+            phone_number = data.get('phone_number')
+
+            try:
+                current_user = OTPVerification.objects.get(phone_number=phone_number)
+            
+            except OTPVerification.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_phone_number())
+                return HttpResponse("Invalid phone number")
+            
+            otp_received_timestamp = (current_user.time_of_otp).replace(tzinfo=None)
+            current_timestamp  = datetime.now()
+
+            if(current_user.otp == otp):
+                time_lapsed = current_timestamp-otp_received_timestamp
+
+                if(time_lapsed.total_seconds()>600):
+                    current_user.otp='invalid'
+                    current_user.save()
+                    HttpResponse.status_code = int(error_codes.expired_otp())
+                    return HttpResponse('Expired otp')
+                
+                else:
+                    try:
+                        current_user_account_info = UserAccount.objects.get(phone_number=phone_number)
+                        current_user_account_info.phone_number_confirmed = True
+                        current_user_account_info.save()
+                        current_user.otp='invalid'
+                        current_user.save()
+                        return HttpResponse('OTP verified')
+
+                    except Exception as e:
+                        HttpResponse.status_code=int(error_codes.invalid_phone_number())
+                        return HttpResponse("Invalid phone number")
+            
+            else:
+                HttpResponse.status_code=int(error_codes.invalid_otp())
+                return HttpResponse('Invalid OTP')
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')

@@ -41,7 +41,7 @@ class OrgAccount(models.Model):
     address = models.CharField(max_length=200)
     verified = models.BooleanField(default=False)
 
-class OTPVerfification(models.Model):
+class OTPVerification(models.Model):
     phone_number=models.IntegerField(primary_key=True)
     otp=models.CharField(max_length=6,default='invalid')
     time_of_otp=models.DateTimeField(default=now)

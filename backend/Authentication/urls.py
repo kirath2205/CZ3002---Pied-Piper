@@ -10,4 +10,6 @@ urlpatterns = [
     path("verify_jwt_token/",views.verify_jwt_token,name="VerifyJwtToken"),
     path('verify_email/',views.verify_email,name='verify_email'),
     path('activate/<uidb64>/<token>/<type>',views.activate_account, name='activate'),
+    path('send_otp/',views.send_otp,name='send_otp'),
+    path('verify_otp/',views.verify_otp,name='verify_otp'),
 ]
