@@ -1,10 +1,11 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
+import ProgressBar from '@/components/shared/ProgressBar';
 import useRedirect from '@/utils/hooks/useRedirect';
 import Head from 'next/head';
 
 export default function SignIn() {
-    useRedirect();
+    const loading = useRedirect();
     return (
         <>
             <Head>
@@ -12,9 +13,7 @@ export default function SignIn() {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-            <Layout>
-                <SignInForm />
-            </Layout>
+            <Layout>{loading ? <ProgressBar /> : <SignInForm />}</Layout>
         </>
     );
 }
