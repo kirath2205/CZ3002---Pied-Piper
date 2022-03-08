@@ -1,9 +1,12 @@
 //lib
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
+//services
+import { login } from '@/services/authService';
 
 /**
  * The yup validation for the store
@@ -20,6 +23,7 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign in form
  */
 const SignInForm = (): JSX.Element => {
+    const [error, setError] = useState<string>();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -28,6 +32,12 @@ const SignInForm = (): JSX.Element => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             formik.resetForm();
+            const { email, password } = values;
+            try {
+                login(email, password);
+            } catch (err: any) {
+                setError(err.response.data);
+            }
         },
     });
 

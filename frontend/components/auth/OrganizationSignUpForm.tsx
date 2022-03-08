@@ -34,7 +34,6 @@ const OrganizationSignUpForm = (): JSX.Element => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             formik.resetForm();
-            console.dir(values);
         },
     });
 

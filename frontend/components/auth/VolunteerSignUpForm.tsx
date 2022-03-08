@@ -2,9 +2,14 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
+import { useState } from 'react';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
-
+//services
+import { register } from '@/services/authService';
+//types
+import { Gender } from '@/interfaces/User';
+import ErrorAlert from '@/components/shared/ErrorAlert';
 /**
  * The yup validation for the sign up form for volunteers
  */
@@ -13,8 +18,8 @@ const validationSchema = yup.object({
     password: yup.string().required('Password is required'),
     firstName: yup.string().required('First Name is required'),
     lastName: yup.string().required('Last Name is required'),
-    gender: yup.string().oneOf(['M', 'F', 'O']).required('Gender is required'),
-    phone: yup.string().required('Phone is required'),
+    gender: yup.mixed<Gender>().oneOf(['M', 'F', 'T']).required('Gender is required'),
+    phone: yup.string().min(8, 'Enter an 8 digit phone number').max(8).required('Phone is required'),
     age: yup.number().min(12, 'Age must be more than 12').max(100, 'Age must be 100 or less').required('Age is required'),
     address: yup.string().min(10).required('Address is required'),
     skills: yup.array().min(1, 'At least one skill is required'),
@@ -27,6 +32,7 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign up form for volunteers
  */
 const VolunteerSignUpForm = (): JSX.Element => {
+    const [error, setError] = useState<string>();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -34,15 +40,31 @@ const VolunteerSignUpForm = (): JSX.Element => {
             firstName: '',
             lastName: '',
             skills: [],
-            age: '',
-            gender: '',
+            age: 0,
             phone: '',
+            gender: '',
             address: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            formik.resetForm();
-            console.dir(values);
+            const { firstName, lastName, email, password, skills, age, gender, phone, address } = values;
+            try {
+                const response = await register({
+                    first_name: firstName,
+                    last_name: lastName,
+                    age,
+                    gender: gender as Gender,
+                    email,
+                    skills,
+                    address,
+                    phone_number: phone,
+                    password,
+                    type: 'USER',
+                });
+                formik.resetForm();
+            } catch (err: any) {
+                setError(err.response.data);
+            }
         },
     });
 
@@ -52,6 +74,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
+                {error && <ErrorAlert>{error}</ErrorAlert>}
                 <FormGroup row sx={{ mt: 2, gap: 2, flexWrap: 'nowrap' }}>
                     <TextField
                         sx={{ width: '50%' }}
@@ -80,7 +103,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                         <Select labelId='gender' id='gender' name='gender' value={formik.values.gender} label='Gender' onChange={formik.handleChange}>
                             <MenuItem value={'M'}>Male</MenuItem>
                             <MenuItem value={'F'}>Female</MenuItem>
-                            <MenuItem value={'O'}>Others</MenuItem>
+                            <MenuItem value={'T'}>Others</MenuItem>
                         </Select>
                         <FormHelperText>{formik.errors.gender}</FormHelperText>
                     </FormControl>
@@ -97,6 +120,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                     />
                 </FormGroup>
                 <TextField
+                    inputProps={{ maxLength: 8 }}
                     sx={{ mt: 2 }}
                     fullWidth
                     id='phone'
@@ -104,7 +128,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                     label='Phone'
                     value={formik.values.phone}
                     onChange={formik.handleChange}
-                    type='phone'
+                    type='number'
                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                     helperText={formik.touched.phone && formik.errors.phone}
                 />
