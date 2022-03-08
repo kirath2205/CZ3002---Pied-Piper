@@ -3,10 +3,16 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
+import Router from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
 //services
 import { login } from '@/services/authService';
+//components
+import ErrorAlert from '@/components/shared/ErrorAlert';
+//state
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { AuthState, login as loginAction, selectAuthState } from '@/app/slices/authSlice';
 
 /**
  * The yup validation for the store
@@ -24,6 +30,8 @@ const validationSchema = yup.object({
  */
 const SignInForm = (): JSX.Element => {
     const [error, setError] = useState<string>();
+    const authState = useAppSelector(selectAuthState);
+    const dispatch = useAppDispatch();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -31,13 +39,15 @@ const SignInForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            formik.resetForm();
             const { email, password } = values;
             try {
-                login(email, password);
+                const response: AuthState = await login(email, password);
+                dispatch(loginAction(response));
+                Router.push('/campaigns');
             } catch (err: any) {
                 setError(err.response.data);
             }
+            formik.resetForm();
         },
     });
 
@@ -47,6 +57,7 @@ const SignInForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign in to VolunteerGoWhere
                 </Typography>
+                {error && <ErrorAlert>{error}</ErrorAlert>}
                 <TextField
                     sx={{ marginY: '0.3rem' }}
                     fullWidth

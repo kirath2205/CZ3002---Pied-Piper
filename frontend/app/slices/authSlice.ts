@@ -5,9 +5,8 @@ type UserType = 'ORG' | 'VOLUNTEER';
 
 export type AuthState = {
     loggedIn: boolean;
-    userId?: string;
-    userType?: UserType;
-    error?: string;
+    access_token?: string | null;
+    refresh_token?: string | null;
 };
 
 const initialState: AuthState = { loggedIn: false };
@@ -17,11 +16,9 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action: PayloadAction<AuthState>) => {
-            const { userId, userType } = action.payload;
-            state.loggedIn = true;
-            state.userId = userId;
-            state.userType = userType;
-            state.error = undefined;
+            const { access_token, refresh_token } = action.payload;
+            localStorage.setItem('refresh_token', refresh_token as string);
+            return { access_token, refresh_token, loggedIn: true };
         },
     },
 });

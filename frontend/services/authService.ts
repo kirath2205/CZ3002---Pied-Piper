@@ -1,7 +1,7 @@
 import { UserWithPW } from '@/interfaces/User';
 import { OrganizationWithPW } from '@/interfaces/Organization';
 import axios from 'axios';
-import { ERROR_CODES_REGISTER, CustomError } from '@/utils/constants/errorCodes';
+import { ERROR_CODES_REGISTER, CustomError, ERROR_CODES_LOGIN } from '@/utils/constants/errorCodes';
 
 export const URI = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth`;
 
@@ -15,6 +15,9 @@ const register = async (account: UserWithPW | OrganizationWithPW) => {
 
 const login = async (email: string, password: string) => {
     const response = await axios.post(`${URI}/login/`, { email, password });
+    if (ERROR_CODES_LOGIN.includes(response.status)) {
+        throw CustomError(response.data);
+    }
     return response.data;
 };
 
