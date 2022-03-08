@@ -128,6 +128,8 @@ def register(request):
                 user_login.save()
                 otp_verify = OTPVerification(phone_number=phone_number)
                 otp_verify.save()
+                password_reset = PasswordReset(email=email)
+                password_reset.save()
 
             else:
                 name = data.get('name')
@@ -135,7 +137,10 @@ def register(request):
                 new_org_account.save()
                 org_login = Login(email=email,password=hashed_password)
                 org_login.save()
-            
+                password_reset = PasswordReset(email=email)
+                password_reset.save()
+
+            HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Registered Successfully')
             
 
@@ -193,6 +198,7 @@ def refresh_jwt_token(request):
                 access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
                 access_token_payload={'id':current_user.email,'expiry':access_token_expiry}
                 access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
+                JsonResponse.status_code=int(error_codes.api_success())
                 return JsonResponse({
                 'access_token' : access_token.decode('utf-8')})
         
@@ -232,6 +238,7 @@ def login(request):
             refresh_token_payload={'id':current_user.email,'expiry':refresh_token_expiry}
             access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
             refresh_token=jwt.encode(refresh_token_payload,SECRET_KEY,algorithm="HS256")
+            JsonResponse.status_code = int(error_codes.login_successful())
             return JsonResponse({'access_token':access_token.decode('utf-8'),'refresh_token':refresh_token.decode('utf-8')})
         
         except Exception as e:
@@ -267,6 +274,7 @@ def verify_jwt_token(request):
                 HttpResponse.status_code=int(error_codes.invalid_jwt_token())
                 return HttpResponse("Expired token")
 
+            HttpResponse.status_code = int(error_codes.api_success())
             return HttpResponse("Valid Jwt token")
         
         except Exception as e:
@@ -452,6 +460,7 @@ def verify_otp(request):
                         current_user_account_info.save()
                         current_user.otp='invalid'
                         current_user.save()
+                        HttpResponse.status_code=int(error_codes.otp_verified())
                         return HttpResponse('OTP verified')
 
                     except Exception as e:
@@ -466,6 +475,124 @@ def verify_otp(request):
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('Deserialisation error '+str(e))
     
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def initiate_password_reset(request):
+
+    if(request.method=='POST'):
+
+        try:
+            data=json.loads(request.body.decode('utf-8'))
+            email = data.get('email')
+
+            try:
+                current_user = PasswordReset.objects.get(email=email)
+            
+            except PasswordReset.DoesNotExist as e:
+                HttpResponse.status_code = int(error_codes.invalid_email())
+                return HttpResponse('Email does not exist')
+            
+            generated_otp = __generate_otp()
+            subject = 'Volunteer Org Password Reset'
+            message = f'Your otp is {generated_otp}'
+            recepient = email
+            send_mail(subject, 
+            message, DEFAULT_FROM_EMAIL, [recepient])
+            current_user.otp=generated_otp
+            current_user.time_of_otp=datetime.now()
+            current_user.save()
+            HttpResponse.status_code=int(error_codes.otp_sent())
+            return HttpResponse('OTP sent')
+
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def password_reset_OTP_verification(request):
+    
+    if(request.method == 'POST'):
+
+        try:
+            data=json.loads(request.body.decode('utf-8'))
+            otp=data.get('otp')
+            email=data.get('email')
+
+            try:
+                current_user = PasswordReset.objects.get(email=email)
+            
+            except PasswordReset.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_email())
+                return HttpResponse("Invalid Email")
+            
+            if(current_user.otp != otp):
+                HttpResponse.status_code = int(error_codes.invalid_otp())
+                return HttpResponse('Invalid OTP')
+            
+            otp_timestamp = (current_user.time_of_otp).replace(tzinfo=None)
+            time_elapsed = datetime.now()-otp_timestamp
+
+            if(time_elapsed.total_seconds() > 600):
+                current_user.otp='invalid'
+                current_user.save()
+                HttpResponse.status_code = int(error_codes.expired_otp())
+                return HttpResponse('Expired OTP')
+            
+            current_user.otp='valid'
+            current_user.save()
+            HttpResponse.status_code=int(error_codes.otp_verified())
+            return HttpResponse('OTP verified')
+
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+    
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def get_new_password_after_otp_verification(request):
+
+    if(request.method=='POST'):
+
+        try:
+            data=json.loads(request.body.decode('utf-8'))
+            password=data.get('password')
+            email=data.get('email')
+
+            try:
+                current_user = Login.objects.get(email=email)
+                current_user_otp_verification = PasswordReset.objects.get(email=email)
+
+            except Login.DoesNotExist or PasswordReset.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.invalid_email())
+                return HttpResponse("Invalid Email")
+            
+            if(current_user_otp_verification.otp!='valid'):
+                current_user_otp_verification.otp='invalid'
+                current_user_otp_verification.save()
+                HttpResponse.status_code = int(error_codes.invalid_otp())
+                return HttpResponse('Invalid OTP')
+                
+            current_user.password = pbkdf2_sha256.hash(password)
+            current_user.save()
+            current_user_otp_verification.otp='invalid'
+            current_user_otp_verification.save()
+            HttpResponse.status_code=int(error_codes.password_changed())
+            return HttpResponse('Password Changed')
+
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')

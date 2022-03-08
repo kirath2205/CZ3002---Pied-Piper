@@ -45,3 +45,8 @@ class OTPVerification(models.Model):
     phone_number=models.IntegerField(primary_key=True)
     otp=models.CharField(max_length=6,default='invalid')
     time_of_otp=models.DateTimeField(default=now)
+
+class PasswordReset(models.Model):
+    email=models.EmailField(primary_key=True)
+    otp=models.CharField(max_length=6,default='invalid')
+    time_of_otp=models.DateTimeField(default=now)

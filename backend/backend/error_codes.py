@@ -48,3 +48,12 @@ def invalid_otp():
 
 def expired_otp():
     return '223'
+
+def otp_verified():
+    return '224'
+
+def password_changed():
+    return '225'
+
+def login_successful():
+    return '226'
