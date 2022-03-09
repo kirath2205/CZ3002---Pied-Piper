@@ -117,7 +117,6 @@ def register(request):
             address = data.get('address')
 
             if(type == USER):
-                print('ran')
                 first_name = data.get('first_name')
                 last_name = data.get('last_name')
                 skills = data.get('skills')
