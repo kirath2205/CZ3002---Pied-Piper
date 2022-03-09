@@ -1,9 +1,15 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
+//services
+import { register, sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
+//components
+import ErrorAlert from '@/components/shared/ErrorAlert';
 
 /**
  * The yup validation for the sign up form for organizations
@@ -12,7 +18,7 @@ const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
     password: yup.string().required('Password is required'),
     orgName: yup.string().required('Organization Name is required'),
-    phone: yup.string().required('Phone is required'),
+    phone: yup.string().min(8, 'Enter an 8 digit phone number').max(8).required('Phone is required'),
     address: yup.string().min(10).required('Address is required'),
 });
 
@@ -23,6 +29,8 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign up form for organizations
  */
 const OrganizationSignUpForm = (): JSX.Element => {
+    const [error, setError] = useState<string>();
+    const router = useRouter();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -33,8 +41,25 @@ const OrganizationSignUpForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            formik.resetForm();
-            console.dir(values);
+            const { orgName, email, password, address, phone } = values;
+            try {
+                const response = await register({
+                    name: orgName,
+                    email,
+                    address,
+                    phone_number: phone,
+                    password,
+                    type: 'ORG',
+                });
+                formik.resetForm();
+            } catch (err: any) {
+                setError(err.response.data);
+                return;
+            }
+
+            await sendVerificationEmail('ORG', email);
+            await sendPhoneOTP(phone);
+            router.push('/');
         },
     });
 
@@ -44,6 +69,7 @@ const OrganizationSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
+                {error && <ErrorAlert>{error}</ErrorAlert>}
                 <TextField
                     fullWidth
                     sx={{ mt: 2 }}

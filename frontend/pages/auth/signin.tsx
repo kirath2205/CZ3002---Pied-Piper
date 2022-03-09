@@ -1,8 +1,11 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
+import ProgressBar from '@/components/shared/ProgressBar';
+import useRedirect from '@/utils/hooks/useRedirect';
 import Head from 'next/head';
 
 export default function SignIn() {
+    const [loggedIn, redirecting] = useRedirect();
     return (
         <>
             <Head>
@@ -11,7 +14,8 @@ export default function SignIn() {
             </Head>
 
             <Layout>
-                <SignInForm />
+                {redirecting && <ProgressBar />}
+                {!redirecting && !loggedIn && <SignInForm />}
             </Layout>
         </>
     );
