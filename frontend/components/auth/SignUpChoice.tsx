@@ -4,8 +4,6 @@ import ManIcon from '@mui/icons-material/Man';
 import BusinessIcon from '@mui/icons-material/Business';
 //lib
 import React from 'react';
-import Router from 'next/router';
-import Image from 'next/image';
 //components
 import VolunteerSignUpForm from '@/components/auth/VolunteerSignUpForm';
 import OrganizationSignUpForm from '@/components/auth/OrganizationSignUpForm';

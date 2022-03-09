@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
 //services
@@ -17,7 +18,7 @@ const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
     password: yup.string().required('Password is required'),
     orgName: yup.string().required('Organization Name is required'),
-    phone: yup.string().required('Phone is required'),
+    phone: yup.string().min(8, 'Enter an 8 digit phone number').max(8).required('Phone is required'),
     address: yup.string().min(10).required('Address is required'),
 });
 
@@ -29,6 +30,7 @@ const validationSchema = yup.object({
  */
 const OrganizationSignUpForm = (): JSX.Element => {
     const [error, setError] = useState<string>();
+    const router = useRouter();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -57,6 +59,7 @@ const OrganizationSignUpForm = (): JSX.Element => {
 
             await sendVerificationEmail('ORG', email);
             await sendPhoneOTP(phone);
+            router.push('/');
         },
     });
 

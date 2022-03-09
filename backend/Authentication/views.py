@@ -92,7 +92,7 @@ def register(request):
                 return HttpResponse("Invalid phone number")
 
             try:
-                name = client.lookups.phone_numbers("+65"+phone_number).fetch(type='caller-name')
+                name = client.lookups.phone_numbers("+65"+str(phone_number)).fetch(type='caller-name')
 
             except TwilioRestException as e:
                 HttpResponse.status_code=int(error_codes.invalid_phone_number())
@@ -117,6 +117,7 @@ def register(request):
             address = data.get('address')
 
             if(type == USER):
+                print('ran')
                 first_name = data.get('first_name')
                 last_name = data.get('last_name')
                 skills = data.get('skills')

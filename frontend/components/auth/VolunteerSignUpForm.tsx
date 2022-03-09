@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
 import { useState } from 'react';
+import Router from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 //services
@@ -33,6 +34,7 @@ const validationSchema = yup.object({
  */
 const VolunteerSignUpForm = (): JSX.Element => {
     const [error, setError] = useState<string>();
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -68,6 +70,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
             }
             await sendVerificationEmail('USER', email);
             await sendPhoneOTP(phone);
+            Router.push('/');
         },
     });
 

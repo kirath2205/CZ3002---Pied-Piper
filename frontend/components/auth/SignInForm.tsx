@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
 //services
@@ -31,6 +31,7 @@ const validationSchema = yup.object({
 const SignInForm = (): JSX.Element => {
     const [error, setError] = useState<string>();
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -42,7 +43,7 @@ const SignInForm = (): JSX.Element => {
             try {
                 const response: AuthState = await login(email, password);
                 dispatch(loginAction(response));
-                Router.push('/campaigns');
+                router.push('/');
             } catch (err: any) {
                 setError(err.response.data);
             }

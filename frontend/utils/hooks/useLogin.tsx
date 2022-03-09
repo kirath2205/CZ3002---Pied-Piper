@@ -6,8 +6,9 @@ const useLogin = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         const refresh_token = localStorage.getItem('refresh_token');
+        const access_token = localStorage.getItem('access_token');
         if (refresh_token) {
-            dispatch(loginAction({ refresh_token, loggedIn: true }));
+            dispatch(loginAction({ refresh_token, access_token, loggedIn: true }));
         }
     }, []);
 };
