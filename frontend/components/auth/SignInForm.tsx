@@ -46,7 +46,6 @@ const SignInForm = (): JSX.Element => {
             } catch (err: any) {
                 setError(err.response.data);
             }
-            formik.resetForm();
         },
     });
 

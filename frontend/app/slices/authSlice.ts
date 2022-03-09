@@ -18,10 +18,12 @@ export const authSlice = createSlice({
         login: (state, action: PayloadAction<AuthState>) => {
             const { access_token, refresh_token } = action.payload;
             localStorage.setItem('refresh_token', refresh_token as string);
+            localStorage.setItem('access_token', access_token as string);
             return { access_token, refresh_token, loggedIn: true };
         },
         logout: (state) => {
             localStorage.removeItem('refresh_token');
+            localStorage.removeItem('access_token');
             return { loggedIn: false, refresh_token: null, access_token: null };
         },
     },

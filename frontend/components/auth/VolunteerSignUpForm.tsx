@@ -6,7 +6,7 @@ import { useState } from 'react';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 //services
-import { register } from '@/services/authService';
+import { register, sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
 //types
 import { Gender } from '@/interfaces/User';
 import ErrorAlert from '@/components/shared/ErrorAlert';
@@ -64,7 +64,10 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 formik.resetForm();
             } catch (err: any) {
                 setError(err.response.data);
+                return;
             }
+            await sendVerificationEmail('USER', email);
+            await sendPhoneOTP(phone);
         },
     });
 
