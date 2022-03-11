@@ -1,12 +1,11 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 
 /**
- * The yup validation for the sign up form for volunteers
+ * The yup validation for the forgot password form
  */
 const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
@@ -14,12 +13,12 @@ const validationSchema = yup.object({
 });
 
 /**
- * Renders the sign up form for volunteers
+ * Renders the forgot pass word form
  *
  *
- * @returns {JSX.Element} - The sign up form for volunteers
+ * @returns {JSX.Element} - The forgot password form
  */
-const VolunteerSignUpForm = (): JSX.Element => {
+const ForgotPasswordForm = (): JSX.Element => {
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -78,4 +77,4 @@ const VolunteerSignUpForm = (): JSX.Element => {
     );
 };
 
-export default VolunteerSignUpForm;
+export default ForgotPasswordForm;

@@ -14,12 +14,7 @@ export default function SignIn() {
     }
     return (
         <>
-            <Head>
-                <title>VolunteerGoWhere</title>
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
-
-            <Layout>
+            <Layout title='VolunteerGoWhere - Sign In'>
                 <SignInForm />
             </Layout>
         </>

@@ -5,15 +5,8 @@ import Head from 'next/head';
 
 export default function SignIn() {
     return (
-        <>
-            <Head>
-                <title>VolunteerGoWhere - Forgot Password</title>
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
-
-            <Layout>
-                <ForgotPasswordForm />
-            </Layout>
-        </>
+        <Layout title='VolunteerGoWhere - Forgot Password'>
+            <ForgotPasswordForm />
+        </Layout>
     );
 }

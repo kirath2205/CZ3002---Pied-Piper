@@ -7,18 +7,11 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 export default function IndividualCampaignPage({ campaign }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     return (
-        <>
-            <Head>
-                <title>VolunteerGoWhere</title>
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
-
-            <Layout>
-                <Box px={4} pt={2}>
-                    <CampaignCard campaign={campaign} detailed />
-                </Box>
-            </Layout>
-        </>
+        <Layout>
+            <Box px={4} pt={2}>
+                <CampaignCard campaign={campaign} detailed />
+            </Box>
+        </Layout>
     );
 }
 

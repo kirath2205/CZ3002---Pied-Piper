@@ -80,18 +80,11 @@ const campaigns: Campaign[] = [
 
 export default function Campaigns() {
     return (
-        <>
-            <Head>
-                <title>VolunteerGoWhere</title>
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
-
-            <Layout>
-                <div className={styles.container}>
-                    <FilterButton />
-                    <CampaignGrid campaigns={campaigns} />
-                </div>
-            </Layout>
-        </>
+        <Layout title='VolunteerGoWhere - Campaigns'>
+            <div className={styles.container}>
+                <FilterButton />
+                <CampaignGrid campaigns={campaigns} />
+            </div>
+        </Layout>
     );
 }

@@ -4,7 +4,7 @@ import { Container, Typography, Button } from '@mui/material';
 
 export default function Custom404() {
     return (
-        <Layout>
+        <Layout title='VolunteerGoWhere - Error'>
             <Container sx={{ pt: 12, px: 6 }}>
                 <Typography variant='h2'>Oops! The page you were looking for could not be found.</Typography>
                 <UnstyledLink href='/'>

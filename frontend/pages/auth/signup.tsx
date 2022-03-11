@@ -13,14 +13,8 @@ export default function SignUp() {
         router.push('/');
     }
     return (
-        <>
-            <Head>
-                <title>VolunteerGoWhere</title>
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
-            <Layout>
-                <SignUpChoice />
-            </Layout>
-        </>
+        <Layout title='VolunteerGoWhere - Sign Up'>
+            <SignUpChoice />
+        </Layout>
     );
 }
