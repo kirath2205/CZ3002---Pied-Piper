@@ -1,11 +1,17 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
-import ProgressBar from '@/components/shared/ProgressBar';
-import useRedirect from '@/utils/hooks/useRedirect';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useAppSelector } from '@/app/hooks';
+import { selectLoggedIn } from '@/app/slices/authSlice';
 
 export default function SignIn() {
-    const [loggedIn, redirecting] = useRedirect();
+    const loggedIn = useAppSelector(selectLoggedIn);
+    const router = useRouter();
+
+    if (typeof window !== undefined && loggedIn) {
+        router.push('/');
+    }
     return (
         <>
             <Head>
@@ -14,8 +20,7 @@ export default function SignIn() {
             </Head>
 
             <Layout>
-                {redirecting && <ProgressBar />}
-                {!redirecting && !loggedIn && <SignInForm />}
+                <SignInForm />
             </Layout>
         </>
     );

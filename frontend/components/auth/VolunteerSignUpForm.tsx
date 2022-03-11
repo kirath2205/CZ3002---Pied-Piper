@@ -1,15 +1,15 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
-import { useState } from 'react';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 //services
-import { register, sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //types
 import { Gender } from '@/interfaces/User';
+import { UserWithPW } from '@/interfaces/User';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 /**
  * The yup validation for the sign up form for volunteers
@@ -33,7 +33,9 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign up form for volunteers
  */
 const VolunteerSignUpForm = (): JSX.Element => {
-    const [error, setError] = useState<string>();
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const authState = useAppSelector(selectAuthState);
 
     const formik = useFormik({
         initialValues: {
@@ -49,28 +51,10 @@ const VolunteerSignUpForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const { firstName, lastName, email, password, skills, age, gender, phone, address } = values;
-            try {
-                const response = await register({
-                    first_name: firstName,
-                    last_name: lastName,
-                    age,
-                    gender: gender as Gender,
-                    email,
-                    skills,
-                    address,
-                    phone_number: phone,
-                    password,
-                    type: 'USER',
-                });
-                formik.resetForm();
-            } catch (err: any) {
-                setError(err.response.data);
-                return;
-            }
-            await sendVerificationEmail('USER', email);
-            await sendPhoneOTP(phone);
-            Router.push('/');
+            const { firstName, lastName, phone } = values;
+            const user = { ...values, first_name: firstName, last_name: lastName, phone_number: phone, type: 'USER' };
+            dispatch(clearError());
+            await dispatch(register(user as UserWithPW));
         },
     });
 
@@ -80,7 +64,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
-                {error && <ErrorAlert>{error}</ErrorAlert>}
+                <ErrorAlert>{authState.error}</ErrorAlert>
                 <FormGroup row sx={{ mt: 2, gap: 2, flexWrap: 'nowrap' }}>
                     <TextField
                         sx={{ width: '50%' }}
@@ -111,7 +95,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                             <MenuItem value={'F'}>Female</MenuItem>
                             <MenuItem value={'T'}>Others</MenuItem>
                         </Select>
-                        <FormHelperText>{formik.errors.gender}</FormHelperText>
+                        <FormHelperText>{formik.touched.gender && formik.errors.gender}</FormHelperText>
                     </FormControl>
                     <TextField
                         sx={{ width: '50%' }}
@@ -179,13 +163,22 @@ const VolunteerSignUpForm = (): JSX.Element => {
                         <MenuItem value={'Elderly'}>Elderly</MenuItem>
                         <MenuItem value={'Environment'}>Environment</MenuItem>
                     </Select>
-                    <FormHelperText>{formik.errors.skills}</FormHelperText>
+                    <FormHelperText>{formik.touched.skills && formik.errors.skills}</FormHelperText>
                 </FormControl>
                 <Stack>
                     <Box sx={{ mt: 0.8 }}>
-                        Already have an account? <Link href='/auth/signin'>Sign In</Link>
+                        Already have an account?
+                        <Button
+                            size='small'
+                            variant='text'
+                            onClick={() => {
+                                dispatch(clearError());
+                                router.push('/auth/signin');
+                            }}
+                        >
+                            Sign In
+                        </Button>
                     </Box>
-                    <Box sx={{ mt: 0.8 }}></Box>
                     <Button
                         sx={{ mt: 0.8, width: '40%', backgroundColor: '#12CDD4' }}
                         color='primary'

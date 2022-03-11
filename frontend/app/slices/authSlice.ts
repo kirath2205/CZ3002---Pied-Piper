@@ -1,36 +1,135 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { OrganizationWithPW } from '@/interfaces/Organization';
+import { UserWithPW } from '@/interfaces/User';
+import { sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 import type { RootState } from '../store';
 
 type UserType = 'ORG' | 'VOLUNTEER';
 
 export type AuthState = {
     loggedIn: boolean;
-    access_token?: string | null;
-    refresh_token?: string | null;
+    loading: boolean;
+    message?: string;
+    user?: UserType;
+    error?: string;
 };
 
-const initialState: AuthState = { loggedIn: false };
+const initialState: AuthState = { loggedIn: false, loading: false };
+
+interface LoginBody {
+    email: string;
+    password: string;
+}
+
+interface ErrorMessage {
+    error: string;
+}
+
+const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>('auth/login', async (loginBody, thunkAPI) => {
+    try {
+        const res = await axios.post('/api/auth/login', loginBody);
+        if (res.status === 226) {
+            return res.data as string;
+        } else {
+            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+        }
+    } catch (err) {
+        return thunkAPI.rejectWithValue({ error: 'Something went wrong logging in.' });
+    }
+});
+
+const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+    try {
+        const res = await axios.post('/api/auth/logout');
+        if (res.status === 200) {
+            return;
+        } else {
+            return thunkAPI.rejectWithValue({ error: 'Failed to logout' });
+        }
+    } catch (err) {
+        return thunkAPI.rejectWithValue({ error: 'Failed to logout' });
+    }
+});
+
+const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejectValue: ErrorMessage }>('auth/register', async (registerBody, thunkAPI) => {
+    try {
+        const res = await axios.post('/api/auth/register', registerBody);
+        if (res.status === 200) {
+            // await sendPhoneOTP(registerBody.phone_number);
+            // await sendVerificationEmail(registerBody.type, registerBody.email);
+
+            return;
+        } else {
+            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+        }
+    } catch (err) {
+        return thunkAPI.rejectWithValue({ error: 'Something went wrong went registering.' });
+    }
+});
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        login: (state, action: PayloadAction<AuthState>) => {
-            const { access_token, refresh_token } = action.payload;
-            console.log(access_token);
-            localStorage.setItem('refresh_token', refresh_token as string);
-            localStorage.setItem('access_token', access_token as string);
-            return { access_token, refresh_token, loggedIn: true };
+        clearError: (state) => {
+            return { ...state, error: undefined };
         },
-        logout: (state) => {
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('access_token');
-            return { loggedIn: false, refresh_token: null, access_token: null };
-        },
+    },
+    extraReducers: (builder) => {
+        //Login cases
+        builder.addCase(login.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(login.fulfilled, (state) => {
+            state.loggedIn = true;
+            state.loading = false;
+        });
+        builder.addCase(login.rejected, (state, action) => {
+            const { payload } = action;
+            state.loading = false;
+            state.loggedIn = false;
+            if (payload) {
+                state.error = payload.error;
+            } else {
+                state.error = action.error.message;
+            }
+        });
+        //Logout cases
+        builder.addCase(logout.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(logout.fulfilled, (state) => {
+            state.loading = false;
+            state.loggedIn = false;
+        });
+        builder.addCase(logout.rejected, (state, action) => {
+            state.loading = false;
+            state.error = 'Failed to logout';
+        });
+        //Register cases
+        builder.addCase(register.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(register.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = 'Registered succesfully';
+        });
+        builder.addCase(register.rejected, (state, action) => {
+            const { payload } = action;
+            state.loading = false;
+            if (payload) {
+                state.error = payload.error;
+            } else {
+                state.error = action.error.message;
+            }
+        });
     },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { clearError } = authSlice.actions;
+
+export { login, logout, register };
 
 export const selectAuthState = (state: RootState) => state.auth;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
