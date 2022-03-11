@@ -1,7 +1,6 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
@@ -43,11 +42,7 @@ const SignInForm = (): JSX.Element => {
         },
     });
 
-    if (typeof window && authState.loggedIn) {
-        router.push('/');
-    }
-
-    if (authState.loggedIn) {
+    if (typeof window !== undefined && authState.loggedIn) {
         router.push('/');
     }
 
@@ -82,11 +77,31 @@ const SignInForm = (): JSX.Element => {
                     helperText={formik.touched.password && formik.errors.password}
                 />
                 <Stack>
-                    <Box sx={{ marginTop: 2 }}>
-                        Don't have an account yet? <Link href='/auth/signup'>Sign up here</Link>
+                    <Box mt={1}>
+                        Don't have an account yet?
+                        <Button
+                            size='small'
+                            variant='text'
+                            onClick={() => {
+                                dispatch(clearError());
+                                router.push('/auth/signup');
+                            }}
+                        >
+                            Sign up here
+                        </Button>
                     </Box>
-                    <Box sx={{ marginTop: 2 }}>
-                        Forgot your password? <Link href='/auth/forgot-password'>Reset here</Link>
+                    <Box>
+                        Forgot your password?
+                        <Button
+                            size='small'
+                            variant='text'
+                            onClick={() => {
+                                dispatch(clearError());
+                                router.push('/auth/signup');
+                            }}
+                        >
+                            Reset here
+                        </Button>
                     </Box>
                     <Button
                         sx={{ marginTop: 2, width: '40%', backgroundColor: '#12CDD4' }}

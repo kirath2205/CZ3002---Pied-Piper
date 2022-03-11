@@ -1,7 +1,6 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
@@ -117,7 +116,17 @@ const OrganizationSignUpForm = (): JSX.Element => {
                 />
                 <Stack>
                     <Box sx={{ mt: 0.8 }}>
-                        Already have an account? <Link href='/auth/signin'>Sign In</Link>
+                        Already have an account?
+                        <Button
+                            size='small'
+                            variant='text'
+                            onClick={() => {
+                                dispatch(clearError());
+                                router.push('/auth/signin');
+                            }}
+                        >
+                            Sign In
+                        </Button>
                     </Box>
                     <Button
                         sx={{ mt: 0.8, width: '40%', backgroundColor: '#12CDD4' }}

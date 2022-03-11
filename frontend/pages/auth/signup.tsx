@@ -1,9 +1,17 @@
 import SignUpChoice from '@/components/auth/SignUpChoice';
 import Layout from '@/components/shared/Layout';
-import ProgressBar from '@/components/shared/ProgressBar';
+import { useRouter } from 'next/router';
+import { useAppSelector } from '@/app/hooks';
+import { selectLoggedIn } from '@/app/slices/authSlice';
 import Head from 'next/head';
 
 export default function SignUp() {
+    const loggedIn = useAppSelector(selectLoggedIn);
+    const router = useRouter();
+
+    if (typeof window !== undefined && loggedIn) {
+        router.push('/');
+    }
     return (
         <>
             <Head>

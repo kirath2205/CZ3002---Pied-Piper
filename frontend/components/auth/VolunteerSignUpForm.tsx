@@ -1,8 +1,7 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 //services
@@ -34,6 +33,7 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign up form for volunteers
  */
 const VolunteerSignUpForm = (): JSX.Element => {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const authState = useAppSelector(selectAuthState);
 
@@ -167,9 +167,18 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 </FormControl>
                 <Stack>
                     <Box sx={{ mt: 0.8 }}>
-                        Already have an account? <Link href='/auth/signin'>Sign In</Link>
+                        Already have an account?
+                        <Button
+                            size='small'
+                            variant='text'
+                            onClick={() => {
+                                dispatch(clearError());
+                                router.push('/auth/signin');
+                            }}
+                        >
+                            Sign In
+                        </Button>
                     </Box>
-                    <Box sx={{ mt: 0.8 }}></Box>
                     <Button
                         sx={{ mt: 0.8, width: '40%', backgroundColor: '#12CDD4' }}
                         color='primary'
