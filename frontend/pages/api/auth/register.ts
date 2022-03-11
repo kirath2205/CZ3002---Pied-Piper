@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';
@@ -6,7 +5,7 @@ import axios from 'axios';
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
         try {
-            const apiRes = await axios.post(`${API_URL}/auth/register`, req.body);
+            const apiRes = await axios.post(`${API_URL}/auth/register/`, req.body);
 
             const data = await apiRes.data;
 

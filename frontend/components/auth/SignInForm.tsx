@@ -10,7 +10,7 @@ import { Button, TextField, Typography, Box, Container, Stack } from '@mui/mater
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //state
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { AuthState, login, selectAuthState, clearError } from '@/app/slices/authSlice';
+import { login, selectAuthState, clearError } from '@/app/slices/authSlice';
 
 /**
  * The yup validation for the store
