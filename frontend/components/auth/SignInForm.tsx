@@ -1,18 +1,16 @@
 //lib
-import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
-//services
-import { login } from '@/services/authService';
+
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //state
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { AuthState, login as loginAction, selectAuthState } from '@/app/slices/authSlice';
+import { AuthState, login, selectAuthState, clearError } from '@/app/slices/authSlice';
 
 /**
  * The yup validation for the store
@@ -29,8 +27,8 @@ const validationSchema = yup.object({
  * @returns {JSX.Element} - The sign in form
  */
 const SignInForm = (): JSX.Element => {
-    const [error, setError] = useState<string>();
     const dispatch = useAppDispatch();
+    const authState = useAppSelector(selectAuthState);
     const router = useRouter();
     const formik = useFormik({
         initialValues: {
@@ -39,16 +37,19 @@ const SignInForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
+            dispatch(clearError());
             const { email, password } = values;
-            try {
-                const response: AuthState = await login(email, password);
-                dispatch(loginAction(response));
-                router.push('/');
-            } catch (err: any) {
-                setError(err.response.data);
-            }
+            dispatch(login(values));
         },
     });
+
+    if (typeof window && authState.loggedIn) {
+        router.push('/');
+    }
+
+    if (authState.loggedIn) {
+        router.push('/');
+    }
 
     return (
         <Container maxWidth='sm' sx={{ mt: 10 }}>
@@ -56,7 +57,7 @@ const SignInForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign in to VolunteerGoWhere
                 </Typography>
-                {error && <ErrorAlert>{error}</ErrorAlert>}
+                {<ErrorAlert>{authState.error}</ErrorAlert>}
                 <TextField
                     sx={{ marginY: '0.3rem' }}
                     fullWidth

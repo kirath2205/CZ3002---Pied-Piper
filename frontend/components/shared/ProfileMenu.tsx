@@ -4,7 +4,7 @@ import React from 'react';
 import Router from 'next/router';
 //state
 import { useAppDispatch } from '@/app/hooks';
-import { logout as logoutAction } from '@/app/slices/authSlice';
+import { logout } from '@/app/slices/authSlice';
 
 interface ProfileMenuProps {
     closeAccountMenu: () => void;
@@ -13,9 +13,10 @@ interface ProfileMenuProps {
 
 const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Element => {
     const dispatch = useAppDispatch();
-    const logout = () => {
-        Router.replace('/');
-        dispatch(logoutAction());
+    const logoutHandler = () => {
+        if (dispatch && dispatch !== null && dispatch !== undefined) {
+            dispatch(logout());
+        }
     };
 
     return (
@@ -36,7 +37,7 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Elem
         >
             <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
             <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
-            <MenuItem onClick={() => logout()}>Sign out</MenuItem>
+            <MenuItem onClick={logoutHandler}>Sign out</MenuItem>
         </Menu>
     );
 };

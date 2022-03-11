@@ -38,6 +38,7 @@ def register(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
             type = data.get('type')
+            print(data)
 
             if(type!=USER and type!=ORG):
                 HttpResponse.status_code = int(error_codes.bad_request())
@@ -218,6 +219,7 @@ def login(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
             email = data.get('email')
+            print(data)
 
             try:
                 current_user = Login.objects.get(email=email)
