@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import CampaignCard from '@/components/campaigns/CampaignCard';
 import Layout from '@/components/shared/Layout';
-import Head from 'next/head';
 import { Campaign } from '@/interfaces/Campaign';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 

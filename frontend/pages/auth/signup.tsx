@@ -3,7 +3,6 @@ import Layout from '@/components/shared/Layout';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn } from '@/app/slices/authSlice';
-import Head from 'next/head';
 
 export default function SignUp() {
     const loggedIn = useAppSelector(selectLoggedIn);

@@ -1,6 +1,5 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn } from '@/app/slices/authSlice';

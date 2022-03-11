@@ -1,5 +1,5 @@
 //lib
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 //mui
@@ -12,8 +12,8 @@ import Sidebar from '@/components/shared/Sidebar';
 import UnstyledLink from '@/components/shared/UnstyledLink';
 import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
-import { useAppSelector } from '@/app/hooks';
-import { selectLoggedIn } from '@/app/slices/authSlice';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
+import { selectLoggedIn, refreshToken } from '@/app/slices/authSlice';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -32,6 +32,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const loggedIn = useAppSelector(selectLoggedIn);
+    const dispatch = useAppDispatch();
 
     const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -48,6 +49,13 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
     const closeDrawer = () => {
         setDrawerOpen(false);
     };
+
+    //Login persistence
+    useEffect(() => {
+        if (dispatch && dispatch !== null && dispatch !== undefined) {
+            dispatch(refreshToken());
+        }
+    }, [dispatch]);
 
     return (
         <>

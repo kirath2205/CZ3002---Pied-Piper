@@ -1,6 +1,5 @@
 import CampaignGrid from '@/components/campaigns/CampaignGrid';
 import Layout from '@/components/shared/Layout';
-import Head from 'next/head';
 import { Campaign } from '@/interfaces/Campaign';
 import FilterButton from '@/components/campaigns/FilterButton';
 import styles from '@/styles/campaigns.module.css';

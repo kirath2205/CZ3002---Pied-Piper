@@ -68,6 +68,34 @@ const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejec
     }
 });
 
+const checkAuthStatus = createAsyncThunk('auth/checkStatus', async (_, thunkAPI) => {
+    try {
+        const res = await axios.get('/api/auth/verify_token');
+        const data = await res.data;
+        if (res.status === 200) {
+            return;
+        } else {
+            return thunkAPI.rejectWithValue({ error: data });
+        }
+    } catch (err) {
+        return thunkAPI.rejectWithValue({ error: 'Somethign went wrong when verifying.' });
+    }
+});
+
+const refreshToken = createAsyncThunk('auth/refreshToken', async (_, thunkAPI) => {
+    try {
+        const res = await axios.get('/api/auth/refresh_token');
+        const data = await res.data;
+        if (res.status === 200) {
+            thunkAPI.dispatch(checkAuthStatus());
+        } else {
+            return thunkAPI.rejectWithValue({ error: data });
+        }
+    } catch (err) {
+        return thunkAPI.rejectWithValue({ error: 'Something went wrong when refreshing token' });
+    }
+});
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -124,12 +152,29 @@ export const authSlice = createSlice({
                 state.error = action.error.message;
             }
         });
+        //Check auth status
+        builder.addCase(checkAuthStatus.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(checkAuthStatus.fulfilled, (state) => {
+            state.loading = false;
+            state.loggedIn = true;
+        });
+        builder.addCase(checkAuthStatus.rejected, (state) => {
+            state.loading = false;
+            state.loggedIn = false;
+        });
+        //Refresh token
+        builder.addCase(refreshToken.fulfilled, (state) => state);
+        builder.addCase(refreshToken.rejected, (state) => {
+            state.loggedIn = false;
+        });
     },
 });
 
 export const { clearError } = authSlice.actions;
 
-export { login, logout, register };
+export { login, logout, register, refreshToken, checkAuthStatus };
 
 export const selectAuthState = (state: RootState) => state.auth;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
