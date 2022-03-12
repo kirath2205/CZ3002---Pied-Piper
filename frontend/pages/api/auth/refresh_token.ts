@@ -33,6 +33,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         path: '/',
                     }),
                 ]);
+                res.setHeader('Set-Cookie', [
+                    cookie.serialize('refresh', refresh, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV !== 'development',
+                        maxAge: 60 * 60 * 24 * 200,
+                        sameSite: 'strict',
+                        path: '/',
+                    }),
+                ]);
 
                 return res.status(200).json({
                     success: 'Refresh request successful',

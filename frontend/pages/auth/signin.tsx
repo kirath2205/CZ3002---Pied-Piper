@@ -1,21 +1,16 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
-import { useRouter } from 'next/router';
-import { useAppSelector } from '@/app/hooks';
-import { selectLoggedIn } from '@/app/slices/authSlice';
+import { redirectToHome } from '@/utils/redirect';
+import { GetServerSidePropsContext } from 'next';
 
 export default function SignIn() {
-    const loggedIn = useAppSelector(selectLoggedIn);
-    const router = useRouter();
-
-    if (typeof window !== undefined && loggedIn) {
-        router.push('/');
-    }
     return (
-        <>
-            <Layout title='VolunteerGoWhere - Sign In'>
-                <SignInForm />
-            </Layout>
-        </>
+        <Layout title='VolunteerGoWhere - Sign In'>
+            <SignInForm />
+        </Layout>
     );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+    return redirectToHome(ctx);
 }

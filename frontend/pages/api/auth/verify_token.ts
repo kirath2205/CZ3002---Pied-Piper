@@ -9,7 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const access_token = cookies.access ?? false;
 
         if (!access_token) {
-            return res.status(403).json({
+            return res.status(217).json({
                 error: 'User forbidden from making the request',
             });
         }

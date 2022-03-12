@@ -165,7 +165,8 @@ export const authSlice = createSlice({
             state.loggedIn = false;
         });
         //Refresh token
-        builder.addCase(refreshToken.fulfilled, (state) => state);
+        builder.addCase(refreshToken.fulfilled, (state) => ({ ...state, loading: false }));
+        builder.addCase(refreshToken.pending, (state) => ({ ...state, loading: true }));
         builder.addCase(refreshToken.rejected, (state) => {
             state.loggedIn = false;
         });
@@ -177,6 +178,7 @@ export const { clearError } = authSlice.actions;
 export { login, logout, register, refreshToken, checkAuthStatus };
 
 export const selectAuthState = (state: RootState) => state.auth;
+export const selectLoading = (state: RootState) => state.auth.loading;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
 
 export default authSlice.reducer;
