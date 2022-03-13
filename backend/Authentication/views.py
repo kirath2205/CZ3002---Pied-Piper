@@ -152,7 +152,7 @@ def register(request):
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
         
-def verify_jwt_token(access_token):
+def verify_jwt_token_local(access_token):
 
     decoded_access_token=jwt.decode(access_token,SECRET_KEY,algorithm="HS256")
 
