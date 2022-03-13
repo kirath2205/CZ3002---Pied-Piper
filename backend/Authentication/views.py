@@ -17,7 +17,6 @@ import pytz
 from passlib.hash import pbkdf2_sha256
 from twilio.base.exceptions import TwilioRestException
 import requests
-import re
 import jwt
 from datetime import date, datetime,timedelta, tzinfo
 
