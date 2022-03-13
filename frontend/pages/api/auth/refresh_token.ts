@@ -7,6 +7,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         const cookies = cookie.parse(req.headers.cookie ?? '');
         const refresh = cookies.refresh ?? false;
+        const access = cookies.access ?? false;
+        if (access) {
+            return res.status(200).json({
+                message: 'Still valid',
+            });
+        }
 
         if (!refresh) {
             return res.status(401).json({
@@ -32,8 +38,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         sameSite: 'strict',
                         path: '/',
                     }),
-                ]);
-                res.setHeader('Set-Cookie', [
                     cookie.serialize('refresh', refresh, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV !== 'development',
@@ -42,7 +46,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         path: '/',
                     }),
                 ]);
-
                 return res.status(200).json({
                     success: 'Refresh request successful',
                 });
