@@ -1,8 +1,8 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
 //components
+import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 
 //mui
@@ -10,61 +10,77 @@ import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem,
 import axios from 'axios';
 import { useState } from 'react';
 
-interface ForgotPasswordFormProps{
-    sentOTP:() => void;
-    sentEmail:(email: string)=> void;
-}
+
 /**
- * The yup validation for the forgot password form
- */  
+ * The yup validation for the reset password form
+ */
 
 const validationSchema = yup.object({
-    email: yup.string().required('Email is required'),
+    password: yup.string().required('Password is required'),
 });
 
+interface ResetPasswordFormProps {
+    email: string
+}
+
 /**
- * Renders the forgot pass word form
+ * Renders the reset pass word form
  *
  *
- * @returns {JSX.Element} - The forgot password form
+ * @returns {JSX.Element} - The reset password form
  */
-const ForgotPasswordForm = ({sentOTP, sentEmail}: ForgotPasswordFormProps): JSX.Element => {
+const ResetPasswordForm = ({email}: ResetPasswordFormProps): JSX.Element => {
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
     const formik = useFormik({
         initialValues: {
-            email: '',
+            email: email,
+            password: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            try{
+            console.log("resetpassword" + email)
+            try {
                 setError('');
-                const apiRes = await axios.post(`/api/auth/initiate_password_reset/`, { email:values.email });
-                sentOTP();
-                sentEmail(values.email);
-                console.log("initiate password reset" + values.email);
+                const apiRes = await axios.post(`/api/auth/get_new_password_after_otp_verification/`, { email:email,password:values.password });
+                setSuccess(true);
                 formik.resetForm();
             } catch (err: any) {
                 setError(err.message)
             }
         },
+         
     });
+
     return (
         <Container maxWidth='sm' sx={{ mt: 8 }}>
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
-                    Forgot Password
+                    Reset Password
                 </Typography>
                 {error && <ErrorAlert>{error}</ErrorAlert>}
+                {success && <SuccessAlert>Password reset successfully</SuccessAlert>}
                 <TextField
                     sx={{ mt: 2 }}
                     fullWidth
                     id='email'
                     name='email'
                     label='Email'
-                    value={formik.values.email}
+                    value={email}
+                    disabled
+                />
+
+                <TextField
+                    sx={{ mt: 2 }}
+                    fullWidth
+                    id='password'
+                    name='password'
+                    label='Password'
+                    type='password'
+                    value={formik.values.password}
                     onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
                 />
                 <Stack>
                     <Button
@@ -75,12 +91,12 @@ const ForgotPasswordForm = ({sentOTP, sentEmail}: ForgotPasswordFormProps): JSX.
                         type='submit'
                         aria-label='send-otp'
                     >
-                        SEND OTP
+                        Reset Password
                     </Button>
                 </Stack>
             </form>
         </Container>
-    );
+        );
 };
 
-export default ForgotPasswordForm;
+export default ResetPasswordForm;

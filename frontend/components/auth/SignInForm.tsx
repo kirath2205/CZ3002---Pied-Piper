@@ -97,7 +97,7 @@ const SignInForm = (): JSX.Element => {
                             variant='text'
                             onClick={() => {
                                 dispatch(clearError());
-                                router.push('/auth/signup');
+                                router.push('/auth/forgot-password');
                             }}
                         >
                             Reset here
