@@ -1,6 +1,5 @@
 import { OrganizationWithPW } from '@/interfaces/Organization';
 import { UserWithPW } from '@/interfaces/User';
-import { sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { RootState } from '../store';
@@ -26,18 +25,21 @@ interface ErrorMessage {
     error: string;
 }
 
-const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>('auth/login', async (loginBody, thunkAPI) => {
-    try {
-        const res = await axios.post('/api/auth/login', loginBody);
-        if (res.status === 226) {
-            return res.data as string;
-        } else {
-            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>(
+    'auth/login',
+    async (loginBody, thunkAPI) => {
+        try {
+            const res = await axios.post('/api/auth/login', loginBody);
+            if (res.status === 226) {
+                return res.data as string;
+            } else {
+                return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+            }
+        } catch (err) {
+            return thunkAPI.rejectWithValue({ error: 'Something went wrong logging in.' });
         }
-    } catch (err) {
-        return thunkAPI.rejectWithValue({ error: 'Something went wrong logging in.' });
     }
-});
+);
 
 const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     try {
@@ -52,21 +54,21 @@ const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     }
 });
 
-const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejectValue: ErrorMessage }>('auth/register', async (registerBody, thunkAPI) => {
-    try {
-        const res = await axios.post('/api/auth/register', registerBody);
-        if (res.status === 200) {
-            // await sendPhoneOTP(registerBody.phone_number);
-            // await sendVerificationEmail(registerBody.type, registerBody.email);
-
-            return;
-        } else {
-            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejectValue: ErrorMessage }>(
+    'auth/register',
+    async (registerBody, thunkAPI) => {
+        try {
+            const res = await axios.post('/api/auth/register', registerBody);
+            if (res.status === 200) {
+                return;
+            } else {
+                return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+            }
+        } catch (err) {
+            return thunkAPI.rejectWithValue({ error: 'Something went wrong went registering.' });
         }
-    } catch (err) {
-        return thunkAPI.rejectWithValue({ error: 'Something went wrong went registering.' });
     }
-});
+);
 
 const checkAuthStatus = createAsyncThunk('auth/checkStatus', async (_, thunkAPI) => {
     try {
@@ -101,7 +103,7 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         clearError: (state) => {
-            return { ...state, error: undefined };
+            return { ...state, error: undefined, message: undefined };
         },
     },
     extraReducers: (builder) => {
@@ -141,7 +143,7 @@ export const authSlice = createSlice({
         });
         builder.addCase(register.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = 'Registered succesfully';
+            state.message = 'Registered succesfully. You may now proceed to login.';
         });
         builder.addCase(register.rejected, (state, action) => {
             const { payload } = action;

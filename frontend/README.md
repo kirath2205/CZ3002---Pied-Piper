@@ -31,11 +31,10 @@ Next.js has [Fast Refresh](https://nextjs.org/docs/basic-features/fast-refresh) 
 ├── .next       # Build files
 ├── __tests__   # All unit and integration tests
 ├── components  # All non-page React components
-├── pages       # All page components from Next.js
+├── pages       # All page components from Next.js, connections to backend under "pages/api" folder
 ├── interfaces  # All type declarations except for component props
 ├── utils       # Any util functions
 ├── public      # All public assets (SVG or favicons)
-├── services    # Any code that interacts with API/backend
 ├── styles      # CSS files (shouldn't need in this project)
 ├── LICENSE
 └── README.md

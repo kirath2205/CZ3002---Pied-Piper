@@ -24,7 +24,13 @@ interface CampaignCardProps {
 const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element => {
     return (
         <Card raised>
-            <CardMedia component='img' height={200} image='https://picsum.photos/400/300' alt={campaign.title} sx={{ paddingX: 1, paddingY: 1 }} />
+            <CardMedia
+                component='img'
+                height={200}
+                image='https://picsum.photos/400/300'
+                alt={campaign.title}
+                sx={{ paddingX: 1, paddingY: 1 }}
+            />
             <CardContent>
                 <Typography variant='h6' component='p'>
                     {campaign.title}
@@ -55,12 +61,22 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
             </CardContent>
             <CardActions sx={{ pl: 2, mt: -1.2, mb: 0.4 }}>
                 {detailed ? (
-                    <Button size='small' variant='contained' sx={{ backgroundColor: '#12CDD4' }} aria-label={`learn-more-${campaign.title}`}>
+                    <Button
+                        size='small'
+                        variant='contained'
+                        sx={{ backgroundColor: '#12CDD4' }}
+                        aria-label={`learn-more-${campaign.title}`}
+                    >
                         Volunteer Now
                     </Button>
                 ) : (
                     <UnstyledLink href={`/campaigns/${campaign.id}`}>
-                        <Button size='small' variant='contained' sx={{ backgroundColor: '#12CDD4' }} aria-label={`learn-more-${campaign.title}`}>
+                        <Button
+                            size='small'
+                            variant='contained'
+                            sx={{ backgroundColor: '#12CDD4' }}
+                            aria-label={`learn-more-${campaign.title}`}
+                        >
                             Learn More
                         </Button>
                     </UnstyledLink>

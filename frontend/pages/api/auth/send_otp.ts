@@ -5,22 +5,19 @@ import axios from 'axios';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
-        const { password, email } = req.body;
+        const { phone_number } = req.body;
 
         try {
-            const apiRes = await axios.post(`${API_URL}/auth/get_new_password_after_otp_verification/`, {
-                password,
-                email,
-            });
+            const apiRes = await axios.post(`${API_URL}/auth/send_otp/`, { phone_number });
 
             const data = await apiRes.data;
 
-            if (apiRes.status === 225) {
-                return res.status(225).json({
-                    success: 'Password Changed successfully.',
+            if (apiRes.status === 220) {
+                return res.status(220).json({
+                    success: 'OTP Sent',
                 });
             } else {
-                return res.status(apiRes.status).json({
+                return res.status(400).json({
                     error: data,
                 });
             }

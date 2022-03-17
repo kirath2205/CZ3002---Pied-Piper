@@ -5,10 +5,10 @@ import axios from 'axios';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
-        const { otp,email } = req.body;
+        const { otp, email } = req.body;
 
         try {
-            const apiRes = await axios.post(`${API_URL}/auth/password_reset_OTP_verification/`, { otp,email });
+            const apiRes = await axios.post(`${API_URL}/auth/password_reset_OTP_verification/`, { otp, email });
 
             const data = await apiRes.data;
 

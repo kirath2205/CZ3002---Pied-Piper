@@ -8,9 +8,9 @@ import React from 'react';
 //components
 import ApproveApplication from '@/components/organization/OrganizationApproveApplication';
 import OrganizationProfileInfo from '@/components/organization/OrganizationProfileInfo';
-import OrganizationExistingCampaign from  '@/components/organization/OrganizationExistingCampaign';
+import OrganizationExistingCampaign from '@/components/organization/OrganizationExistingCampaign';
 
-type ProfileType = 'PROFILE' | 'APPROVE'| 'EDIT';
+type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
 /**
  * Renders the signup choice component
  *
@@ -24,14 +24,16 @@ const ProfileChoice = (): JSX.Element => {
     };
     return (
         <Container>
-            <Avatar sx={{ mx: 'auto',width: 150,height:150, mt:2}}
-                alt="Remy Sharp"
-                />
-            <Box sx={{textAlign:'center' , mt:2}}>
-                NTU
-            </Box>
-            <Box display="flex" justifyContent="center" sx={{ width: '100%', bgcolor: 'background.paper', mt: 1 }}>
-                <Tabs value={value} onChange={handleChange} variant="scrollable" centered={true} allowScrollButtonsMobile>
+            <Avatar sx={{ mx: 'auto', width: 150, height: 150, mt: 2 }} alt='Remy Sharp' />
+            <Box sx={{ textAlign: 'center', mt: 2 }}>NTU</Box>
+            <Box display='flex' justifyContent='center' sx={{ width: '100%', bgcolor: 'background.paper', mt: 1 }}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    centered={true}
+                    allowScrollButtonsMobile
+                >
                     <Tab label='Profile Info' value='PROFILE' />
                     <Tab label='Approve Application' value='APPROVE' />
                     <Tab label='Edit/Delete Existing Campaign' value='EDIT' />

@@ -3,7 +3,20 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
 //mui
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
+import {
+    Button,
+    TextField,
+    Typography,
+    Box,
+    Container,
+    Stack,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    FormHelperText,
+    FormGroup,
+} from '@mui/material';
 //services
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
@@ -21,7 +34,11 @@ const validationSchema = yup.object({
     lastName: yup.string().required('Last Name is required'),
     gender: yup.mixed<Gender>().oneOf(['M', 'F', 'T']).required('Gender is required'),
     phone: yup.string().min(8, 'Enter an 8 digit phone number').max(8).required('Phone is required'),
-    age: yup.number().min(12, 'Age must be more than 12').max(100, 'Age must be 100 or less').required('Age is required'),
+    age: yup
+        .number()
+        .min(12, 'Age must be more than 12')
+        .max(100, 'Age must be 100 or less')
+        .required('Age is required'),
     address: yup.string().min(10).required('Address is required'),
     skills: yup.array().min(1, 'At least one skill is required'),
 });
@@ -90,7 +107,14 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 <FormGroup row sx={{ mt: 2, gap: 2, flexWrap: 'nowrap' }}>
                     <FormControl error={formik.touched.gender && Boolean(formik.errors.gender)} sx={{ width: '50%' }}>
                         <InputLabel id='gender'>Gender</InputLabel>
-                        <Select labelId='gender' id='gender' name='gender' value={formik.values.gender} label='Gender' onChange={formik.handleChange}>
+                        <Select
+                            labelId='gender'
+                            id='gender'
+                            name='gender'
+                            value={formik.values.gender}
+                            label='Gender'
+                            onChange={formik.handleChange}
+                        >
                             <MenuItem value={'M'}>Male</MenuItem>
                             <MenuItem value={'F'}>Female</MenuItem>
                             <MenuItem value={'T'}>Others</MenuItem>
@@ -158,7 +182,15 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 />
                 <FormControl sx={{ mt: 2 }} error={formik.touched.skills && Boolean(formik.errors.skills)} fullWidth>
                     <InputLabel id='skills'>Skills</InputLabel>
-                    <Select labelId='skills' id='skills' name='skills' value={formik.values.skills} label='Gender' onChange={formik.handleChange} multiple>
+                    <Select
+                        labelId='skills'
+                        id='skills'
+                        name='skills'
+                        value={formik.values.skills}
+                        label='Gender'
+                        onChange={formik.handleChange}
+                        multiple
+                    >
                         <MenuItem value={'IT'}>IT</MenuItem>
                         <MenuItem value={'Elderly'}>Elderly</MenuItem>
                         <MenuItem value={'Environment'}>Environment</MenuItem>

@@ -6,17 +6,17 @@ import * as yup from 'yup';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 
 //mui
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
+import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
 
-interface ForgotPasswordFormProps{
-    sentOTP:() => void;
-    sentEmail:(email: string)=> void;
+interface ForgotPasswordFormProps {
+    sentOTP: () => void;
+    sentEmail: (email: string) => void;
 }
 /**
  * The yup validation for the forgot password form
- */  
+ */
 
 const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
@@ -28,7 +28,7 @@ const validationSchema = yup.object({
  *
  * @returns {JSX.Element} - The forgot password form
  */
-const ForgotPasswordForm = ({sentOTP, sentEmail}: ForgotPasswordFormProps): JSX.Element => {
+const ForgotPasswordForm = ({ sentOTP, sentEmail }: ForgotPasswordFormProps): JSX.Element => {
     const [error, setError] = useState('');
     const formik = useFormik({
         initialValues: {
@@ -36,15 +36,15 @@ const ForgotPasswordForm = ({sentOTP, sentEmail}: ForgotPasswordFormProps): JSX.
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            try{
+            try {
                 setError('');
-                const apiRes = await axios.post(`/api/auth/initiate_password_reset/`, { email:values.email });
+                const apiRes = await axios.post(`/api/auth/initiate_password_reset/`, { email: values.email });
                 sentOTP();
                 sentEmail(values.email);
-                console.log("initiate password reset" + values.email);
+                console.log('initiate password reset' + values.email);
                 formik.resetForm();
             } catch (err: any) {
-                setError(err.message)
+                setError(err.message);
             }
         },
     });

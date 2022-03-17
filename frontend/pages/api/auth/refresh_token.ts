@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         if (!refresh) {
-            return res.status(401).json({
+            return res.status(221).json({
                 error: 'User unauthorized to make this request',
             });
         }

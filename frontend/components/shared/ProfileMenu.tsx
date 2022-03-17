@@ -19,7 +19,7 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Elem
             dispatch(logout());
         }
     };
-    
+
     return (
         <Menu
             id='menu-account'
