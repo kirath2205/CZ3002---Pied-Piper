@@ -1,6 +1,5 @@
 import { OrganizationWithPW } from '@/interfaces/Organization';
 import { UserWithPW } from '@/interfaces/User';
-import { sendPhoneOTP, sendVerificationEmail } from '@/services/authService';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { RootState } from '../store';
@@ -56,9 +55,6 @@ const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejec
     try {
         const res = await axios.post('/api/auth/register', registerBody);
         if (res.status === 200) {
-            // await sendPhoneOTP(registerBody.phone_number);
-            // await sendVerificationEmail(registerBody.type, registerBody.email);
-
             return;
         } else {
             return thunkAPI.rejectWithValue(res.data as ErrorMessage);
@@ -101,7 +97,7 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         clearError: (state) => {
-            return { ...state, error: undefined };
+            return { ...state, error: undefined, message: undefined };
         },
     },
     extraReducers: (builder) => {
@@ -141,7 +137,7 @@ export const authSlice = createSlice({
         });
         builder.addCase(register.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = 'Registered succesfully';
+            state.message = 'Registered succesfully. You may now proceed to login.';
         });
         builder.addCase(register.rejected, (state, action) => {
             const { payload } = action;

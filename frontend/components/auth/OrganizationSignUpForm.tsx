@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
+import SuccessAlert from '@/components/shared/SuccessAlert';
 //types
 import { OrganizationWithPW } from '@/interfaces/Organization';
 
@@ -55,7 +56,7 @@ const OrganizationSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
-                {authState.message && console.log(authState.message)}
+                <SuccessAlert>{authState.message}</SuccessAlert>
                 <ErrorAlert>{authState.error}</ErrorAlert>
                 <TextField
                     fullWidth
