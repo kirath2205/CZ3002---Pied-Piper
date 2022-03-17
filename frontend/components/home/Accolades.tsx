@@ -16,10 +16,10 @@ const Accolades = (): JSX.Element => {
                 <Typography variant='body1'>
                     We want to make volunteering to be simple,fun and meaningful to you
                 </Typography>
-                <Image src='/handshake-icon.jpg' width={300} height={200} />
+                <Image src='/handshake-icon.jpg' width={300} height={200} alt='' />
 
                 <Typography variant='body1'>
-                    Find a volunteer activity that you're interested in, and use the skills you have right here in
+                    Find a volunteer activity that you&apos;re interested in, and use the skills you have right here in
                     Singapore.
                 </Typography>
                 <UnstyledLink href='/auth/signup'>
@@ -33,17 +33,17 @@ const Accolades = (): JSX.Element => {
                 </UnstyledLink>
             </Box>
             <Box>
-                <Image src='/home-heart.png' width={250} height={250} />
+                <Image src='/home-heart.png' width={250} height={250} alt='' />
                 <Typography variant='h4'>27</Typography>
                 <Typography variant='body1'>Registered Volunteering Organisations Supported</Typography>
             </Box>
             <Box>
-                <Image src='/hands-raised.png' width={250} height={250} />
+                <Image src='/hands-raised.png' width={250} height={250} alt='' />
                 <Typography variant='h4'>130k</Typography>
                 <Typography variant='body1'>Successfully run campaigns</Typography>
             </Box>
             <Box>
-                <Image src='/hands-heart.png' width={250} height={250} />
+                <Image src='/hands-heart.png' width={250} height={250} alt='' />
                 <Typography variant='h4'>100k</Typography>
                 <Typography variant='body1'>Volunteer signups</Typography>
             </Box>

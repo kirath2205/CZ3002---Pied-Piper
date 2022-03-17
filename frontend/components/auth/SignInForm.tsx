@@ -78,7 +78,7 @@ const SignInForm = (): JSX.Element => {
                 />
                 <Stack>
                     <Box mt={1}>
-                        Don't have an account yet?
+                        Don&apos;t have an account yet?
                         <Button
                             size='small'
                             variant='text'
