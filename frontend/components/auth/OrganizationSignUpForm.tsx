@@ -44,7 +44,12 @@ const OrganizationSignUpForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const organization: OrganizationWithPW = { ...values, name: values.orgName, phone_number: values.phone, type: 'ORG' };
+            const organization: OrganizationWithPW = {
+                ...values,
+                name: values.orgName,
+                phone_number: values.phone,
+                type: 'ORG',
+            };
             dispatch(clearError());
             await dispatch(register(organization as OrganizationWithPW));
         },

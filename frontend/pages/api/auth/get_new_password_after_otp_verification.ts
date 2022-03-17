@@ -8,7 +8,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const { password, email } = req.body;
 
         try {
-            const apiRes = await axios.post(`${API_URL}/auth/get_new_password_after_otp_verification/`, { password, email });
+            const apiRes = await axios.post(`${API_URL}/auth/get_new_password_after_otp_verification/`, {
+                password,
+                email,
+            });
 
             const data = await apiRes.data;
 

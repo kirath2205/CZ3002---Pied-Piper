@@ -4,7 +4,11 @@ import React from 'react';
 
 const FilterButton = () => {
     return (
-        <Button size='small' variant='contained' sx={{ backgroundColor: '#12CDD4', color: '#fff', width: '20%', alignSelf: 'center', marginTop: 2 }}>
+        <Button
+            size='small'
+            variant='contained'
+            sx={{ backgroundColor: '#12CDD4', color: '#fff', width: '20%', alignSelf: 'center', marginTop: 2 }}
+        >
             <FilterAltOutlinedIcon />
             <Typography variant='button'>Filter</Typography>
         </Button>

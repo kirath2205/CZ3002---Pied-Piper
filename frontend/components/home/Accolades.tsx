@@ -13,14 +13,21 @@ const Accolades = (): JSX.Element => {
         <Stack marginTop={2} marginX={4} sx={{ textAlign: 'center' }} gap={4}>
             <Box>
                 <Typography variant='h4'>All in One Application</Typography>
-                <Typography variant='body1'>We want to make volunteering to be simple,fun and meaningful to you</Typography>
+                <Typography variant='body1'>
+                    We want to make volunteering to be simple,fun and meaningful to you
+                </Typography>
                 <Image src='/handshake-icon.jpg' width={300} height={200} />
 
                 <Typography variant='body1'>
-                    Find a volunteer activity that you're interested in, and use the skills you have right here in Singapore.
+                    Find a volunteer activity that you're interested in, and use the skills you have right here in
+                    Singapore.
                 </Typography>
                 <UnstyledLink href='/auth/signup'>
-                    <Button sx={{ marginY: 2, width: '30%', backgroundColor: '#12CDD4' }} color='primary' variant='contained'>
+                    <Button
+                        sx={{ marginY: 2, width: '30%', backgroundColor: '#12CDD4' }}
+                        color='primary'
+                        variant='contained'
+                    >
                         Be a volunteer
                     </Button>
                 </UnstyledLink>

@@ -25,18 +25,21 @@ interface ErrorMessage {
     error: string;
 }
 
-const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>('auth/login', async (loginBody, thunkAPI) => {
-    try {
-        const res = await axios.post('/api/auth/login', loginBody);
-        if (res.status === 226) {
-            return res.data as string;
-        } else {
-            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>(
+    'auth/login',
+    async (loginBody, thunkAPI) => {
+        try {
+            const res = await axios.post('/api/auth/login', loginBody);
+            if (res.status === 226) {
+                return res.data as string;
+            } else {
+                return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+            }
+        } catch (err) {
+            return thunkAPI.rejectWithValue({ error: 'Something went wrong logging in.' });
         }
-    } catch (err) {
-        return thunkAPI.rejectWithValue({ error: 'Something went wrong logging in.' });
     }
-});
+);
 
 const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     try {
@@ -51,18 +54,21 @@ const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     }
 });
 
-const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejectValue: ErrorMessage }>('auth/register', async (registerBody, thunkAPI) => {
-    try {
-        const res = await axios.post('/api/auth/register', registerBody);
-        if (res.status === 200) {
-            return;
-        } else {
-            return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+const register = createAsyncThunk<void, OrganizationWithPW | UserWithPW, { rejectValue: ErrorMessage }>(
+    'auth/register',
+    async (registerBody, thunkAPI) => {
+        try {
+            const res = await axios.post('/api/auth/register', registerBody);
+            if (res.status === 200) {
+                return;
+            } else {
+                return thunkAPI.rejectWithValue(res.data as ErrorMessage);
+            }
+        } catch (err) {
+            return thunkAPI.rejectWithValue({ error: 'Something went wrong went registering.' });
         }
-    } catch (err) {
-        return thunkAPI.rejectWithValue({ error: 'Something went wrong went registering.' });
     }
-});
+);
 
 const checkAuthStatus = createAsyncThunk('auth/checkStatus', async (_, thunkAPI) => {
     try {

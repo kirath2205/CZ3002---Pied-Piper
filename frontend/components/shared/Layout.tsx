@@ -61,7 +61,10 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
         <>
             <Head>
                 <title>{title ?? 'VolunteerGoWhere'}</title>
-                <meta name='description' content={content ?? 'All in one platform to find volunteering opportunities'} />
+                <meta
+                    name='description'
+                    content={content ?? 'All in one platform to find volunteering opportunities'}
+                />
             </Head>
             <main>
                 <CssBaseline />

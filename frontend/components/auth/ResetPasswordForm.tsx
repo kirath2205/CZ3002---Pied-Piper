@@ -6,10 +6,9 @@ import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 
 //mui
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
+import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
-
 
 /**
  * The yup validation for the reset password form
@@ -20,7 +19,7 @@ const validationSchema = yup.object({
 });
 
 interface ResetPasswordFormProps {
-    email: string
+    email: string;
 }
 
 /**
@@ -29,7 +28,7 @@ interface ResetPasswordFormProps {
  *
  * @returns {JSX.Element} - The reset password form
  */
-const ResetPasswordForm = ({email}: ResetPasswordFormProps): JSX.Element => {
+const ResetPasswordForm = ({ email }: ResetPasswordFormProps): JSX.Element => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const formik = useFormik({
@@ -39,17 +38,19 @@ const ResetPasswordForm = ({email}: ResetPasswordFormProps): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log("resetpassword" + email)
+            console.log('resetpassword' + email);
             try {
                 setError('');
-                const apiRes = await axios.post(`/api/auth/get_new_password_after_otp_verification/`, { email:email,password:values.password });
+                const apiRes = await axios.post(`/api/auth/get_new_password_after_otp_verification/`, {
+                    email: email,
+                    password: values.password,
+                });
                 setSuccess(true);
                 formik.resetForm();
             } catch (err: any) {
-                setError(err.message)
+                setError(err.message);
             }
         },
-         
     });
 
     return (
@@ -60,15 +61,7 @@ const ResetPasswordForm = ({email}: ResetPasswordFormProps): JSX.Element => {
                 </Typography>
                 {error && <ErrorAlert>{error}</ErrorAlert>}
                 {success && <SuccessAlert>Password reset successfully</SuccessAlert>}
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='email'
-                    name='email'
-                    label='Email'
-                    value={email}
-                    disabled
-                />
+                <TextField sx={{ mt: 2 }} fullWidth id='email' name='email' label='Email' value={email} disabled />
 
                 <TextField
                     sx={{ mt: 2 }}
@@ -96,7 +89,7 @@ const ResetPasswordForm = ({email}: ResetPasswordFormProps): JSX.Element => {
                 </Stack>
             </form>
         </Container>
-        );
+    );
 };
 
 export default ResetPasswordForm;

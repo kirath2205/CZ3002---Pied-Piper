@@ -5,14 +5,20 @@ import axios from 'axios';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
-        const { location,skills,date,time,description,title,duration,volunteer_count,minimum_age} = req.body;
+        const { location, skills, date, time, description, title, duration, volunteer_count, minimum_age } = req.body;
         const cookies = cookie.parse(req.headers.cookie ?? '');
         const access = cookies.access ?? false;
 
         try {
-            const apiRes = await axios.post(`${API_URL}/org_view/create_campaign/`, { location,skills,date,time,description,title,duration,volunteer_count,minimum_age }, {headers: {
-                Authorization: access
-            }});
+            const apiRes = await axios.post(
+                `${API_URL}/org_view/create_campaign/`,
+                { location, skills, date, time, description, title, duration, volunteer_count, minimum_age },
+                {
+                    headers: {
+                        Authorization: access,
+                    },
+                }
+            );
 
             const data = await apiRes.data;
 

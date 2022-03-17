@@ -1,6 +1,7 @@
 //TODO Time format 12:00 and Date format 2022-12-31 YYYY-MM-DD
 
 //lib
+import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
@@ -11,12 +12,23 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
-//services
+import {
+    Button,
+    TextField,
+    Typography,
+    Box,
+    Container,
+    Stack,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    FormHelperText,
+    FormGroup,
+} from '@mui/material';
+//redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
-//types
-import React from 'react';
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
@@ -32,7 +44,11 @@ const validationSchema = yup.object({
     title: yup.string().required('Title is required'),
     duration: yup.string().required('Duration is required'),
     volunteer_count: yup.string().min(1, 'Enter a valid number').required('Volunteer Count is required'),
-    minimum_age: yup.number().min(12, 'Age must be more than 12').max(100, 'Age must be 100 or less').required('Age is required'),
+    minimum_age: yup
+        .number()
+        .min(12, 'Age must be more than 12')
+        .max(100, 'Age must be 100 or less')
+        .required('Age is required'),
 });
 
 /**
@@ -49,12 +65,11 @@ const CreateCampaign = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const authState = useAppSelector(selectAuthState);
 
-      const [value, setValue] = React.useState<Date | null>(
-      );
-    
-      const handleChange = (newValue: Date | null) => {
+    const [value, setValue] = React.useState<Date | null>();
+
+    const handleChange = (newValue: Date | null) => {
         setValue(newValue);
-      };
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -72,17 +87,23 @@ const CreateCampaign = (): JSX.Element => {
         onSubmit: async (values) => {
             try {
                 setError('');
-                const apiRes = await axios.post(`/api/auth/create_campaign/`, 
-            { location:values.location,skills:values.skills,date:values.date,time:values.time,
-                description:values.description,title:values.title,duration:values.duration,volunteer_count:values.volunteer_count,
-                minimum_age:values.minimum_age
-            });
+                const apiRes = await axios.post(`/api/org_view/create_campaign/`, {
+                    location: values.location,
+                    skills: values.skills,
+                    date: values.date,
+                    time: values.time,
+                    description: values.description,
+                    title: values.title,
+                    duration: values.duration,
+                    volunteer_count: values.volunteer_count,
+                    minimum_age: values.minimum_age,
+                });
                 setSuccess(true);
                 formik.resetForm();
             } catch (err: any) {
-                console.log('err')
+                console.log('err');
                 setSuccess(false);
-                setError('Failed to Create Campaign. Please try again!')
+                setError('Failed to Create Campaign. Please try again!');
             }
         },
     });
@@ -108,7 +129,15 @@ const CreateCampaign = (): JSX.Element => {
                 />
                 <FormControl sx={{ mt: 2 }} error={formik.touched.skills && Boolean(formik.errors.skills)} fullWidth>
                     <InputLabel id='skills'>Skills</InputLabel>
-                    <Select labelId='skills' id='skills' name='skills' value={formik.values.skills} label='Gender' onChange={formik.handleChange} multiple>
+                    <Select
+                        labelId='skills'
+                        id='skills'
+                        name='skills'
+                        value={formik.values.skills}
+                        label='Gender'
+                        onChange={formik.handleChange}
+                        multiple
+                    >
                         <MenuItem value={'IT'}>IT</MenuItem>
                         <MenuItem value={'Elderly'}>Elderly</MenuItem>
                         <MenuItem value={'Environment'}>Environment</MenuItem>
@@ -177,7 +206,6 @@ const CreateCampaign = (): JSX.Element => {
                     error={formik.touched.description && Boolean(formik.errors.description)}
                     helperText={formik.touched.description && formik.errors.description}
                 />
-
 
                 <TextField
                     sx={{ mt: 2 }}
