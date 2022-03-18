@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 //mui
-import { AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Typography, CssBaseline, Drawer } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, CssBaseline, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
@@ -14,7 +14,7 @@ import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectLoggedIn, refreshToken } from '@/app/slices/authSlice';
-import StickyFooter from './footer';
+import Footer from '@/components/shared/Footer';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -67,8 +67,8 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                     content={content ?? 'All in one platform to find volunteering opportunities'}
                 />
             </Head>
-            
-            <main>
+
+            <Box component='main' sx={{ position: 'relative', minHeight: '100vh' }}>
                 <CssBaseline />
 
                 <AppBar position='sticky' sx={{ backgroundColor: '#78b9c4', color: '#fff' }}>
@@ -104,10 +104,9 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                         )}
                     </Toolbar>
                 </AppBar>
-
-                {children}
-            </main>
-            <StickyFooter/>
+                <Box pb={'8rem'}>{children}</Box>
+                <Footer />
+            </Box>
         </>
     );
 };
