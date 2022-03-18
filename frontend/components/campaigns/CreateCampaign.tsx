@@ -1,22 +1,18 @@
-//TODO Time format 12:00 and Date format 2022-12-31 YYYY-MM-DD
+//TODO Time format 12:00
 
 //lib
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useRouter } from 'next/router';
-//mui
-import { useState } from 'react';
 import axios from 'axios';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import DateAdapter from '@mui/lab/AdapterDateFns';
+//mui
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+
 import {
     Button,
     TextField,
     Typography,
-    Box,
     Container,
     Stack,
     Select,
@@ -24,22 +20,21 @@ import {
     FormControl,
     InputLabel,
     FormHelperText,
-    FormGroup,
 } from '@mui/material';
-//redux
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
+//utils
+import { convertDate, getHourAndMinutes } from '@/utils/datetime';
+
 /**
- * The yup validation for the sign up form for volunteers
+ * The yup validation for the create campaign form
  */
 const validationSchema = yup.object({
     location: yup.string().required('Location is required'),
     skills: yup.array().min(1, 'At least one skill is required'),
-    date: yup.string().required('Date is required'),
-    time: yup.string().required('Time is required'),
+    date: yup.date().required('Date is required'),
+    time: yup.string().required('Start time is required'),
     description: yup.string().required('Description is required'),
     title: yup.string().required('Title is required'),
     duration: yup.string().required('Duration is required'),
@@ -61,16 +56,6 @@ const CreateCampaign = (): JSX.Element => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const router = useRouter();
-    const dispatch = useAppDispatch();
-    const authState = useAppSelector(selectAuthState);
-
-    const [value, setValue] = React.useState<Date | null>();
-
-    const handleChange = (newValue: Date | null) => {
-        setValue(newValue);
-    };
-
     const formik = useFormik({
         initialValues: {
             location: '',
@@ -90,8 +75,8 @@ const CreateCampaign = (): JSX.Element => {
                 const apiRes = await axios.post(`/api/org_view/create_campaign/`, {
                     location: values.location,
                     skills: values.skills,
-                    date: values.date,
-                    time: values.time,
+                    date: convertDate(values.date as unknown as Date),
+                    time: getHourAndMinutes(values.time as unknown as Date),
                     description: values.description,
                     title: values.title,
                     duration: values.duration,
@@ -116,136 +101,150 @@ const CreateCampaign = (): JSX.Element => {
                 </Typography>
                 {error && <ErrorAlert>{error}</ErrorAlert>}
                 {success && <SuccessAlert>Campaign created Successfully</SuccessAlert>}
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='location'
-                    name='location'
-                    label='Location'
-                    value={formik.values.location}
-                    onChange={formik.handleChange}
-                    error={formik.touched.location && Boolean(formik.errors.location)}
-                    helperText={formik.touched.location && formik.errors.location}
-                />
-                <FormControl sx={{ mt: 2 }} error={formik.touched.skills && Boolean(formik.errors.skills)} fullWidth>
-                    <InputLabel id='skills'>Skills</InputLabel>
-                    <Select
-                        labelId='skills'
-                        id='skills'
-                        name='skills'
-                        value={formik.values.skills}
-                        label='Gender'
+                <Stack gap={0.5}>
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='location'
+                        name='location'
+                        label='Location'
+                        value={formik.values.location}
                         onChange={formik.handleChange}
-                        multiple
+                        error={formik.touched.location && Boolean(formik.errors.location)}
+                        helperText={formik.touched.location && formik.errors.location}
+                    />
+                    <FormControl
+                        sx={{ mt: 2 }}
+                        error={formik.touched.skills && Boolean(formik.errors.skills)}
+                        fullWidth
                     >
-                        <MenuItem value={'IT'}>IT</MenuItem>
-                        <MenuItem value={'Elderly'}>Elderly</MenuItem>
-                        <MenuItem value={'Environment'}>Environment</MenuItem>
-                        <MenuItem value={'NIL'}>NIL</MenuItem>
-                    </Select>
-                    <FormHelperText>{formik.touched.skills && formik.errors.skills}</FormHelperText>
-                </FormControl>
+                        <InputLabel id='skills'>Skills</InputLabel>
+                        <Select
+                            labelId='skills'
+                            id='skills'
+                            name='skills'
+                            value={formik.values.skills}
+                            label='Gender'
+                            onChange={formik.handleChange}
+                            multiple
+                        >
+                            <MenuItem value={'IT'}>IT</MenuItem>
+                            <MenuItem value={'Elderly'}>Elderly</MenuItem>
+                            <MenuItem value={'Environment'}>Environment</MenuItem>
+                            <MenuItem value={'NIL'}>NIL</MenuItem>
+                        </Select>
+                        <FormHelperText>{formik.touched.skills && formik.errors.skills}</FormHelperText>
+                    </FormControl>
 
-                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <Stack sx={{ mt: 2 }}>
-                <DesktopDatePicker
-                    label="Date"
-                    inputFormat="MM/dd/yyyy"
-                    value={formik.values.date}
-                    onChange={formik.handleChange}
-                    renderInput={(params) => <TextField {...params} />}
-                    
-                />
-                    </Stack>
-                </LocalizationProvider>   */}
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            minDate={new Date()}
+                            value={formik.values.date}
+                            onChange={(value) => {
+                                formik.setFieldValue('date', value);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label='Date'
+                                    id='date'
+                                    name='date'
+                                    fullWidth
+                                    sx={{ mt: 2 }}
+                                    error={formik.touched.date && Boolean(formik.errors.date)}
+                                    helperText={formik.touched.date && formik.errors.date}
+                                />
+                            )}
+                        />
+                    </LocalizationProvider>
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='date'
-                    name='date'
-                    label='Date'
-                    value={formik.values.date}
-                    onChange={formik.handleChange}
-                    error={formik.touched.date && Boolean(formik.errors.date)}
-                    helperText={formik.touched.date && formik.errors.date}
-                />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimePicker
+                            value={formik.values.time}
+                            onChange={(value) => {
+                                formik.setFieldValue('time', value);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label='Start time'
+                                    id='time'
+                                    name='time'
+                                    fullWidth
+                                    sx={{ mt: 2 }}
+                                    error={formik.touched.time && Boolean(formik.errors.time)}
+                                    helperText={formik.touched.time && formik.errors.time}
+                                />
+                            )}
+                        />
+                    </LocalizationProvider>
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='title'
+                        name='title'
+                        label='Title'
+                        value={formik.values.title}
+                        onChange={formik.handleChange}
+                        error={formik.touched.title && Boolean(formik.errors.title)}
+                        helperText={formik.touched.title && formik.errors.title}
+                    />
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='time'
-                    name='time'
-                    label='Time'
-                    value={formik.values.time}
-                    onChange={formik.handleChange}
-                    error={formik.touched.time && Boolean(formik.errors.time)}
-                    helperText={formik.touched.time && formik.errors.time}
-                />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='description'
+                        name='description'
+                        label='Description'
+                        value={formik.values.description}
+                        onChange={formik.handleChange}
+                        error={formik.touched.description && Boolean(formik.errors.description)}
+                        helperText={formik.touched.description && formik.errors.description}
+                    />
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='title'
-                    name='title'
-                    label='Title'
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={formik.touched.title && formik.errors.title}
-                />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='duration'
+                        name='duration'
+                        label='Duration (hours)'
+                        type='number'
+                        value={formik.values.duration}
+                        onChange={formik.handleChange}
+                        error={formik.touched.duration && Boolean(formik.errors.duration)}
+                        helperText={formik.touched.duration && formik.errors.duration}
+                    />
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='description'
-                    name='description'
-                    label='Description'
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='volunteer_count'
+                        name='volunteer_count'
+                        label='Volunteer vacancies'
+                        type='number'
+                        value={formik.values.volunteer_count}
+                        onChange={formik.handleChange}
+                        error={formik.touched.volunteer_count && Boolean(formik.errors.volunteer_count)}
+                        helperText={formik.touched.volunteer_count && formik.errors.volunteer_count}
+                    />
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='duration'
-                    name='duration'
-                    label='Duration'
-                    value={formik.values.duration}
-                    onChange={formik.handleChange}
-                    error={formik.touched.duration && Boolean(formik.errors.duration)}
-                    helperText={formik.touched.duration && formik.errors.duration}
-                />
-
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='volunteer_count'
-                    name='volunteer_count'
-                    label='Volunteer Vacancies'
-                    value={formik.values.volunteer_count}
-                    onChange={formik.handleChange}
-                    error={formik.touched.volunteer_count && Boolean(formik.errors.volunteer_count)}
-                    helperText={formik.touched.volunteer_count && formik.errors.volunteer_count}
-                />
-
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='minimum_age'
-                    name='minimum_age'
-                    label='Minimum age'
-                    value={formik.values.minimum_age}
-                    onChange={formik.handleChange}
-                    error={formik.touched.minimum_age && Boolean(formik.errors.minimum_age)}
-                    helperText={formik.touched.minimum_age && formik.errors.minimum_age}
-                />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='minimum_age'
+                        name='minimum_age'
+                        label='Minimum age'
+                        type='number'
+                        value={formik.values.minimum_age}
+                        onChange={formik.handleChange}
+                        error={formik.touched.minimum_age && Boolean(formik.errors.minimum_age)}
+                        helperText={formik.touched.minimum_age && formik.errors.minimum_age}
+                    />
+                </Stack>
 
                 <Stack>
                     <Button
-                        sx={{ mt: 0.8, width: '100%', backgroundColor: '#12CDD4' }}
+                        sx={{ mt: 2, width: '100%', backgroundColor: '#12CDD4' }}
                         color='primary'
                         variant='contained'
                         fullWidth
