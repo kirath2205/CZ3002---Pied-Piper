@@ -1,12 +1,17 @@
+//lib
 import React, { useState } from 'react';
 //components
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
 import OTPForm from '@/components/auth/OTPForm';
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm';
-
 //mui
 import { Container } from '@mui/material';
 
+/**
+ * Render the multi step form for forgot password
+ *
+ * @returns {JSX.Element} - The multi step form for forgot password
+ */
 const ForgotPasswordChoice = (): JSX.Element => {
     const [formData, setEmail] = useState({
         email: '',

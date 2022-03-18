@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
-//services
+//redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components

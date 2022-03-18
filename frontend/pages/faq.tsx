@@ -1,7 +1,6 @@
 import Layout from '@/components/shared/Layout';
-import StyleLink from '@/components/shared/StyledLink';
-import { Container, Typography, Button, Grid, Box, Stack } from '@mui/material';
-import Head from 'next/head';
+import StyledLink from '@/components/shared/StyledLink';
+import { Container, Typography, Box, Stack } from '@mui/material';
 
 import { blue } from '@mui/material/colors';
 
@@ -40,92 +39,94 @@ export default function FAQ() {
                             Frequently Asked Questions:
                         </Typography>
                         <Typography variant='body1' style={h2Styles} mt={2}>
-                            If you still can't find the answer, feel free to{' '}
-                            <StyleLink href='/contactus'>contact us</StyleLink>. We'd be more than happy to help!
+                            If you still can&apos;t find the answer, feel free to{' '}
+                            <StyledLink href='/contactus'>contact us</StyledLink>. We&apos;d be more than happy to help!
                             <br></br>
                         </Typography>
 
-                        <Typography variant='body1' style={category2Styles} marginTop={4}>
+                        <Box style={category2Styles} marginTop={4}>
                             About VolunteerGoWhere:
                             <ul style={ulStyles}>
                                 <li>
-                                    <StyleLink href='#vgw1'>What is VolunteerGoWhere?</StyleLink>
+                                    <StyledLink href='#vgw1'>What is VolunteerGoWhere?</StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#vgw2'>
+                                    <StyledLink href='#vgw2'>
                                         Do I need to create an account to register for a campaign?
-                                    </StyleLink>
+                                    </StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#vgw3'>
+                                    <StyledLink href='#vgw3'>
                                         Are there any hidden fees being charged when using VolunteerGoWhere?
-                                    </StyleLink>
+                                    </StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#vgw4'>
+                                    <StyledLink href='#vgw4'>
                                         What are the supported browsers for VolunteerGoWhere?
-                                    </StyleLink>
+                                    </StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#vgw5'>
+                                    <StyledLink href='#vgw5'>
                                         Are my Information on VolunteerGoWhere safe and secure?
-                                    </StyleLink>
+                                    </StyledLink>
                                 </li>
                             </ul>
-                        </Typography>
+                        </Box>
                     </Box>
 
                     <Box>
-                        <Typography variant='body1' style={category2Styles}>
+                        <Box style={category2Styles}>
                             For Volunteers:
                             <ul style={ulStyles}>
                                 <li>
-                                    <StyleLink href='#v1'>I’m not 13 years old yet! Can I still volunteer?</StyleLink>
+                                    <StyledLink href='#v1'>
+                                        I&apos;m not 13 years old yet! Can I still volunteer?
+                                    </StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#v2'>Can I withdraw my application to be a volunteer?</StyleLink>
+                                    <StyledLink href='#v2'>Can I withdraw my application to be a volunteer?</StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#v3'>
+                                    <StyledLink href='#v3'>
                                         Can I obtain proof of attendance or certification for my volunteer hours?
-                                    </StyleLink>
+                                    </StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#v4'>My Account got banned. What do I do?</StyleLink>
+                                    <StyledLink href='#v4'>My Account got banned. What do I do?</StyledLink>
                                 </li>
                                 <li>
-                                    <StyleLink href='#v5'>I forgot my account password. What do I do?</StyleLink>
+                                    <StyledLink href='#v5'>I forgot my account password. What do I do?</StyledLink>
                                 </li>
                             </ul>
-                        </Typography>
+                        </Box>
                     </Box>
                     <Box>
                         <Box>
-                            <Typography variant='body1' style={category2Styles} marginTop={0}>
+                            <Box style={category2Styles}>
                                 For Organisations:
                                 <ul style={ulStyles}>
                                     <li>
-                                        <StyleLink href='#o1'>Who can join as an organisation or group?</StyleLink>
+                                        <StyledLink href='#o1'>Who can join as an organisation or group?</StyledLink>
                                     </li>
                                     <li>
-                                        <StyleLink href='#o2'>How do I create a campaign</StyleLink>
+                                        <StyledLink href='#o2'>How do I create a campaign</StyledLink>
                                     </li>
                                     <li>
-                                        <StyleLink href='#o3'>How do I approve/reject the volunteers</StyleLink>
+                                        <StyledLink href='#o3'>How do I approve/reject the volunteers</StyledLink>
                                     </li>
                                     <li>
-                                        <StyleLink href='#o4'>
+                                        <StyledLink href='#o4'>
                                             Am I able to create a campaign after I have registered an account?
-                                        </StyleLink>
+                                        </StyledLink>
                                     </li>
                                     <li>
-                                        <StyleLink href='#o5'>How do I close my campaign early</StyleLink>
+                                        <StyledLink href='#o5'>How do I close my campaign early</StyledLink>
                                     </li>
                                 </ul>
-                            </Typography>
+                            </Box>
                         </Box>
-
-                        <Typography variant='body1' style={category2Styles} marginTop={13}>
+                        <hr></hr>
+                        <Typography variant='body1' style={category2Styles} marginTop={8}>
                             About VolunteerGoWhere:
                         </Typography>
                         <Typography variant='body1' style={categoryStyles} marginTop={5}>

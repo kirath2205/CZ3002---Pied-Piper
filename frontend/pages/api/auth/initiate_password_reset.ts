@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';

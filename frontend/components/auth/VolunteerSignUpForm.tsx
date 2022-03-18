@@ -17,13 +17,15 @@ import {
     FormHelperText,
     FormGroup,
 } from '@mui/material';
-//services
+//redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //types
 import { Gender } from '@/interfaces/User';
 import { UserWithPW } from '@/interfaces/User';
+//components
 import ErrorAlert from '@/components/shared/ErrorAlert';
+
 /**
  * The yup validation for the sign up form for volunteers
  */

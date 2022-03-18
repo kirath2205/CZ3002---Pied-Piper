@@ -4,10 +4,9 @@ import * as yup from 'yup';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
-
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
-//state
+//redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { login, selectAuthState, clearError } from '@/app/slices/authSlice';
 

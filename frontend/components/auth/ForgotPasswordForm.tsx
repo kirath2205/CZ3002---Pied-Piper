@@ -1,14 +1,12 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
-//components
-import ErrorAlert from '@/components/shared/ErrorAlert';
-
-//mui
-import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
+//components
+import ErrorAlert from '@/components/shared/ErrorAlert';
+//mui
+import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 
 interface ForgotPasswordFormProps {
     sentOTP: () => void;
@@ -23,7 +21,7 @@ const validationSchema = yup.object({
 });
 
 /**
- * Renders the forgot pass word form
+ * Renders the forgot password form
  *
  *
  * @returns {JSX.Element} - The forgot password form

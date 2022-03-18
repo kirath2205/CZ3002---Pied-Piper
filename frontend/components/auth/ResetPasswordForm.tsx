@@ -1,14 +1,13 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import axios from 'axios';
+import { useState } from 'react';
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
-
 //mui
 import { Button, TextField, Typography, Container, Stack } from '@mui/material';
-import axios from 'axios';
-import { useState } from 'react';
 
 /**
  * The yup validation for the reset password form
@@ -23,7 +22,7 @@ interface ResetPasswordFormProps {
 }
 
 /**
- * Renders the reset pass word form
+ * Renders the reset password form
  *
  *
  * @returns {JSX.Element} - The reset password form

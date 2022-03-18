@@ -1,5 +1,3 @@
-//TODO Time format 12:00
-
 //lib
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
@@ -8,7 +6,6 @@ import axios from 'axios';
 //mui
 import { DatePicker, LocalizationProvider, TimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-
 import {
     Button,
     TextField,

@@ -8,26 +8,24 @@ interface UnstyledLinkProps {
 }
 
 /**
- * Renders a Next.js link component without the default styling
+ * Renders a Next.js link component with styling
  *
  * @param {UnstyledLinkProps} props - The children and href
- * @returns {JSX.Element} - The UnstyledLink component
+ * @returns {JSX.Element} - The StyledLink component
  */
-const StyleLink = ({ children, href }: UnstyledLinkProps): JSX.Element => {
+const StyledLink = ({ children, href }: UnstyledLinkProps): JSX.Element => {
     return (
         <Link href={href || '/'}>
             <a
                 style={{
                     textDecoration: 'underline',
                     color: blue[500],
-                
                 }}
             >
                 {children}
             </a>
         </Link>
-        
     );
 };
 
-export default StyleLink;
+export default StyledLink;

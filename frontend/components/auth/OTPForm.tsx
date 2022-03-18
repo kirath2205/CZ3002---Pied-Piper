@@ -1,9 +1,9 @@
+//lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
+import axios from 'axios';
 //mui
 import { Button, TextField, Typography, Container, Stack } from '@mui/material';
-import axios from 'axios';
 
 /**
  * The yup validation for the otp form

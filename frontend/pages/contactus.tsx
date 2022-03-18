@@ -1,5 +1,5 @@
 import Layout from '@/components/shared/Layout';
-import StyleLink from '@/components/shared/StyledLink';
+import StyledLink from '@/components/shared/StyledLink';
 import { Typography, Box, Stack } from '@mui/material';
 
 const h2Styles = {
@@ -18,13 +18,13 @@ export default function contactus() {
                         <Typography variant='body1' style={h2Styles} marginTop={3}>
                             Got a cool idea or feedback on how we can improve or maybe just to say hi to us?
                             <br></br>
-                            We'd love to hear from you!
+                            We&apos;d love to hear from you!
                             <br></br>
                             Please drop us an email at{' '}
-                            <StyleLink href='mailto:yolo@gmail.com'>VolunteerGoWhere@hotmail.sg</StyleLink>
+                            <StyledLink href='mailto:yolo@gmail.com'>VolunteerGoWhere@hotmail.sg</StyledLink>
                             <br></br>
                             <br></br>
-                            "No act of kindness, no matter how small is ever wasted"
+                            &quot;No act of kindness, no matter how small is ever wasted&quot;
                             <br></br>
                             -AESOP
                         </Typography>
