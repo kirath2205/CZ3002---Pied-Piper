@@ -34,18 +34,18 @@ export default function FAQ() {
     return (
         <Layout title='VolunteerGoWhere - FAQ'>
             <Container>
-                <Stack gap={10}>
+                <Stack gap={3}>
                     <Box>
-                        <Typography variant='h2' style={{ fontWeight: 500 }}>
+                        <Typography variant='h4' style={{ fontWeight: 500 }} mt={2}>
                             Frequently Asked Questions:
                         </Typography>
-                        <Typography variant='body1' style={h2Styles} marginTop={6}>
+                        <Typography variant='body1' style={h2Styles} mt={2}>
                             If you still can't find the answer, feel free to{' '}
                             <StyleLink href='/contactus'>contact us</StyleLink>. We'd be more than happy to help!
                             <br></br>
                         </Typography>
 
-                        <Typography variant='body1' style={category2Styles} marginTop={6}>
+                        <Typography variant='body1' style={category2Styles} marginTop={4}>
                             About VolunteerGoWhere:
                             <ul style={ulStyles}>
                                 <li>
@@ -76,7 +76,7 @@ export default function FAQ() {
                     </Box>
 
                     <Box>
-                        <Typography variant='body1' style={category2Styles} marginTop={0}>
+                        <Typography variant='body1' style={category2Styles}>
                             For Volunteers:
                             <ul style={ulStyles}>
                                 <li>
