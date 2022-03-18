@@ -25,7 +25,9 @@ def create_campaign(request):
 
         try:
             data = json.loads(request.body.decode('utf-8'))
+            print(data)
             token = request.headers['Authorization']
+            print(token)
 
             if(not verify_jwt_token_local(token)):
                 HttpResponse.status_code=int(error_codes.invalid_jwt_token())
@@ -44,14 +46,13 @@ def create_campaign(request):
             time=data.get('time')
             description=data.get('description')
             title=data.get('title')
-            duration=data.get('duration')
-            volunteer_count=data.get('volunteer_count')
-            minimum_age=data.get('minimum_age')
+            duration=int(data.get('duration'))
+            volunteer_count=int(data.get('volunteer_count'))
+            minimum_age=int(data.get('minimum_age'))
             new_campaign = Campaign(organisation_email=email,location=location,skills=skills,date=date,time=time,description=description,title=title,duration=duration,volunteer_count=volunteer_count,minimum_age=minimum_age)
             new_campaign.save()
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Campaign Created')
-
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
