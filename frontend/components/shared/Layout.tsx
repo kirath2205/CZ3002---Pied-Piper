@@ -14,6 +14,7 @@ import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectLoggedIn, refreshToken } from '@/app/slices/authSlice';
+import StickyFooter from './footer';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -66,6 +67,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                     content={content ?? 'All in one platform to find volunteering opportunities'}
                 />
             </Head>
+            
             <main>
                 <CssBaseline />
 
@@ -105,6 +107,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
 
                 {children}
             </main>
+            <StickyFooter/>
         </>
     );
 };

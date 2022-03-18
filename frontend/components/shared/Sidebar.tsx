@@ -32,10 +32,10 @@ const Sidebar = ({ closeSidebar }: SidebarProps): JSX.Element => {
                 <UnstyledLink>Learn</UnstyledLink>
             </ListItem>
             <ListItem>
-                <UnstyledLink>Contact us</UnstyledLink>
+                <UnstyledLink href='contactus'>Contact us</UnstyledLink>
             </ListItem>
             <ListItem>
-                <UnstyledLink>FAQ</UnstyledLink>
+                <UnstyledLink href="/faq">FAQ</UnstyledLink>
             </ListItem>
         </List>
     );
