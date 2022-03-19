@@ -17,11 +17,15 @@ const Hero = () => {
     return (
         <Box className={styles.imageContainer}>
             <Box sx={{ color: '#fff' }} className={styles.containerInfo}>
-                <Typography variant='h2'>Be a volunteer Today!</Typography>
-                <Typography variant='h4'>We rise by lifting others</Typography>
-                <UnstyledLink href="/aboutus">
+                <Typography variant='h2' style={{ fontSize: '6vmin' }}>
+                    Be a volunteer today!
+                </Typography>
+                <Typography variant='h4' style={{ fontSize: '3vmin' }}>
+                    We rise by lifting others
+                </Typography>
+                <UnstyledLink href='/aboutus'>
                     <Button
-                        sx={{ marginY: 4, width: '75%', backgroundColor: '#12CDD4', padding:2, fontSize:24}}
+                        sx={{ marginY: 3, width: '55%', backgroundColor: '#12CDD4', padding: 2, fontSize: '2.5vmin' }}
                         color='primary'
                         variant='contained'
                         fullWidth
@@ -31,7 +35,7 @@ const Hero = () => {
                 </UnstyledLink>
                 <UnstyledLink href={loggedIn ? '/campaigns' : '/auth/signup'}>
                     <Button
-                        sx={{ marginY: 0, width: '75%', backgroundColor: '#12CDD4', padding:2, fontSize:24}}
+                        sx={{ marginY: 0, width: '55%', backgroundColor: '#12CDD4', padding: 2, fontSize: '2.5vmin' }}
                         color='primary'
                         variant='contained'
                         fullWidth
