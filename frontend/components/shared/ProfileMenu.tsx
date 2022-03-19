@@ -1,8 +1,8 @@
 //mui
 import { Menu, MenuItem } from '@mui/material';
 import React from 'react';
-import Router from 'next/router';
-//state
+import { useRouter } from 'next/router';
+//redux
 import { useAppDispatch } from '@/app/hooks';
 import { logout } from '@/app/slices/authSlice';
 
@@ -11,8 +11,15 @@ interface ProfileMenuProps {
     anchorEl: HTMLElement | null;
 }
 
+/**
+ * Renders the profile menu
+ *
+ * @param {ProfileMenuProps}
+ * @returns {JSX.Element} - The profile menu
+ */
 const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Element => {
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const logoutHandler = () => {
         if (dispatch && dispatch !== null && dispatch !== undefined) {
             dispatch(logout());
@@ -35,7 +42,7 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Elem
             open={Boolean(anchorEl)}
             onClose={closeAccountMenu}
         >
-            <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
+            <MenuItem onClick={() => router.push('/profile/organization')}>Profile</MenuItem>
             <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
             <MenuItem onClick={logoutHandler}>Sign out</MenuItem>
         </Menu>

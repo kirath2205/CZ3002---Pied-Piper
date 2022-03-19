@@ -20,12 +20,22 @@ const Hero = () => {
                 <Typography variant='h4'>Be a volunteer Today</Typography>
                 <Typography variant='subtitle1'>We rise by lifting others</Typography>
                 <UnstyledLink>
-                    <Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
+                    <Button
+                        sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }}
+                        color='primary'
+                        variant='contained'
+                        fullWidth
+                    >
                         About us
                     </Button>
                 </UnstyledLink>
                 <UnstyledLink href={loggedIn ? '/campaigns' : '/auth/signup'}>
-                    <Button sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }} color='primary' variant='contained' fullWidth>
+                    <Button
+                        sx={{ marginTop: 2, width: '100%', backgroundColor: '#12CDD4' }}
+                        color='primary'
+                        variant='contained'
+                        fullWidth
+                    >
                         {loggedIn ? 'Browse Campaigns' : 'Sign Up'}
                     </Button>
                 </UnstyledLink>

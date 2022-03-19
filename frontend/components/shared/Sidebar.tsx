@@ -3,6 +3,7 @@ import { IconButton, List, ListItem } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 //libs
 import React from 'react';
+//components
 import UnstyledLink from '@/components/shared/UnstyledLink';
 
 interface SidebarProps {
@@ -26,13 +27,16 @@ const Sidebar = ({ closeSidebar }: SidebarProps): JSX.Element => {
                 <UnstyledLink href='/campaigns'>Be a volunteer</UnstyledLink>
             </ListItem>
             <ListItem>
+                <UnstyledLink href='/campaigns/create-campaign'>Create Campaign</UnstyledLink>
+            </ListItem>
+            <ListItem>
                 <UnstyledLink>Learn</UnstyledLink>
             </ListItem>
             <ListItem>
-                <UnstyledLink>Contact us</UnstyledLink>
+                <UnstyledLink href='contactus'>Contact us</UnstyledLink>
             </ListItem>
             <ListItem>
-                <UnstyledLink>FAQ</UnstyledLink>
+                <UnstyledLink href='/faq'>FAQ</UnstyledLink>
             </ListItem>
         </List>
     );

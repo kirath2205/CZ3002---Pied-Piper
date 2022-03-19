@@ -17,7 +17,6 @@ import pytz
 from passlib.hash import pbkdf2_sha256
 from twilio.base.exceptions import TwilioRestException
 import requests
-import re
 import jwt
 from datetime import date, datetime,timedelta, tzinfo
 
@@ -152,7 +151,7 @@ def register(request):
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
         
-def verify_jwt_token(access_token):
+def verify_jwt_token_local(access_token):
 
     decoded_access_token=jwt.decode(access_token,SECRET_KEY,algorithm="HS256")
 

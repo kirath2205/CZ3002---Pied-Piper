@@ -57,3 +57,6 @@ def password_changed():
 
 def login_successful():
     return '226'
+
+def invalid_campaign():
+    return '227'

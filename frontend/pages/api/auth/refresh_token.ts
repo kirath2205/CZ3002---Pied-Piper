@@ -7,9 +7,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         const cookies = cookie.parse(req.headers.cookie ?? '');
         const refresh = cookies.refresh ?? false;
+        const access = cookies.access ?? false;
+        if (access) {
+            return res.status(200).json({
+                message: 'Still valid',
+            });
+        }
 
         if (!refresh) {
-            return res.status(401).json({
+            return res.status(221).json({
                 error: 'User unauthorized to make this request',
             });
         }
@@ -28,12 +34,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     cookie.serialize('access', data.access_token, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV !== 'development',
-                        maxAge: 60 * 30,
+                        maxAge: 60 * 5,
                         sameSite: 'strict',
                         path: '/',
                     }),
-                ]);
-                res.setHeader('Set-Cookie', [
                     cookie.serialize('refresh', refresh, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV !== 'development',
@@ -42,7 +46,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         path: '/',
                     }),
                 ]);
-
                 return res.status(200).json({
                     success: 'Refresh request successful',
                 });

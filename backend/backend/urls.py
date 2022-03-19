@@ -7,4 +7,5 @@ urlpatterns = [
     path('',views.index,name='Home'),
     path('admin/', admin.site.urls),
     path('auth/', include('Authentication.urls')),
+    path('org_view/', include('OrgView.urls')),
 ]

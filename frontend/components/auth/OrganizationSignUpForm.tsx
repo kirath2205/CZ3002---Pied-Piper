@@ -4,11 +4,12 @@ import * as yup from 'yup';
 import { useRouter } from 'next/router';
 //mui
 import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
-//services
+//redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
+import SuccessAlert from '@/components/shared/SuccessAlert';
 //types
 import { OrganizationWithPW } from '@/interfaces/Organization';
 
@@ -43,7 +44,12 @@ const OrganizationSignUpForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const organization: OrganizationWithPW = { ...values, name: values.orgName, phone_number: values.phone, type: 'ORG' };
+            const organization: OrganizationWithPW = {
+                ...values,
+                name: values.orgName,
+                phone_number: values.phone,
+                type: 'ORG',
+            };
             dispatch(clearError());
             await dispatch(register(organization as OrganizationWithPW));
         },
@@ -55,7 +61,7 @@ const OrganizationSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
-                {authState.message && console.log(authState.message)}
+                <SuccessAlert>{authState.message}</SuccessAlert>
                 <ErrorAlert>{authState.error}</ErrorAlert>
                 <TextField
                     fullWidth

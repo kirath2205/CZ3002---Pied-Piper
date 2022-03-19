@@ -1,54 +1,58 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import axios from 'axios';
+import { useState } from 'react';
+//components
+import ErrorAlert from '@/components/shared/ErrorAlert';
 //mui
-import { Button, TextField, Typography, Box, Container, Stack, Select, MenuItem, FormControl, InputLabel, FormHelperText, FormGroup } from '@mui/material';
+import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 
+interface ForgotPasswordFormProps {
+    sentOTP: () => void;
+    sentEmail: (email: string) => void;
+}
 /**
  * The yup validation for the forgot password form
  */
+
 const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
-    phone: yup.string().required('Phone is required'),
 });
 
 /**
- * Renders the forgot pass word form
+ * Renders the forgot password form
  *
  *
  * @returns {JSX.Element} - The forgot password form
  */
-const ForgotPasswordForm = (): JSX.Element => {
+const ForgotPasswordForm = ({ sentOTP, sentEmail }: ForgotPasswordFormProps): JSX.Element => {
+    const [error, setError] = useState('');
     const formik = useFormik({
         initialValues: {
             email: '',
-            phone: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            formik.resetForm();
+            try {
+                setError('');
+                const apiRes = await axios.post(`/api/auth/initiate_password_reset/`, { email: values.email });
+                sentOTP();
+                sentEmail(values.email);
+                console.log('initiate password reset' + values.email);
+                formik.resetForm();
+            } catch (err: any) {
+                setError(err.message);
+            }
         },
     });
-
     return (
         <Container maxWidth='sm' sx={{ mt: 8 }}>
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
-                    Reset Password
+                    Forgot Password
                 </Typography>
-
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='phone'
-                    name='phone'
-                    label='Phone'
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    type='phone'
-                    error={formik.touched.phone && Boolean(formik.errors.phone)}
-                    helperText={formik.touched.phone && formik.errors.phone}
-                />
+                {error && <ErrorAlert>{error}</ErrorAlert>}
                 <TextField
                     sx={{ mt: 2 }}
                     fullWidth
@@ -67,9 +71,9 @@ const ForgotPasswordForm = (): JSX.Element => {
                         variant='contained'
                         fullWidth
                         type='submit'
-                        aria-label='reset-password'
+                        aria-label='send-otp'
                     >
-                        Reset password
+                        SEND OTP
                     </Button>
                 </Stack>
             </form>

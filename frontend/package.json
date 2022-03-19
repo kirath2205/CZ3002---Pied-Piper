@@ -9,11 +9,21 @@
 		"test:ci": "jest --ci"
 	},
 	"dependencies": {
+<<<<<<< HEAD
 		"@emotion/react": "^11.8.2",
 		"@emotion/styled": "^11.8.1",
 		"@mui/icons-material": "^5.4.2",
 		"@mui/material": "^5.5.1",
+=======
+		"@date-io/date-fns": "^2.13.1",
+		"@emotion/react": "^11.8.1",
+		"@emotion/styled": "^11.8.1",
+		"@mui/icons-material": "^5.4.2",
+		"@mui/lab": "^5.0.0-alpha.73",
+		"@mui/material": "^5.4.3",
+>>>>>>> cbede3784aedebe879a42c9b51a34f8063ea90c3
 		"@reduxjs/toolkit": "^1.7.2",
+		"@types/date-fns": "^2.6.0",
 		"axios": "^0.26.0",
 		"cookie": "^0.4.2",
 		"formik": "^2.2.9",
@@ -34,7 +44,7 @@
 		"babel-jest": "27.4.5",
 		"eslint": "8.5.0",
 		"eslint-config-next": "latest",
-		"eslint-plugin-react": "^7.29.1",
+		"eslint-plugin-react": "^7.29.4",
 		"eslint-plugin-testing-library": "5.0.1",
 		"jest": "27.4.5",
 		"typescript": "4.5.4"
