@@ -34,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     cookie.serialize('access', data.access_token, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV !== 'development',
-                        maxAge: 60 * 30,
+                        maxAge: 60 * 5,
                         sameSite: 'strict',
                         path: '/',
                     }),

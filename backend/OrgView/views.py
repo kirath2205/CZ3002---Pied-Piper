@@ -98,6 +98,17 @@ def update_org_details(request):
         return HttpResponse('404 error')
 
 @csrf_exempt
+#Should get all fields except password
+def get_org_details(request):
+    pass
+
+@csrf_exempt
+#For individual campaigns
+def get_campaign_details(request):
+    pass
+
+
+@csrf_exempt
 def update_campaign_details(request):
 
     if(request.method=="POST"):
