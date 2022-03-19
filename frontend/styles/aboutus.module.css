@@ -7,15 +7,6 @@
 	height: 70vh;
 }
 
-.imageContainer2{
-	position: relative;
-	background: url('/volunteer-banner.png');
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
-	height: 70vh;
-}
-
 @media only screen and (max-width: 1024px) {
 	.imageContainer {
 		height: 70vh;
