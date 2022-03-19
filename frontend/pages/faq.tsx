@@ -35,7 +35,7 @@ export default function FAQ() {
             <Container>
                 <Stack gap={3}>
                     <Box>
-                        <Typography variant='h4' style={{ fontWeight: 500 }} mt={2}>
+                        <Typography variant='h2' style={{ fontWeight: 500 }} mt={2}>
                             Frequently Asked Questions:
                         </Typography>
                         <Typography variant='body1' style={h2Styles} mt={2}>
