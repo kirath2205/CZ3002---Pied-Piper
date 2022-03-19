@@ -3,7 +3,7 @@ import StyledLink from '@/components/shared/StyledLink';
 import { Typography, Box, Stack } from '@mui/material';
 
 const h2Styles = {
-    fontSize: 24,
+    fontSize: '3vmin',
 };
 
 export default function contactus() {
@@ -12,7 +12,7 @@ export default function contactus() {
             <Layout>
                 <Stack marginTop={5} px={{ xs: 2, sm: 4, md: 6 }} style={{ paddingBottom: '30%' }}>
                     <Box style={{ height: '100%' }}>
-                        <Typography variant='h3' style={{ fontWeight: 500 }}>
+                        <Typography variant='h3' style={{ fontWeight: 500, fontSize: '6vmin' }}>
                             Hello.
                         </Typography>
                         <Typography variant='body1' style={h2Styles} marginTop={3}>
