@@ -5,26 +5,26 @@ import { Container, Typography, Box, Stack } from '@mui/material';
 import { blue } from '@mui/material/colors';
 
 const ulStyles = {
-    fontSize: '3vmin',
+    fontSize: 24,
 };
 
 const h2Styles = {
-    fontSize: '3vmin',
+    fontSize: 24,
 };
 
 const categoryStyles = {
-    fontSize: '3vmin',
+    fontSize: 24,
     fontWeight: 500,
     textDecoration: 'underline',
 };
 
 const category2Styles = {
-    fontSize: '3vmin',
+    fontSize: 24,
     fontWeight: 500,
 };
 
 const questionStyle = {
-    fontSize: '2.5vmin',
+    fontSize: 24,
     Color: blue[100],
     fontWeight: 300,
 };
@@ -35,7 +35,7 @@ export default function FAQ() {
             <Container>
                 <Stack gap={3}>
                     <Box>
-                        <Typography variant='h2' style={{ fontWeight: 500, fontSize: '6vmin' }} mt={2}>
+                        <Typography variant='h2' style={{ fontWeight: 500 }} mt={2}>
                             Frequently Asked Questions:
                         </Typography>
                         <Typography variant='body1' style={h2Styles} mt={2}>

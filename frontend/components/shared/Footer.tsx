@@ -7,7 +7,7 @@ function Copyright() {
             <Typography
                 variant='body2'
                 color='text.secondary'
-                sx={{ fontWeight: 500, fontSize: '2.5vmin', color: '#fff', textAlign: 'center' }}
+                sx={{ fontWeight: 500, fontSize: 18, color: '#fff', textAlign: 'center' }}
             >
                 Copyright ©
                 <Link color='#fff' href='https://mui.com/'>
@@ -19,7 +19,7 @@ function Copyright() {
             <Typography
                 variant='body2'
                 color='text.secondary'
-                sx={{ fontWeight: 500, fontSize: '2.5vmin', color: '#fff', textAlign: 'center' }}
+                sx={{ fontWeight: 500, fontSize: 18, color: '#fff', textAlign: 'center' }}
             >
                 <Link color='#fff' href='https://mui.com/'>
                     Terms and Conditions
@@ -40,7 +40,8 @@ export default function Footer() {
                 position: 'absolute',
                 bottom: 0,
                 width: '100%',
-                height: '8vmin',
+                height: '6rem',
+                pt: '1rem',
                 backgroundColor: '#78b9c4',
                 color: '#fff',
             }}
