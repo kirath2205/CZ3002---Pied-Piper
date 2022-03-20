@@ -25,6 +25,39 @@ def __get_email_from_token(token):
     return ((jwt.decode(token,SECRET_KEY,algorithm="HS256"))['id'])
 
 @csrf_exempt
+def get_user_details(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_user_data = json.loads(serializers.serialize('json',[user_account]))[0]
+            return JsonResponse(serialized_user_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+
+@csrf_exempt
 def register_for_campaign(request):
 
     if(request.method=="POST"):

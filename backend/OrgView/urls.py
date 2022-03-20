@@ -7,6 +7,7 @@ urlpatterns = [
     path("create_campaign/",views.create_campaign,name="create_campaign"),
     path("get_all_campaign_details_for_org/",views.get_all_campaign_details_for_org,name="get_all_campaign_details_for_org"),
     path("update_campaign_details",views.update_campaign_details,name="update_campaign_details"),
+    path("get_org_details/", views.get_org_details, name="get_org_details"),
     path("update_org_details/",views.update_org_details,name="update_org_details"),
     path("get_all_past_campaign_details_for_org/",views.get_all_past_campaign_details_for_org,name="get_all_past_campaign_details_for_org"),
     path("get_all_upcoming_campaign_details_for_org/",views.get_all_upcoming_campaign_details_for_org,name="get_all_upcoming_campaign_details_for_org"),

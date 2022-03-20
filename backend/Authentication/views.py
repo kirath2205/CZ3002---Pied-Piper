@@ -123,7 +123,7 @@ def register(request):
                 gender = data.get('gender')
                 new_user_account = UserAccount(first_name=first_name,last_name=last_name,email=email,phone_number=phone_number,skills=skills,age=age,gender=gender,address=address)
                 new_user_account.save()
-                user_login = Login(email=email,password=hashed_password)
+                user_login = Login(email=email,password=hashed_password,account_type=type)
                 user_login.save()
                 otp_verify = OTPVerification(phone_number=phone_number)
                 otp_verify.save()
@@ -134,7 +134,7 @@ def register(request):
                 name = data.get('name')
                 new_org_account = OrgAccount(name=name,phone_number=phone_number,email=email,address=address)
                 new_org_account.save()
-                org_login = Login(email=email,password=hashed_password)
+                org_login = Login(email=email,password=hashed_password,account_type=type)
                 org_login.save()
                 password_reset = PasswordReset(email=email)
                 password_reset.save()
@@ -237,8 +237,9 @@ def login(request):
             refresh_token_payload={'id':current_user.email,'expiry':refresh_token_expiry}
             access_token=jwt.encode(access_token_payload,SECRET_KEY,algorithm="HS256")
             refresh_token=jwt.encode(refresh_token_payload,SECRET_KEY,algorithm="HS256")
+            account_type = current_user.account_type
             JsonResponse.status_code = int(error_codes.login_successful())
-            return JsonResponse({'access_token':access_token.decode('utf-8'),'refresh_token':refresh_token.decode('utf-8')})
+            return JsonResponse({'access_token':access_token.decode('utf-8'),'refresh_token':refresh_token.decode('utf-8'), 'account_type': account_type})
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
@@ -273,8 +274,8 @@ def verify_jwt_token(request):
                 HttpResponse.status_code=int(error_codes.invalid_jwt_token())
                 return HttpResponse("Expired token")
 
-            HttpResponse.status_code = int(error_codes.api_success())
-            return HttpResponse("Valid Jwt token")
+            JsonResponse.status_code = int(error_codes.api_success())
+            return JsonResponse({"message": "Valid JWT Token", "account_type": current_user.account_type})
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
