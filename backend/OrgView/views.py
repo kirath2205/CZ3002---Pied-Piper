@@ -63,6 +63,39 @@ def create_campaign(request):
         return HttpResponse('404 error')
 
 @csrf_exempt
+def get_org_details(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_org_data = json.loads(serializers.serialize('json',[org_account]))[0]
+            return JsonResponse(serialized_org_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+
+@csrf_exempt
 def update_org_details(request):
     if(request.method=="POST"):
     
