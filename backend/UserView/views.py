@@ -1,6 +1,7 @@
-from backend.OrgView.models import Campaign
-from backend.Authentication.models import UserAccount
-from datetime import date
+from Authentication.models import UserAccount
+from OrgView.models import Campaign
+from Authentication.models import *
+from datetime import date,timedelta
 from django.db.models import fields
 
 from django.http.response import JsonResponse
@@ -40,7 +41,7 @@ def register_for_campaign(request):
 
             try:
                 user_account = UserAccount.objects.get(email=email)
-            except OrgAccount.DoesNotExist as e:
+            except UserAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
@@ -50,12 +51,12 @@ def register_for_campaign(request):
             except Campaign.DoesNotExist as e:
                 HttpResponse.status_code = int(error_codes.bad_request())
                 return HttpResponse('404 error')
-            
-            user_id=user_account.get('user_id')
+
+            user_id=user_account.user_id
 
             try:
                 check_if_tried_registration = OrgNotif.objects.get(user_id=user_id)
-                status=check_if_tried_registration.get('status')
+                status=check_if_tried_registration.status
                 if(status=='P'):
                     HttpResponse.status_code=int(error_codes.pending_request())
                     return HttpResponse('Pending Request') 
@@ -71,22 +72,28 @@ def register_for_campaign(request):
             except OrgNotif.DoesNotExist as e:
                 pass
             
-            date=campaign.get('date')
-            time=campaign.get('time')
-            duration=campaign.get('duration')
-            campaign_slot_clashes=UserCampaign.objects.filter(date==date ,time__gte=time , time__lte=(time+duration))
-            
-            if not campaign_slot_clashes:
+            #TODO test this
+            date=campaign.date
+            time=campaign.time
+            duration=campaign.duration
+            print(time)
+            slot_end=(time+timedelta(hours=duration))
+            print(slot_end)
+            try:
+                campaign_slot_clashes=UserCampaign.objects.get(date==date ,time__gte=time , time__lte=slot_end)
+                HttpResponse.status_code=int(error_codes.campaign_time_clash())
+                return HttpResponse('User campaign clash')
+
+            except UserCampaign.DoesNotExist as e:
                 new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date=date,time=time,duration=duration)
                 new_user_campaign.save()
-                org_id = OrgAccount.objects.get(email=email)
+                org_id = (OrgAccount.objects.get(email=email)).user_id
                 new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())
                 return HttpResponse('User campaign Created')
             
-            HttpResponse.status_code=int(error_codes.campaign_time_clash())
-            return HttpResponse('User campaign clash')
+    
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
@@ -95,3 +102,7 @@ def register_for_campaign(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+
+@csrf_exempt
+def unregister_for_campaign(request):
+    pass

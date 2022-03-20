@@ -9,7 +9,7 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
-class UserCampaign(models,Model):
+class UserCampaign(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)
     class Status(models.TextChoices):

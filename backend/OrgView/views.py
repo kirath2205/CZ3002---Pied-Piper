@@ -354,3 +354,7 @@ def approve_or_reject_user_campaign_registration(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+
+@csrf_exempt
+def mark_volunteer_as_present_or_absent(request):
+    pass

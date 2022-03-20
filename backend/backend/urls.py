@@ -8,4 +8,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('Authentication.urls')),
     path('org_view/', include('OrgView.urls')),
+    path('user_view/',include('UserView.urls'))
 ]

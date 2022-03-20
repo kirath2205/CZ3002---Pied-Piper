@@ -35,10 +35,10 @@ class OrgNotif(models.Model):
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
     org_id=models.IntegerField(default=None)
 
-class AcceptedUsers:
+class AcceptedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)
 
-class RejectedUsers:
+class RejectedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)
