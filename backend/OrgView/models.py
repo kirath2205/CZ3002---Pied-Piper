@@ -24,4 +24,21 @@ class Campaign(models.Model):
         UPCOMING = 'U',_('Upcoming')
         COMPLETED = 'C',_('Completed')
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.UPCOMING)
-    
+
+class OrgNotif(models.Model):
+    user_id=models.IntegerField(default=None)
+    campaign_id=models.IntegerField(default=None)
+    class Status(models.TextChoices):
+        PENDING = 'P',_('Pending')
+        REJECTED = 'R',_('Rejected')
+        ACCEPTED = 'A',_("Accepted")
+    status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
+    org_id=models.IntegerField(default=None)
+
+class AcceptedUsers:
+    user_id=models.IntegerField(default=None)
+    campaign_id=models.IntegerField(default=None)
+
+class RejectedUsers:
+    user_id=models.IntegerField(default=None)
+    campaign_id=models.IntegerField(default=None)

@@ -60,3 +60,18 @@ def login_successful():
 
 def invalid_campaign():
     return '227'
+
+def campaign_time_clash():
+    return '228'
+
+def user_campaign_created():
+    return '229'
+
+def pending_request():
+    return '230' 
+
+def request_rejected():
+    return '231'
+
+def request_accepted():
+    return '232'

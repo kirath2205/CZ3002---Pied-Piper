@@ -63,6 +63,39 @@ def create_campaign(request):
         return HttpResponse('404 error')
 
 @csrf_exempt
+def get_org_details(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_org_data = json.loads(serializers.serialize('json',[org_account]))[0]
+            return JsonResponse(serialized_org_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+
+@csrf_exempt
 def update_org_details(request):
     if(request.method=="POST"):
     
@@ -164,6 +197,7 @@ def get_all_campaign_details_for_org(request):
                 return HttpResponse("Invalid jwt token")
             
             email=__get_email_from_token(token)
+
             try:
                 org_account = OrgAccount.objects.get(email=email)
             except OrgAccount.DoesNotExist as e:
@@ -184,5 +218,172 @@ def get_all_campaign_details_for_org(request):
         return HttpResponse('404 error')
 
 @csrf_exempt
+def get_all_past_campaign_details_for_org(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email,status='C')
+            all_campaigns_completed_but_not_updates = Campaign.objects.filter(organisation_email_email=email,status='U')
+
+            #TODO : Test this
+            for element in all_campaigns_completed_but_not_updates.iterator():
+                if(element.get('time')<datetime.now):
+                    element.status='C'
+                    element.save()
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date','time','description','title','duration','volunteer_count','minimum_age'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def get_all_upcoming_campaign_details_for_org(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email,status='U')
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date','time','description','title','duration','volunteer_count','minimum_age'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+        
+@csrf_exempt
 def delete_org_account(request):
     pass
+
+@csrf_exempt
+def view_org_notifs(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            org_id=OrgAccount.objects.get(email=email)
+            notifs_for_current_org=OrgNotif.objects.filter(org_id=org_id)
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status'))
+            return JsonResponse(serialized_notif_data,safe=False)
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def approve_or_reject_user_campaign_registration(request):
+    if(request.method=="POST"):
+        
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+
+            except OrgAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            campaign_id=data.get('campaign_id')
+            user_id=data.get('user_id')
+
+            try:
+                check_if_org_created_campaign=Campaign.objects.get(campaign_id=campaign_id,organisation_email=email)
+            except Campaign.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            status=data.get('status')
+
+            try:
+                notif=OrgNotif.objects.get(campaign_id=campaign_id,user_id=user_id)
+            except OrgNotif.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+
+            if(status=='R'):
+                notif.delete()
+                add_rejected_user = RejectedUsers(campaign_id=campaign_id,user_id=user_id)
+                add_rejected_user.save()
+                HttpResponse.status_code=int(error_codes.request_rejected())
+                return HttpResponse('User added to rejected')
+
+            elif(status=='A'):
+                notif.delete()
+                add_accepted_user = AcceptedUsers(campaign_id=campaign_id,user_id=user_id)
+                add_accepted_user.save()
+                HttpResponse.status_code=int(error_codes.request_accepted())
+                return HttpResponse('User added to accepted')
+            
+            else:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Invalid status')
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
