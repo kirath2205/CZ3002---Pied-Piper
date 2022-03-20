@@ -18,11 +18,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const apiRes = await axios.post(`${API_URL}/auth/verify_jwt_token/`, {
                 access_token,
             });
-
+            console.log(apiRes);
             const data = await apiRes.data;
 
             if (apiRes.status === 200) {
-                return res.status(200).json({ success: 'Authenticated successfully' });
+                return res.status(200).json({ accountType: data.account_type });
             } else {
                 return res.status(apiRes.status).json({
                     error: data,

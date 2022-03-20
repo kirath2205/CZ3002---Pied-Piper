@@ -27,6 +27,10 @@ class UserAccount(models.Model):
 class Login(models.Model):
     email = models.EmailField(max_length=254,unique=True)
     password = models.EmailField(max_length=200)
+    class AccountType(models.TextChoices):
+        USER = 'USER', _('User')
+        ORG = 'ORG', _('Organization')
+    account_type=models.CharField(max_length=4,choices=AccountType.choices,default=AccountType.USER)
 
 class Ban(models.Model):
     email = models.EmailField(unique=True)

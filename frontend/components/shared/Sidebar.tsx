@@ -5,9 +5,12 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import React from 'react';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
+import { UserType } from '@/app/slices/authSlice';
 
 interface SidebarProps {
     closeSidebar: () => void;
+    loggedIn: boolean;
+    userType?: UserType;
 }
 
 /**
@@ -15,7 +18,7 @@ interface SidebarProps {
  *
  * @returns {JSX.Element} - The SidebarLinks component
  */
-const Sidebar = ({ closeSidebar }: SidebarProps): JSX.Element => {
+const Sidebar = ({ closeSidebar, loggedIn, userType }: SidebarProps): JSX.Element => {
     return (
         <List sx={{ mb: 2, ml: 2, mr: 4 }}>
             <ListItem sx={{ mb: -1, pl: 0 }}>
@@ -23,12 +26,21 @@ const Sidebar = ({ closeSidebar }: SidebarProps): JSX.Element => {
                     <CloseRoundedIcon color='primary' />
                 </IconButton>
             </ListItem>
-            <ListItem>
-                <UnstyledLink href='/campaigns'>Be a volunteer</UnstyledLink>
-            </ListItem>
-            <ListItem>
-                <UnstyledLink href='/campaigns/create-campaign'>Create Campaign</UnstyledLink>
-            </ListItem>
+            {!loggedIn && (
+                <ListItem>
+                    <UnstyledLink href='/auth/signup'>Be a volunteer</UnstyledLink>
+                </ListItem>
+            )}
+            {loggedIn && userType === 'USER' && (
+                <ListItem>
+                    <UnstyledLink href='/campaigns'>Browse Campaigns</UnstyledLink>
+                </ListItem>
+            )}
+            {loggedIn && userType === 'ORG' && (
+                <ListItem>
+                    <UnstyledLink href='/campaigns/create-campaign'>Create Campaign</UnstyledLink>
+                </ListItem>
+            )}
             <ListItem>
                 <UnstyledLink href='/aboutus'>Learn more about us</UnstyledLink>
             </ListItem>

@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { RootState } from '../store';
 
-type UserType = 'ORG' | 'VOLUNTEER';
+export type UserType = 'ORG' | 'USER';
 
 export type AuthState = {
     loggedIn: boolean;
@@ -31,7 +31,8 @@ const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>
         try {
             const res = await axios.post('/api/auth/login', loginBody);
             if (res.status === 226) {
-                return res.data as string;
+                console.log('ran login action');
+                return res.data.accountType;
             } else {
                 return thunkAPI.rejectWithValue(res.data as ErrorMessage);
             }
@@ -75,7 +76,7 @@ const checkAuthStatus = createAsyncThunk('auth/checkStatus', async (_, thunkAPI)
         const res = await axios.get('/api/auth/verify_token');
         const data = await res.data;
         if (res.status === 200) {
-            return;
+            return res.data.accountType;
         } else {
             return thunkAPI.rejectWithValue({ error: data });
         }
@@ -111,9 +112,13 @@ export const authSlice = createSlice({
         builder.addCase(login.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(login.fulfilled, (state) => {
+        builder.addCase(login.fulfilled, (state, action) => {
+            const { payload } = action;
             state.loggedIn = true;
             state.loading = false;
+            if (payload) {
+                state.user = payload as UserType;
+            }
         });
         builder.addCase(login.rejected, (state, action) => {
             const { payload } = action;
@@ -158,9 +163,13 @@ export const authSlice = createSlice({
         builder.addCase(checkAuthStatus.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(checkAuthStatus.fulfilled, (state) => {
+        builder.addCase(checkAuthStatus.fulfilled, (state, action) => {
+            const { payload } = action;
             state.loading = false;
             state.loggedIn = true;
+            if (payload) {
+                state.user = payload as UserType;
+            }
         });
         builder.addCase(checkAuthStatus.rejected, (state) => {
             state.loading = false;
@@ -182,5 +191,6 @@ export { login, logout, register, refreshToken, checkAuthStatus };
 export const selectAuthState = (state: RootState) => state.auth;
 export const selectLoading = (state: RootState) => state.auth.loading;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
+export const selectUserType = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

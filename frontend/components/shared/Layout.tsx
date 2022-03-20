@@ -13,7 +13,7 @@ import UnstyledLink from '@/components/shared/UnstyledLink';
 import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { selectLoggedIn, refreshToken } from '@/app/slices/authSlice';
+import { selectLoggedIn, refreshToken, selectUserType } from '@/app/slices/authSlice';
 import Footer from '@/components/shared/Footer';
 
 interface LayoutProps {
@@ -33,6 +33,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const loggedIn = useAppSelector(selectLoggedIn);
+    const userType = useAppSelector(selectUserType);
     const dispatch = useAppDispatch();
 
     const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,7 +78,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                             <MenuIcon />
                         </IconButton>
                         <Drawer open={drawerOpen} onClose={closeDrawer}>
-                            <Sidebar closeSidebar={closeDrawer} />
+                            <Sidebar closeSidebar={closeDrawer} loggedIn={loggedIn} userType={userType} />
                         </Drawer>
 
                         <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
