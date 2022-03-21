@@ -19,6 +19,5 @@ class UserCampaign(models.Model):
         ABSENT = 'B',_('Absent')
         ATTENDED = 'T',_('Attended')
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
-    date = models.DateField(default=now)
-    time = models.TimeField(default=now)
-    duration=models.IntegerField(default=1)
+    date_time=models.DateTimeField(default=now)
+    end_time=models.DateTimeField(default=now)

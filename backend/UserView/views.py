@@ -3,6 +3,7 @@ from OrgView.models import Campaign
 from Authentication.models import *
 from datetime import date,timedelta
 from django.db.models import fields
+from django.db.models import Q
 
 from django.http.response import JsonResponse
 from Authentication.views import verify_jwt_token_local
@@ -106,27 +107,28 @@ def register_for_campaign(request):
                 pass
             
             #TODO test this
-            date=campaign.date
-            time=campaign.time
-            duration=campaign.duration
-            print(time)
-            slot_end=(time+timedelta(hours=duration))
-            print(slot_end)
+            date_time_current_campaign=campaign.date_time
+            end_time_current_campaign=campaign.end_time
+            
             try:
-                campaign_slot_clashes=UserCampaign.objects.get(date==date ,time__gte=time , time__lte=slot_end)
+                campaign_slot_clashes=UserCampaign.objects.get( 
+                    Q(user_id=user_id) & 
+                    Q( 
+                        Q(date_time__gte=date_time_current_campaign) & Q(date_time__lte=end_time_current_campaign) |
+                        Q(end_time__gte=date_time_current_campaign) & Q(end_time__lte=end_time_current_campaign) 
+                    ) 
+                )
                 HttpResponse.status_code=int(error_codes.campaign_time_clash())
                 return HttpResponse('User campaign clash')
 
             except UserCampaign.DoesNotExist as e:
-                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date=date,time=time,duration=duration)
+                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign)
                 new_user_campaign.save()
                 org_id = (OrgAccount.objects.get(email=email)).user_id
                 new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())
                 return HttpResponse('User campaign Created')
-            
-    
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())

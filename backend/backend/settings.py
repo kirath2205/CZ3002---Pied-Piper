@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Authentication',
     'OrgView',
     'UserView',
+    'GenericView',
     'corsheaders',
 ]
 

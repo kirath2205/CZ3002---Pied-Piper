@@ -42,14 +42,13 @@ def create_campaign(request):
                 return HttpResponse('Access denied')
             location=data.get('location')
             skills=data.get('skills')
-            date=data.get('date')
-            time=data.get('time')
+            date_time=data.get('date_time')
             description=data.get('description')
             title=data.get('title')
-            duration=int(data.get('duration'))
+            end_time=int(data.get('end_time'))
             volunteer_count=int(data.get('volunteer_count'))
             minimum_age=int(data.get('minimum_age'))
-            new_campaign = Campaign(organisation_email=email,location=location,skills=skills,date=date,time=time,description=description,title=title,duration=duration,volunteer_count=volunteer_count,minimum_age=minimum_age)
+            new_campaign = Campaign(organisation_email=email,location=location,skills=skills,date_time=date_time,description=description,title=title,duration=duration,volunteer_count=volunteer_count,minimum_age=minimum_age)
             new_campaign.save()
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Campaign Created')
@@ -166,11 +165,10 @@ def update_campaign_details(request):
             
             campaign.location=data.get('location')
             campaign.skills=data.get('skills')
-            campaign.date=data.get('date')
-            campaign.time=data.get('time')
+            campaign.date_time=data.get('date_time')
             campaign.description=data.get('description')
             campaign.title=data.get('title')
-            campaign.duration=data.get('duration')
+            campaign.end_time=data.get('end_time')
             campaign.volunteer_count=data.get('volunteer_count')
             campaign.minimum_age=data.get('minimum_age')
             campaign.save()
@@ -206,7 +204,7 @@ def get_all_campaign_details_for_org(request):
             
             all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email)
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date','time','description','title','duration','volunteer_count','minimum_age','status'))
+            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','status'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -236,16 +234,10 @@ def get_all_past_campaign_details_for_org(request):
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
-            all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email,status='C')
-            all_campaigns_completed_but_not_updates = Campaign.objects.filter(organisation_email_email=email,status='U')
+            past_campaigns = Campaign.objects.filter(organisation_email=email,datetime__lte=datetime.now())
 
-            #TODO : Test this
-            for element in all_campaigns_completed_but_not_updates.iterator():
-                if(element.get('time')<datetime.now):
-                    element.status='C'
-                    element.save()
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date','time','description','title','duration','volunteer_count','minimum_age'))
+            serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','duration','volunteer_count','minimum_age'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -275,9 +267,9 @@ def get_all_upcoming_campaign_details_for_org(request):
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
-            all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email,status='U')
+            upcoming_campaigns = Campaign.objects.filter(organisation_email=email,date_time__gte=datetime.now())
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date','time','description','title','duration','volunteer_count','minimum_age'))
+            serialized_campaign_data = serializers.serialize('json',upcoming_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
