@@ -237,7 +237,7 @@ def get_all_past_campaign_details_for_org(request):
             past_campaigns = Campaign.objects.filter(organisation_email=email,datetime__lte=datetime.now())
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','duration','volunteer_count','minimum_age'))
+            serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:

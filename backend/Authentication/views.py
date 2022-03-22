@@ -61,12 +61,12 @@ def register(request):
 
             hashed_password = pbkdf2_sha256.hash(password)
             email = data.get('email')
-            response = requests.get("https://isitarealemail.com/api/email/validate",params = {'email': email})
+            '''response = requests.get("https://isitarealemail.com/api/email/validate",params = {'email': email})
             status = response.json()['status']
             
             if(status != 'valid'):
                 HttpResponse.status_code = int(error_codes.invalid_email())
-                return HttpResponse('Invalid email')
+                return HttpResponse('Invalid email')'''
 
             try:
                 userDetails = UserAccount.objects.get(email=email)
