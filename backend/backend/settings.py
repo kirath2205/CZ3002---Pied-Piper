@@ -26,6 +26,7 @@ SECRET_KEY = 'x8@fgznlks29airh@8z8ieycr(*31o-!&j_s0@06ocjl)hxu$s'
 DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'UserView',
     'GenericView',
     'corsheaders',
+    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +152,8 @@ AUTH_TOKEN='acba84cb9c7f397bdabe005296614abe'
 USER='USER'
 ORG='ORG'
 TWILIO_PHONE_NUMBER = '+14146353354'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=Authentication.views,Authentication.models'
+]
