@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { RootState } from '../store';
 
-type UserType = 'ORG' | 'VOLUNTEER';
+export type UserType = 'ORG' | 'USER';
 
 export type AuthState = {
     loggedIn: boolean;
@@ -25,13 +25,13 @@ interface ErrorMessage {
     error: string;
 }
 
-const login = createAsyncThunk<string, LoginBody, { rejectValue: ErrorMessage }>(
+const login = createAsyncThunk<UserType, LoginBody, { rejectValue: ErrorMessage }>(
     'auth/login',
     async (loginBody, thunkAPI) => {
         try {
             const res = await axios.post('/api/auth/login', loginBody);
             if (res.status === 226) {
-                return res.data as string;
+                return res.data.accountType as UserType;
             } else {
                 return thunkAPI.rejectWithValue(res.data as ErrorMessage);
             }
@@ -75,7 +75,7 @@ const checkAuthStatus = createAsyncThunk('auth/checkStatus', async (_, thunkAPI)
         const res = await axios.get('/api/auth/verify_token');
         const data = await res.data;
         if (res.status === 200) {
-            return;
+            return res.data.accountType as UserType;
         } else {
             return thunkAPI.rejectWithValue({ error: data });
         }
@@ -89,7 +89,7 @@ const refreshToken = createAsyncThunk('auth/refreshToken', async (_, thunkAPI) =
         const res = await axios.get('/api/auth/refresh_token');
         const data = await res.data;
         if (res.status === 200) {
-            thunkAPI.dispatch(checkAuthStatus());
+            return thunkAPI.dispatch(checkAuthStatus());
         } else {
             return thunkAPI.rejectWithValue({ error: data });
         }
@@ -111,9 +111,10 @@ export const authSlice = createSlice({
         builder.addCase(login.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(login.fulfilled, (state) => {
+        builder.addCase(login.fulfilled, (state, action) => {
             state.loggedIn = true;
             state.loading = false;
+            state.user = action.payload;
         });
         builder.addCase(login.rejected, (state, action) => {
             const { payload } = action;
@@ -141,7 +142,7 @@ export const authSlice = createSlice({
         builder.addCase(register.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(register.fulfilled, (state, action) => {
+        builder.addCase(register.fulfilled, (state) => {
             state.loading = false;
             state.message = 'Registered succesfully. You may now proceed to login.';
         });
@@ -158,19 +159,25 @@ export const authSlice = createSlice({
         builder.addCase(checkAuthStatus.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(checkAuthStatus.fulfilled, (state) => {
+        builder.addCase(checkAuthStatus.fulfilled, (state, action) => {
             state.loading = false;
             state.loggedIn = true;
+            state.user = action.payload;
         });
         builder.addCase(checkAuthStatus.rejected, (state) => {
             state.loading = false;
             state.loggedIn = false;
         });
         //Refresh token
-        builder.addCase(refreshToken.fulfilled, (state) => ({ ...state, loading: false }));
+        builder.addCase(refreshToken.fulfilled, (state, action) => ({
+            ...state,
+            loading: false,
+            user: action.payload.payload as UserType,
+        }));
         builder.addCase(refreshToken.pending, (state) => ({ ...state, loading: true }));
         builder.addCase(refreshToken.rejected, (state) => {
             state.loggedIn = false;
+            state.loading = false;
         });
     },
 });
@@ -182,5 +189,6 @@ export { login, logout, register, refreshToken, checkAuthStatus };
 export const selectAuthState = (state: RootState) => state.auth;
 export const selectLoading = (state: RootState) => state.auth.loading;
 export const selectLoggedIn = (state: RootState) => state.auth.loggedIn;
+export const selectUserType = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

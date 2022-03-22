@@ -31,7 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 ]);
 
                 return res.status(226).json({
-                    success: 'Logged in successfully',
+                    accountType: data.account_type,
                 });
             } else {
                 return res.status(apiRes.status).json({

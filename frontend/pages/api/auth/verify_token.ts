@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const data = await apiRes.data;
 
             if (apiRes.status === 200) {
-                return res.status(200).json({ success: 'Authenticated successfully' });
+                return res.status(200).json({ accountType: data.account_type });
             } else {
                 return res.status(apiRes.status).json({
                     error: data,
