@@ -2,12 +2,15 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { useState } from 'react';
 //mui
 import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 //services
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
+import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //types
 import { OrganizationWithPW } from '@/interfaces/Organization';
@@ -22,39 +25,40 @@ interface OrganizationProfileInfoProps {
  */
 const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
-    password: yup.string().required('Password is required'),
     orgName: yup.string().required('Organization Name is required'),
     phone: yup.string().min(8, 'Enter an 8 digit phone number').max(8).required('Phone is required'),
     address: yup.string().min(10).required('Address is required'),
 });
 
 /**
- * Renders the sign up form for organizations
+ * Renders the Organization Profile Info
  *
  *
- * @returns {JSX.Element} - The sign up form for organizations
+ * @returns {JSX.Element} - The Organization Profile Info
  */
 const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX.Element => {
+    const [error, setError] = useState('');
     const dispatch = useAppDispatch();
     const authState = useAppSelector(selectAuthState);
+    const [success, setSuccess] = useState(false);
     const formik = useFormik({
         initialValues: {
             email: profile.email,
-            password: '',
             orgName: profile.name,
             address: profile.address,
             phone: profile.phone_number,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const organization: OrganizationWithPW = {
-                ...values,
-                name: values.orgName,
-                phone_number: values.phone,
-                type: 'ORG',
-            };
-            dispatch(clearError());
-            await dispatch(register(organization as OrganizationWithPW));
+            //dispatch(clearError());
+            //await dispatch(register(organization as OrganizationWithPW));
+            try {
+                setError('');
+                const apiRes = await axios.post(`/api/org_view/update_org_details/`, { name: values.orgName, address: values.address });
+                setSuccess(true);
+            } catch (err: any) {
+                setError(err.message);
+            }
         },
     });
 
@@ -64,8 +68,10 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                 <Typography variant='h6' align='center'>
                     Organization Profile
                 </Typography>
+                {success && <SuccessAlert>Profile Updated successfully</SuccessAlert>}
                 {authState.message && console.log(authState.message)}
                 <ErrorAlert>{authState.error}</ErrorAlert>
+                {error && <ErrorAlert>{error}</ErrorAlert>}
                 <TextField
                     fullWidth
                     sx={{ mt: 2 }}
@@ -99,6 +105,7 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                     type='phone'
                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                     helperText={formik.touched.phone && formik.errors.phone}
+                    disabled
                 />
                 <TextField
                     sx={{ mt: 2 }}
@@ -110,18 +117,7 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                     onChange={formik.handleChange}
                     error={formik.touched.email && Boolean(formik.errors.email)}
                     helperText={formik.touched.email && formik.errors.email}
-                />
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='password'
-                    name='password'
-                    label='Password'
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    type='password'
-                    error={formik.touched.password && Boolean(formik.errors.password)}
-                    helperText={formik.touched.password && formik.errors.password}
+                    disabled
                 />
                 <Stack>
                     <Button
@@ -130,7 +126,7 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                         variant='contained'
                         fullWidth
                         type='submit'
-                        aria-label='sign-up'
+                        aria-label='edit-profile'
                     >
                         Edit Profile
                     </Button>

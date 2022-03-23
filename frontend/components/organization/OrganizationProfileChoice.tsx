@@ -15,9 +15,9 @@ import { OrganizationProfile } from '@/interfaces/Organization';
 
 type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
 /**
- * Renders the signup choice component
+ * Renders the Organization profile choice
  *
- * @returns {JSX.Element} - The sign up choice
+ * @returns {JSX.Element} - The Organization profile choice
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');

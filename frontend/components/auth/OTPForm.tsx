@@ -32,7 +32,6 @@ const OTPForm = ({ email, confirmedOTP }: OTPFormProps) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             const apiRes = await axios.post(`/api/auth/password_reset_OTP_verification/`, { otp: values.otp, email });
-            console.log('correct otp' + email);
             confirmedOTP();
             formik.resetForm();
         },

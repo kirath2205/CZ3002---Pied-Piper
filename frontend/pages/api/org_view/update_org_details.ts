@@ -25,7 +25,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             );
 
             const data = await apiRes.data;
-
             if (apiRes.status === 200) {
                 return res.status(200).json(data);
             } else {
@@ -35,8 +34,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             }
         } catch (err) {
             return res.status(500).json({
+                
                 error: err,
-            });
+                
+            });;
         }
     } else {
         res.setHeader('Allow', ['POST']);
