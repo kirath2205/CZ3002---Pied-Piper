@@ -4,11 +4,12 @@ import React from 'react';
 import { useRouter } from 'next/router';
 //redux
 import { useAppDispatch } from '@/app/hooks';
-import { logout } from '@/app/slices/authSlice';
+import { logout, UserType } from '@/app/slices/authSlice';
 
 interface ProfileMenuProps {
     closeAccountMenu: () => void;
     anchorEl: HTMLElement | null;
+    userType?: UserType;
 }
 
 /**
@@ -17,7 +18,7 @@ interface ProfileMenuProps {
  * @param {ProfileMenuProps}
  * @returns {JSX.Element} - The profile menu
  */
-const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Element => {
+const ProfileMenu = ({ closeAccountMenu, anchorEl, userType }: ProfileMenuProps): JSX.Element => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const logoutHandler = () => {
@@ -42,7 +43,7 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl }: ProfileMenuProps): JSX.Elem
             open={Boolean(anchorEl)}
             onClose={closeAccountMenu}
         >
-            <MenuItem onClick={() => router.push('/profile/organization')}>Profile</MenuItem>
+            <MenuItem onClick={() => router.push(`/profile/${userType?.toLocaleLowerCase()}`)}>Profile</MenuItem>
             <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
             <MenuItem onClick={logoutHandler}>Sign out</MenuItem>
         </Menu>

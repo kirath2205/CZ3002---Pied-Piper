@@ -1,5 +1,5 @@
 //mui
-import { Container, Stack, Button, Box, Tab, Tabs } from '@mui/material';
+import { Container, Stack, Button, Box, Tab, Tabs, Skeleton } from '@mui/material';
 import ManIcon from '@mui/icons-material/Man';
 import BusinessIcon from '@mui/icons-material/Business';
 import Avatar from '@mui/material/Avatar';
@@ -9,7 +9,8 @@ import React, { useState } from 'react';
 import ApproveApplication from '@/components/organization/OrganizationApproveApplication';
 import OrganizationProfileInfo from '@/components/organization/OrganizationProfileInfo';
 import OrganizationExistingCampaign from '@/components/organization/OrganizationExistingCampaign';
-import useLoadProfile from '@/components/shared/hooks/useLoadProfile';
+import useLoadOrgProfile from '@/components/organization/useLoadOrgProfile';
+
 //types
 import { OrganizationProfile } from '@/interfaces/Organization';
 
@@ -21,7 +22,7 @@ type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, loading } = useLoadProfile('ORG');
+    const { profile, loading } = useLoadOrgProfile(tab);
 
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
@@ -37,9 +38,7 @@ const ProfileChoice = (): JSX.Element => {
                     <Tab label='Edit/Delete Existing Campaign' value='EDIT' />
                 </Tabs>
             </Box>
-            {tab === 'PROFILE' && !loading && profile && (
-                <OrganizationProfileInfo profile={profile as OrganizationProfile} />
-            )}
+            {tab === 'PROFILE' && profile && <OrganizationProfileInfo profile={profile as OrganizationProfile} />}
             {tab === 'APPROVE' && <ApproveApplication />}
             {tab === 'EDIT' && <OrganizationExistingCampaign />}
         </Container>

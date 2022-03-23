@@ -9,7 +9,7 @@ import React from 'react';
 import VolunteerProfileInfo from '@/components/volunteer/VolunteerProfileInfo';
 import VolunteerPendingApplication from '@/components/volunteer/VolunteerPendingApplication';
 import VolunteerApplicationHistory from '@/components/volunteer/VolunteerApplicationHistory';
-import useLoadProfile from '@/components/shared/hooks/useLoadProfile';
+import useLoadUserProfile from '@/components/volunteer/useLoadUserProfile';
 //type
 import { UserProfile } from '@/interfaces/User';
 
@@ -21,7 +21,7 @@ type ProfileType = 'PROFILE' | 'PENDING' | 'HISTORY';
  */
 const UserProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, loading } = useLoadProfile('USER');
+    const { profile, loading } = useLoadUserProfile(tab);
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
     };
