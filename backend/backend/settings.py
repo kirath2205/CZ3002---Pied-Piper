@@ -155,5 +155,5 @@ TWILIO_PHONE_NUMBER = '+14146353354'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=Authentication.views,Authentication.models'
+    '--cover-package=Authentication.views'
 ]
