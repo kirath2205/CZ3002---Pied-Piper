@@ -1,16 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';
-import { getCookieValue } from '@/utils/cookieParser';
+import { getLatestAccessToken } from '@/utils/cookieParser';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
-        const access = getCookieValue(req, 'access');
+        const access = await getLatestAccessToken(req, res);
 
         if (!access) {
-            return res.status(217).json({
-                error: 'User forbidden from making the request',
-            });
+            return res.status(217).json({ error: 'User forbidden from making request' });
         }
 
         const { user_id, campaign_id, status } = req.body;
@@ -45,3 +43,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(405).json({ error: `Method ${req.method} now allowed` });
     }
 };
+function refreshAccessToken(req: NextApiRequest, r: any) {
+    throw new Error('Function not implemented.');
+}

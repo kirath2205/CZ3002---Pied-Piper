@@ -1,16 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';
-import { getCookieValue } from '@/utils/cookieParser';
+import { getCookieValue, getLatestAccessToken } from '@/utils/cookieParser';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
-        const access = getCookieValue(req, 'access');
+        const access = await getLatestAccessToken(req, res);
 
         if (!access) {
-            return res.status(217).json({
-                error: 'User forbidden from making the request',
-            });
+            return res.status(217).json({ error: 'User forbidden from making request' });
         }
 
         try {
