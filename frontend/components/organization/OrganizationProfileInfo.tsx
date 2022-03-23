@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
 //mui
-import { Button, TextField, Typography, Box, Container, Stack } from '@mui/material';
+import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 //services
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
@@ -11,6 +11,11 @@ import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //types
 import { OrganizationWithPW } from '@/interfaces/Organization';
+import { OrganizationProfile } from '@/interfaces/Organization';
+
+interface OrganizationProfileInfoProps {
+    profile: OrganizationProfile;
+}
 
 /**
  * The yup validation for the sign up form for organizations
@@ -29,17 +34,16 @@ const validationSchema = yup.object({
  *
  * @returns {JSX.Element} - The sign up form for organizations
  */
-const OrganizationProfileInfo = (): JSX.Element => {
+const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX.Element => {
     const dispatch = useAppDispatch();
     const authState = useAppSelector(selectAuthState);
-    const router = useRouter();
     const formik = useFormik({
         initialValues: {
-            email: '',
+            email: profile.email,
             password: '',
-            orgName: '',
-            address: '',
-            phone: '',
+            orgName: profile.name,
+            address: profile.address,
+            phone: profile.phone_number,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {

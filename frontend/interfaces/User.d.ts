@@ -12,6 +12,17 @@ export interface User {
     type: 'USER';
 }
 
+export interface UserProfile {
+    first_name: string;
+    last_name: string;
+    age: number;
+    gender: Gender;
+    email: string;
+    phone_number: string;
+    skills: string[];
+    address: string;
+}
+
 export interface UserWithPW extends User {
     password: string;
 }
