@@ -1,6 +1,8 @@
-import { Button, Palette, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import React, { useState } from 'react';
+import Palette from '@/components/Theme/theme'
+import Data from '@/pages/campaigns/data'
 interface Props{
     id : number
     campaigns: any
