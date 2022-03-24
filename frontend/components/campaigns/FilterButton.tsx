@@ -14,6 +14,10 @@ interface Props{
 const FilterButton = ({id, campaigns, setCampaign}:Props) => {
   const [activeButton, setActiveButton] = useState(id);
   const skillsList = [...Array.from(new Set(Data.map(Val => Val.skills)))];
+  const showAllCampaign = () => {
+    setActiveButton(-1);
+    setCampaign(Data);
+  } 
   const filterItem = (id:number , curskill: any)  => {
     setActiveButton(id);
     const newCampaign = Data.filter((newVal) => {
@@ -62,7 +66,7 @@ const FilterButton = ({id, campaigns, setCampaign}:Props) => {
                  marginTop: 2,
                  marginLeft: 2,
                  marginRight: 2}}
-                onClick={() => setCampaign(Data)}
+                onClick={() => showAllCampaign()}
             >
               All
             </Button>
