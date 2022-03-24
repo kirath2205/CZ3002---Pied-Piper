@@ -50,11 +50,12 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            //dispatch(clearError());
-            //await dispatch(register(organization as OrganizationWithPW));
             try {
                 setError('');
-                const apiRes = await axios.post(`/api/org_view/update_org_details/`, { name: values.orgName, address: values.address });
+                const apiRes = await axios.post(`/api/org_view/update_org_details/`, {
+                    name: values.orgName,
+                    address: values.address,
+                });
                 setSuccess(true);
             } catch (err: any) {
                 setError(err.message);

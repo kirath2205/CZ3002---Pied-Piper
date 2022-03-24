@@ -16,23 +16,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { styled } from '@mui/material/styles';
 
 //lib
-import axios from 'axios';
 import * as React from 'react';
-
-//types
-import { OrganizationWithPW } from '@/interfaces/Organization';
 import { OrganizationNotification } from '@/interfaces/Organization';
 
-interface OrganizationNotificationProps {
-    notificationList: string[];
-}
+//types
 
-function generate(element: React.ReactElement) {
-    return [0, 1, 2].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        })
-    );
+interface OrganizationNotificationProps {
+    notificationList: OrganizationNotification[];
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -58,25 +48,29 @@ const ApproveApplication = ({ notificationList }: OrganizationNotificationProps)
             <Grid item>
                 <Demo>
                     <List dense={dense}>
-                        {notificationList && notificationList.map((c:any)=>{
-                            return(
-                            <ListItem key={c.pk}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <FaceIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={c.user_name??"Wei Hong"} secondary={c.campaign_name??"NTU Volunteer Campaign"} />
-                                <IconButton edge='end' aria-label='delete'>
-                                    <CancelIcon />
-                                </IconButton>
-                                <IconButton edge='end' aria-label='edit' sx={{ mr: 2 }}>
-                                    <CheckCircleIcon />
-                                </IconButton>
-                            </ListItem>
-                            )
-                        })
-                        }
+                        {notificationList &&
+                            notificationList.map((notification) => {
+                                return (
+                                    <ListItem key={notification.pk}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <FaceIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        {/**TODO: Change the OrganizationNotification interface to include these fields once the API is implemented */}
+                                        <ListItemText
+                                            primary={notification.user_name ?? 'Wei Hong'}
+                                            secondary={notification.campaign_name ?? 'NTU Volunteer Campaign'}
+                                        />
+                                        <IconButton edge='end' aria-label='delete'>
+                                            <CancelIcon />
+                                        </IconButton>
+                                        <IconButton edge='end' aria-label='edit' sx={{ mr: 2 }}>
+                                            <CheckCircleIcon />
+                                        </IconButton>
+                                    </ListItem>
+                                );
+                            })}
                     </List>
                 </Demo>
             </Grid>

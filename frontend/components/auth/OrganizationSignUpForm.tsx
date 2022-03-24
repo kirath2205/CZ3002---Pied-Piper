@@ -47,7 +47,7 @@ const OrganizationSignUpForm = (): JSX.Element => {
             const organization: OrganizationWithPW = {
                 ...values,
                 name: values.orgName,
-                phone_number: values.phone,
+                phone_number: parseInt(values.phone),
                 type: 'ORG',
             };
             dispatch(clearError());
