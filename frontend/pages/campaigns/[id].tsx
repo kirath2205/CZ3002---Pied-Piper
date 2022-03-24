@@ -1,5 +1,5 @@
 //mui
-import { Box } from '@mui/material';
+import { Container } from '@mui/material';
 //lib
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -43,9 +43,9 @@ export default function IndividualCampaignPage({ campaign }: InferGetServerSideP
 
     return (
         <Layout>
-            <Box px={4} pt={2}>
+            <Container maxWidth='lg'>
                 <CampaignCard campaign={campaign} detailed userRegistered={userCampaigns.includes(campaign.pk)} />
-            </Box>
+            </Container>
         </Layout>
     );
 }

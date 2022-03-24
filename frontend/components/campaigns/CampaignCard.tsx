@@ -1,5 +1,16 @@
 //mui
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, Stack, Box, IconButton } from '@mui/material';
+import {
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Button,
+    Typography,
+    Stack,
+    Box,
+    IconButton,
+    Chip,
+} from '@mui/material';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -70,6 +81,11 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                             {campaign.location}
                         </Box>
                     </Stack>
+                    <Box pt={0.5} sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
+                        {campaign.skills.map((skill) => (
+                            <Chip key={skill} label={skill} size='small' color='primary' variant='outlined' />
+                        ))}
+                    </Box>
                     {detailed && (
                         <Box pt={2}>
                             <Typography variant='body1'>About the activity</Typography>
@@ -77,6 +93,7 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                         </Box>
                     )}
                 </CardContent>
+
                 <CardActions sx={{ pl: 2, mt: -1.2, mb: 0.4 }}>
                     {detailed ? (
                         <Button
