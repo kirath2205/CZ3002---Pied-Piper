@@ -195,6 +195,7 @@ const CreateCampaign = (): JSX.Element => {
                         id='description'
                         name='description'
                         label='Description'
+                        multiline
                         value={formik.values.description}
                         onChange={formik.handleChange}
                         error={formik.touched.description && Boolean(formik.errors.description)}

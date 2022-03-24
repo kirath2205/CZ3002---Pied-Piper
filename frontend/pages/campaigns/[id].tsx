@@ -1,6 +1,12 @@
+//mui
 import { Box } from '@mui/material';
+//lib
+import axios from 'axios';
+import { API_URL } from '@/utils/constants/config';
+//components
 import CampaignCard from '@/components/campaigns/CampaignCard';
 import Layout from '@/components/shared/Layout';
+//type
 import { Campaign } from '@/interfaces/Campaign';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
@@ -17,20 +23,9 @@ export default function IndividualCampaignPage({ campaign }: InferGetServerSideP
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.query;
 
-    const campaign: Campaign = {
-        id: '40549fdf-487b-4be1-8c26-8708db9f59f6',
-        location: 'Bartelt',
-        skills: ['Dog Training'],
-        date: '5/31/2021',
-        time: '6:30pm to 8:30pm',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        minimumAge: 15,
-        duration: 2,
-        vacancies: 35,
-        title: 'Campaign 2',
-        organization: 'The Volunteer Org',
-    };
+    const response = await axios.get(`${API_URL}/get_campaign_using_campaign_id/${id}`);
+
+    const data = await response.data;
 
     return { props: { campaign } };
     // ...

@@ -1,86 +1,86 @@
-import { Button, Typography } from '@mui/material';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+//mui
+import { Button } from '@mui/material';
+//lib
 import React, { useState } from 'react';
-import Palette from '@/components/Theme/theme'
-import Data from '@/pages/campaigns/data'
-interface Props{
-    id : number
-    campaigns: any
-    setCampaign: any
+//components
+import Palette from '@/components/Theme/theme';
+
+//types
+interface FilterButtonProps {
+    setFilter: React.Dispatch<React.SetStateAction<string>>;
+    skills: string[];
 }
 
-const FilterButton = ({id, campaigns, setCampaign}:Props) => {
-  const [activeButton, setActiveButton] = useState(id);
-  const skillsList = [...Array.from(new Set(Data.map(Val => Val.skills)))];
-  const showAllCampaign = () => {
-    setActiveButton(-1);
-    setCampaign(Data);
-  } 
-  const filterItem = (id:number , curskill: any)  => {
-    setActiveButton(id);
-    const newCampaign = Data.filter((Val) => {
-        for (let i = 0; i < curskill.length; i++){
-            if(!Val.skills.includes(curskill[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    });
-    setCampaign(newCampaign);
-  };
+/**
+ *
+ * Renders the filter buttons
+ *
+ * @param {FilterButtonProps} props - The setfilter function and the skills array
+ * @returns {JSX.Element} - The filter buttons
+ */
+const FilterButton = ({ setFilter, skills }: FilterButtonProps): JSX.Element => {
+    const [selected, setSelected] = useState(skills.map((_) => false));
+
+    /**
+     * Sets the selected flag to false for all skills
+     */
+    const showAllCampaign = () => {
+        setFilter('');
+        setSelected(selected.map((_) => false));
+    };
+
+    /**
+     * Sets the filter to the skill clicked
+     *
+     * @param {string} skill - The skill to set the filter
+     * @param {number} selectedIndex - The index of the selected skill in the skills array
+     */
+    const filterItem = (skill: string, selectedIndex: number) => {
+        setSelected(selected.map((_, index) => index === selectedIndex));
+        setFilter(skill);
+    };
     return (
         <>
-          <div className="d-flex justify-content-center">
-            {skillsList.map((Val:any, id: number) => {
-              return (
+            <div className='d-flex justify-content-center'>
+                {skills.map((skill, index) => (
+                    <Palette key={skill}>
+                        <Button
+                            size='small'
+                            variant='contained'
+                            color={selected[index] ? 'secondary' : 'primary'}
+                            sx={{
+                                width: '20%',
+                                alignSelf: 'center',
+                                marginTop: 2,
+                                marginLeft: 2,
+                                marginRight: 2,
+                            }}
+                            onClick={() => filterItem(skill, index)}
+                        >
+                            {skill}
+                        </Button>
+                    </Palette>
+                ))}
                 <Palette>
-                <Button
-                    size='small'
-                    variant='contained'
-                    color={id == activeButton ? "primary" : "secondary"}
-                    sx={{  
-                        width: '20%', 
-                        alignSelf: 'center', 
-                        marginTop: 2,
-                        marginLeft: 2,
-                        marginRight: 2,
-                         }}
-                    onClick={() => filterItem(id, Val)}
-                    key={id}
-                >
-                  {Val}
-                </Button>
+                    <Button
+                        size='small'
+                        variant='contained'
+                        color={selected.every((skill) => !skill) ? 'secondary' : 'primary'}
+                        sx={{
+                            color: '#fff',
+                            width: '20%',
+                            alignSelf: 'center',
+                            marginTop: 2,
+                            marginLeft: 2,
+                            marginRight: 2,
+                        }}
+                        onClick={() => showAllCampaign()}
+                    >
+                        All
+                    </Button>
                 </Palette>
-              );
-            })}
-            <Button
-                size='small'
-                variant='contained'
-                sx={{ backgroundColor: '#12CDD4',
-                 color: '#fff', 
-                 width: '20%', 
-                 alignSelf: 'center', 
-                 marginTop: 2,
-                 marginLeft: 2,
-                 marginRight: 2}}
-                onClick={() => showAllCampaign()}
-            >
-              All
-            </Button>
-          </div>
+            </div>
         </>
-      );
-    };
-    
-//     return (
-//         <Button
-
-//         >
-//             <FilterAltOutlinedIcon />
-//             <Typography variant='button'>Filter</Typography>
-//         </Button>
-//     );
-// };
-
+    );
+};
 export default FilterButton;

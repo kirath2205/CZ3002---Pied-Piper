@@ -1,13 +1,14 @@
 //mui
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 //libs
-import React from 'react';
+import { useState, useEffect } from 'react';
 //components
 import CampaignCard from '@/components/campaigns/CampaignCard';
 import { Campaign } from '@/interfaces/Campaign';
 
 interface CampaignGridProps {
     campaigns: Campaign[];
+    filter: string;
 }
 
 /**
@@ -17,11 +18,22 @@ interface CampaignGridProps {
  * @param {CampaignGridProps} props - The campaigns
  * @returns {JSX.Element} - The grid showing the list of campaigns
  */
-const CampaignGrid = ({ campaigns }: CampaignGridProps): JSX.Element => {
+const CampaignGrid = ({ campaigns, filter }: CampaignGridProps): JSX.Element => {
+    const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>(campaigns);
+
+    useEffect(() => {
+        if (filter) {
+            setFilteredCampaigns(campaigns.filter((campaign) => campaign.skills.includes(filter)));
+        } else {
+            setFilteredCampaigns(campaigns);
+        }
+    }, [filter]);
+
     return (
         <Grid container spacing={3} marginTop={1} paddingX={2}>
-            {campaigns.map((campaign) => (
-                <Grid key={campaign.id} item xs={12} sm={6} md={4}>
+            {!filteredCampaigns.length && <Typography>There were no campaigns for that category :(</Typography>}
+            {filteredCampaigns.map((campaign) => (
+                <Grid key={campaign.pk} item xs={12} sm={6} md={4}>
                     <CampaignCard campaign={campaign} />
                 </Grid>
             ))}

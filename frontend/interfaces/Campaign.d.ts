@@ -1,13 +1,13 @@
 export interface Campaign {
-    id: string;
+    pk?: number;
     location: string;
     skills: string[];
-    date: string;
+    date_time: Date;
     time: string;
     description: string;
-    minimumAge: number;
-    duration: number;
-    vacancies: number;
+    minimum_age: number;
+    end_time: Date;
+    volunteer_count: number;
     title: string;
     organization: string;
 }

@@ -4,13 +4,11 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 //libs
-import React, { useState } from 'react';
+import React from 'react';
 //types
 import { Campaign } from '@/interfaces/Campaign';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
-
-import handleOpen from '@/pages/campaigns/[id]'
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
 
@@ -26,10 +24,6 @@ interface CampaignCardProps {
  * @returns {JSX.Element} - The Campaign Card component
  */
 const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element => {
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
     return (
@@ -46,16 +40,16 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                     {campaign.title}
                 </Typography>
                 <Typography variant='caption' component='p' gutterBottom>
-                    by {campaign.organization}
+                    by {campaign.organization ?? 'Organization Name'}
                 </Typography>
                 <Stack marginTop={1} spacing={0.5}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                         <EventOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
-                        {campaign.date}
+                        {campaign.date_time}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                         <AccessTimeOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
-                        {campaign.time}
+                        {campaign.end_time}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                         <LocationOnOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
@@ -76,12 +70,12 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                         variant='contained'
                         sx={{ backgroundColor: '#12CDD4' }}
                         aria-label={`learn-more-${campaign.title}`}
-                        disabled = {loggedIn && userType === 'ORG'}
+                        disabled={!loggedIn || userType === 'ORG'}
                     >
                         Volunteer Now
                     </Button>
                 ) : (
-                    <UnstyledLink href={`/campaigns/${campaign.id}`}>
+                    <UnstyledLink href={`/campaigns/${campaign.pk}`}>
                         <Button
                             size='small'
                             variant='contained'

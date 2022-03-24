@@ -21,7 +21,7 @@ from django.core import serializers
 @csrf_exempt
 def get_current_campaigns(request):
     if(request.method=='GET'):
-        current_campaigns=Campaign.objects.filter(datetime__gt=datetime.now())
+        current_campaigns=Campaign.objects.filter(date_time__gt=datetime.now())
         JsonResponse.status_code=int(error_codes.api_success())
         serialized_campaign_data = serializers.serialize('json',current_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
         return JsonResponse(serialized_campaign_data,safe=False)
@@ -33,7 +33,7 @@ def get_current_campaigns(request):
 @csrf_exempt
 def get_past_campaigns(request):
     if(request.method=='GET'):
-        past_campaigns=Campaign.objects.filter(datetime__lte=datetime.now())
+        past_campaigns=Campaign.objects.filter(end_time__lte=datetime.now())
         JsonResponse.status_code=int(error_codes.api_success())
         serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
         return JsonResponse(serialized_campaign_data,safe=False)
