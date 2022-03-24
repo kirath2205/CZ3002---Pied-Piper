@@ -33,7 +33,7 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
                     <List>
                         {history &&
                             history.map((campaign) => (
-                                <ListItem>
+                                <ListItem key={campaign.pk}>
                                     <ListItemAvatar>
                                         <Avatar>
                                             <ContactPage />

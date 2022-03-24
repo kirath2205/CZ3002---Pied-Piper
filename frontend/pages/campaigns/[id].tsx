@@ -23,9 +23,9 @@ export default function IndividualCampaignPage({ campaign }: InferGetServerSideP
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.query;
 
-    const response = await axios.get(`${API_URL}/get_campaign_using_campaign_id/${id}`);
+    const response = await axios.get(`${API_URL}/generic_view/get_campaign_using_campaign_id/${id}`);
 
-    const data = await response.data;
+    const campaign = (await response.data) as Campaign;
 
     return { props: { campaign } };
     // ...
