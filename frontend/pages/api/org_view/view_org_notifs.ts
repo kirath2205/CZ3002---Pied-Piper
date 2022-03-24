@@ -12,12 +12,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         try {
-            const apiRes = await axios.get(`${API_URL}/org_view/view_org_notifs/`, {
+            const apiRes = await axios.get(`${API_URL}/org_view/view_org_notifs`, {
                 headers: {
                     Authorization: access,
                 },
             });
-
             const data = await apiRes.data;
 
             if (apiRes.status === 200) {

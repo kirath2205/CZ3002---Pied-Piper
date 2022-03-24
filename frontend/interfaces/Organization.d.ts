@@ -13,6 +13,12 @@ export interface OrganizationProfile {
     address: string;
 }
 
+export interface OrganizationNotification {
+    campaign_id: string;
+    status: string;
+    user_id: number;
+}
+
 export interface OrganizationWithPW extends Organization {
     password: string;
 }

@@ -285,7 +285,6 @@ def delete_org_account(request):
 @csrf_exempt
 def view_org_notifs(request):
     if(request.method=="GET"):
-        
         try:
             token = request.headers['Authorization']
 
@@ -300,7 +299,8 @@ def view_org_notifs(request):
             except OrgAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
-            org_id=OrgAccount.objects.get(email=email)
+            org_id = org_account.user_id
+            ##org_id=OrgAccount.objects.get(email=email)
             notifs_for_current_org=OrgNotif.objects.filter(org_id=org_id)
             JsonResponse.status_code=int(error_codes.api_success())
             serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status'))
