@@ -22,7 +22,7 @@ type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, loading, notification } = useLoadOrgProfile(tab);
+    const { profile, loading, notifications, approveApplication } = useLoadOrgProfile(tab);
 
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
@@ -39,7 +39,12 @@ const ProfileChoice = (): JSX.Element => {
                 </Tabs>
             </Box>
             {tab === 'PROFILE' && profile && <OrganizationProfileInfo profile={profile as OrganizationProfile} />}
-            {tab === 'APPROVE' && <ApproveApplication notificationList={notification as OrganizationNotification[]} />}
+            {tab === 'APPROVE' && (
+                <ApproveApplication
+                    notificationList={notifications as OrganizationNotification[]}
+                    approveApplication={approveApplication}
+                />
+            )}
             {tab === 'EDIT' && <OrganizationExistingCampaign />}
         </Container>
     );

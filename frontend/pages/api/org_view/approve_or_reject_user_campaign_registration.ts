@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         try {
             const apiRes = await axios.post(
-                `${API_URL}/org_view/approve_or_reject_user_campaign_registration/`,
+                `${API_URL}/org_view/approve_or_reject_user_campaign_registration`,
                 { user_id, campaign_id, status },
                 {
                     headers: {

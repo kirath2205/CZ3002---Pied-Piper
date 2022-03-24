@@ -23,6 +23,7 @@ import { OrganizationNotification } from '@/interfaces/Organization';
 
 interface OrganizationNotificationProps {
     notificationList: OrganizationNotification[];
+    approveApplication: (pk: number, user_id: number, campaign_id: number, status: string) => Promise<void>;
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -35,10 +36,7 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Approve Application page
  */
-const ApproveApplication = ({ notificationList }: OrganizationNotificationProps) => {
-    const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
-
+const ApproveApplication = ({ notificationList, approveApplication }: OrganizationNotificationProps) => {
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -47,7 +45,7 @@ const ApproveApplication = ({ notificationList }: OrganizationNotificationProps)
 
             <Grid item>
                 <Demo>
-                    <List dense={dense}>
+                    <List>
                         {notificationList &&
                             notificationList.map((notification) => {
                                 return (
@@ -62,11 +60,48 @@ const ApproveApplication = ({ notificationList }: OrganizationNotificationProps)
                                             primary={notification.user_name ?? 'Wei Hong'}
                                             secondary={notification.campaign_name ?? 'NTU Volunteer Campaign'}
                                         />
-                                        <IconButton edge='end' aria-label='delete'>
-                                            <CancelIcon />
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            aria-label='edit'
+                                            sx={{ mr: 2 }}
+                                            onClick={() =>
+                                                approveApplication(
+                                                    notification.pk as number,
+                                                    notification.user_id,
+                                                    notification.campaign_id,
+                                                    'A'
+                                                )
+                                            }
+                                        >
+                                            <CheckCircleIcon
+                                                sx={{
+                                                    '&:hover': {
+                                                        fill: '#50856a',
+                                                    },
+                                                }}
+                                            />
                                         </IconButton>
-                                        <IconButton edge='end' aria-label='edit' sx={{ mr: 2 }}>
-                                            <CheckCircleIcon />
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            aria-label='delete'
+                                            onClick={() =>
+                                                approveApplication(
+                                                    notification.pk as number,
+                                                    notification.user_id,
+                                                    notification.campaign_id,
+                                                    'R'
+                                                )
+                                            }
+                                        >
+                                            <CancelIcon
+                                                sx={{
+                                                    '&:hover': {
+                                                        fill: '#691c33',
+                                                    },
+                                                }}
+                                            />
                                         </IconButton>
                                     </ListItem>
                                 );

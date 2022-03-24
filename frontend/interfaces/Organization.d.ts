@@ -14,7 +14,7 @@ export interface OrganizationProfile {
 }
 
 export interface OrganizationNotification {
-    campaign_id: string;
+    campaign_id: number;
     status: string;
     campaign_name: string;
     user_name: string;
