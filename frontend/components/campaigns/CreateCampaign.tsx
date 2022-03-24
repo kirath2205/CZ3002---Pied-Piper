@@ -17,6 +17,8 @@ import {
     FormControl,
     InputLabel,
     FormHelperText,
+    Box,
+    Chip,
 } from '@mui/material';
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
@@ -124,6 +126,13 @@ const CreateCampaign = (): JSX.Element => {
                             label='Gender'
                             onChange={formik.handleChange}
                             multiple
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
                         >
                             <MenuItem value={'IT'}>IT</MenuItem>
                             <MenuItem value={'Elderly'}>Elderly</MenuItem>

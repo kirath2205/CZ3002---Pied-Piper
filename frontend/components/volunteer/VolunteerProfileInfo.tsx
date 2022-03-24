@@ -1,6 +1,8 @@
 //mui
 import {
+    Box,
     Button,
+    Chip,
     Container,
     FormControl,
     FormGroup,
@@ -187,6 +189,13 @@ const VolunteerProfileInfo = ({ profile }: VolunteerProfileInfoProps): JSX.Eleme
                         label='Gender'
                         onChange={formik.handleChange}
                         multiple
+                        renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {selected.map((value) => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </Box>
+                        )}
                     >
                         <MenuItem value={'IT'}>IT</MenuItem>
                         <MenuItem value={'Elderly'}>Elderly</MenuItem>

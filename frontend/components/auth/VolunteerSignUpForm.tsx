@@ -16,6 +16,7 @@ import {
     InputLabel,
     FormHelperText,
     FormGroup,
+    Chip,
 } from '@mui/material';
 //redux
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -200,6 +201,13 @@ const VolunteerSignUpForm = (): JSX.Element => {
                         label='Gender'
                         onChange={formik.handleChange}
                         multiple
+                        renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {selected.map((value) => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </Box>
+                        )}
                     >
                         <MenuItem value={'IT'}>IT</MenuItem>
                         <MenuItem value={'Elderly'}>Elderly</MenuItem>
