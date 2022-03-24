@@ -1,4 +1,5 @@
-
+from ast import Pass
+from datetime import datetime
 from email import header
 from wsgiref import headers
 from passlib.hash import pbkdf2_sha256
@@ -16,6 +17,7 @@ class AuthenticationViewsTests(TestCase):
 
     def setUp(self):
         client = Client()
+        self.verify_email_url=reverse('verify_email')
         self.register_url=reverse('Register')
         self.index_url=reverse('AuthHome')
         self.refresh_jwt_url=reverse('RefreshJwtToken')
@@ -23,12 +25,17 @@ class AuthenticationViewsTests(TestCase):
         self.verify_jwt_url=reverse('VerifyJwtToken')
         self.send_otp_url=reverse('send_otp')
         self.verify_otp_url=reverse('verify_otp')
+        self.initiate_password_reset_url=reverse('initiate_password_reset')
+        self.password_reset_OTP_verification_url=reverse('password_reset_OTP_verification')
+        self.get_new_password_after_otp_verification_url=reverse('get_new_password_after_otp_verification')
         UserAccount.objects.create(first_name='Kirath',last_name='Singh',email='singhkirath@gmail.com',
         phone_number='85138731',skills={},age=21,gender='M',address='address')
         OrgAccount.objects.create(name='Org1',email='kirath001@e.ntu.edu.sg',
         phone_number='85138732',address='address')
         Login.objects.create(email='singhkirath@gmail.com',password=pbkdf2_sha256.hash('Login@1234'),account_type='USER')
-        OTPVerification.objects.create(phone_number='85138731')
+        OTPVerification.objects.create(phone_number='85138731',time_of_otp='2022-03-23 14:00:43.723436',otp='123456')
+        OTPVerification.objects.create(phone_number='11111111',time_of_otp='2023-03-23 14:00:43.723436',otp='123456')
+        PasswordReset.objects.create(email='singhkirath@gmail.com',otp='123456',time_of_otp='2022-03-23 14:00:43.723436')
 
     def get_response_index(self):
         response=self.client.get(self.index_url)
@@ -233,3 +240,160 @@ class AuthenticationViewsTests(TestCase):
         response=self.client.get(self.verify_otp_url,content_type="application/json")
         self.assertEquals(response.status_code,int(error_codes.bad_request()))
         self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_verify_otp_for_invalid_data_return_bad_request(self):
+        response=self.client.post(self.verify_otp_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+    
+    def test_verify_otp_for_unregistered_phone_number_return_invalid_phone_number(self):
+        data={'phone_number':'12345678'}
+        response=self.client.post(self.verify_otp_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_phone_number()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid phone number')
+    
+    def test_verify_otp_for_expired_otp_return_expired_otp(self):
+        data={'phone_number':'85138731','otp':'123456'}
+        response=self.client.post(self.verify_otp_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.expired_otp()))
+        self.assertEquals((response.content).decode("utf-8") ,'Expired otp')
+    
+    def test_verify_otp_for_invalid_phone_number_return_invalid_phone_number(self):
+        data={'phone_number':'11111111','otp':'123456'}
+        response=self.client.post(self.verify_otp_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_phone_number()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid phone number')
+    
+    def test_verify_otp_for_valid_otp_return_otp_verified(self):
+        otp_verification=OTPVerification.objects.get(phone_number='85138731')
+        otp_verification.time_of_otp=datetime.now()
+        otp_verification.save()
+        data={'phone_number':'85138731','otp':'123456'}
+        response=self.client.post(self.verify_otp_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.otp_verified()))
+        self.assertEquals((response.content).decode("utf-8") ,'OTP verified')
+    
+    def test_password_reset_for_invalid_request_return_bad_request(self):
+        response=self.client.get(self.initiate_password_reset_url,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_password_reset_for_invalid_data_return_bad_request(self):
+        response=self.client.post(self.initiate_password_reset_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+    
+    def test_password_reset_for_invalid_email_return_invalid_email(self):
+        data={'email':'singhkirath'}
+        response=self.client.post(self.initiate_password_reset_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_email()))
+        self.assertEquals((response.content).decode("utf-8") ,'Email does not exist')
+    
+    def test_password_reset_for_valid_email_return_otp_sent(self):
+        data={'email':'singhkirath@gmail.com'}
+        response=self.client.post(self.initiate_password_reset_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.otp_sent()))
+        self.assertEquals((response.content).decode("utf-8") ,'OTP sent')
+    
+    def test_password_reset_OTP_verification_for_invalid_request_return_bad_request(self):
+        response=self.client.get(self.password_reset_OTP_verification_url,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_password_reset_OTP_verification_for_invalid_data_return_bad_request(self):
+        response=self.client.post(self.password_reset_OTP_verification_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+    
+    def test_password_reset_OTP_verification_for_invalid_email_return_invalid_email(self):
+        data={'email':'singhkirath@gmail'}
+        response=self.client.post(self.password_reset_OTP_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_email()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid Email')
+    
+    def test_password_reset_OTP_verification_for_invalid_otp_return_invalid_otp(self):
+        data={'email':'singhkirath@gmail.com','otp':'12345'}
+        response=self.client.post(self.password_reset_OTP_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_otp()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid OTP')
+    
+    def test_password_reset_OTP_verification_for_expired_otp_return_expired_otp(self):
+        data={'email':'singhkirath@gmail.com','otp':'123456'}
+        response=self.client.post(self.password_reset_OTP_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.expired_otp()))
+        self.assertEquals((response.content).decode("utf-8") ,'Expired OTP')
+    
+    def test_password_reset_OTP_verification_for_valid_otp_return_otp_verified(self):
+        data={'email':'singhkirath@gmail.com','otp':'123456'}
+        password_reset=PasswordReset.objects.get(email='singhkirath@gmail.com')
+        password_reset.time_of_otp='2023-03-23 14:00:43.723436'
+        password_reset.save()
+        response=self.client.post(self.password_reset_OTP_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.otp_verified()))
+        self.assertEquals((response.content).decode("utf-8") ,'OTP verified')
+    
+    def test_get_new_password_after_otp_verification_for_invalid_request_return_bad_request(self):
+        response=self.client.get(self.get_new_password_after_otp_verification_url,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+
+    def test_get_new_password_after_otp_verification_for_invalid_data_return_bad_request(self):
+        response=self.client.post(self.get_new_password_after_otp_verification_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+    
+    def test_get_new_password_after_otp_verification_for_invalid_email_return_bad_request(self):
+        data={'email':'singhkirath@gmail','password':'Login@1234'}
+        response=self.client.post(self.get_new_password_after_otp_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_email()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid Email')
+    
+    def test_get_new_password_after_otp_verification_for_invalid_otp_return_invalid_otp(self):
+        data={'email':'singhkirath@gmail.com','password':'Login@1234'}
+        response=self.client.post(self.get_new_password_after_otp_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_otp()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid OTP')
+    
+    def test_get_new_password_after_otp_verification_for_valid_otp_return_password_changed(self):
+        data={'email':'singhkirath@gmail.com','password':'Login@1234'}
+        password_reset=PasswordReset.objects.get(email='singhkirath@gmail.com')
+        password_reset.otp='valid'
+        password_reset.save()
+        response=self.client.post(self.get_new_password_after_otp_verification_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.password_changed()))
+        self.assertEquals((response.content).decode("utf-8") ,'Password Changed')
+    
+    def test_verify_email_for_invalid_request_return_bad_request(self):
+        response=self.client.get(self.verify_email_url,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_verify_email_for_invalid_data_return_bad_request(self):
+        response=self.client.post(self.verify_email_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+    
+    def test_verify_email_for_user_does_not_exist_return_invalid_email(self):
+        data={'type':'USER','email':'singhkirath@gmail'}
+        response=self.client.post(self.verify_email_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'Email does not exist')
+    
+    def test_verify_email_for_org_does_not_exist_return_invalid_email(self):
+        data={'type':'ORG','email':'singhkirath@gmail'}
+        response=self.client.post(self.verify_email_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'Email does not exist')
+    
+    def test_verify_email_for_user_return_email_sent(self):
+        data={'type':'USER','email':'singhkirath@gmail.com'}
+        response=self.client.post(self.verify_email_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.api_success()))
+        self.assertEquals((response.content).decode("utf-8") ,error_codes.verification_email_sent())
+    
+    def test_verify_email_for_org_return_email_sent(self):
+        data={'type':'ORG','email':'kirath001@e.ntu.edu.sg'}
+        response=self.client.post(self.verify_email_url,data,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.api_success()))
+        self.assertEquals((response.content).decode("utf-8") ,error_codes.verification_email_sent())
+    

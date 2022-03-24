@@ -417,7 +417,7 @@ def send_otp(request):
                 HttpResponse.status_code = int(error_codes.server_error())
                 return HttpResponse('Twilio error')
         
-        except:
+        except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('Deserialisation error '+str(e))
     
