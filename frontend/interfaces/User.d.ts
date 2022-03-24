@@ -26,3 +26,11 @@ export interface UserProfile {
 export interface UserWithPW extends User {
     password: string;
 }
+
+export interface UserCampaign {
+    campaign_id: number;
+    campaign_name: string;
+    organization_name: string;
+    status: string;
+    pk?: number;
+}

@@ -2,34 +2,39 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 //types
-import { UserType } from '@/app/slices/authSlice';
 import { OrganizationProfile } from '@/interfaces/Organization';
 import { OrganizationNotification } from '@/interfaces/Organization';
-import { UserProfile } from '@/interfaces/User';
+import { APIResponse } from '@/interfaces/Response';
 
 const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
     const [loading, setLoading] = useState<boolean>(true);
     const [profile, setProfile] = useState<OrganizationProfile>();
-    const [notification, setNotifications] = useState<OrganizationNotification>();
+    const [notification, setNotifications] = useState<OrganizationNotification[]>();
     const [campaigns, setCampaigns] = useState();
 
+    /**
+     * Loads the organization profile from API
+     */
     const getProfile = async () => {
         const response = await axios.get('/api/org_view/get_org_details');
-        const orgProfile = await response.data.fields;
-        //console.log(response);
+        const orgProfile = ((await response.data) as APIResponse<OrganizationProfile>).fields;
         setProfile(orgProfile);
         setLoading(false);
     };
 
+    /**
+     * Gets the org notifications (pending applications) from the API
+     */
     const getNotifications = async () => {
         const response = await axios.get('/api/org_view/view_org_notifs');
-        //console.log(response);
-        //const orgNotifs = (await response.data).map((notification: { fields: any; }) => notification.fields);
-        const orgNotifs = (await response.data).map(notif => ({...notif.fields, pk:notif.pk}))
-        console.log(orgNotifs);
+        const orgNotifs = ((await response.data) as APIResponse<OrganizationNotification>[]).map((notification) => ({
+            ...notification.fields,
+            pk: notification.pk,
+        }));
         setNotifications(orgNotifs);
         setLoading(false);
     };
+
     useEffect(() => {
         if (tab === 'PROFILE') {
             getProfile();

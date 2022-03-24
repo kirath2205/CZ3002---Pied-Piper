@@ -21,8 +21,6 @@ import {
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
-//utils
-import { convertDate, getHourAndMinutes } from '@/utils/datetime';
 
 /**
  * The yup validation for the create campaign form

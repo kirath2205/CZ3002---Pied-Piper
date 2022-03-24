@@ -1,15 +1,14 @@
 //mui
-import {Typography,Container,Grid,Avatar,IconButton,List,ListItem,ListItemAvatar,ListItemText} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Grid, Avatar, Container, Typography, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import ContactPage from '@mui/icons-material/ContactPage';
 import { styled } from '@mui/material/styles';
 //lib
-import axios from 'axios';
 import * as React from 'react';
+//types
+import { UserCampaign } from '@/interfaces/User';
 
 interface VolunteerApplicationHistoryProp {
-    history: string[];
+    history: UserCampaign[];
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -22,10 +21,7 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Application History page
  */
-const VolunteerApplicationHistory = ({history} : VolunteerApplicationHistoryProp) => {
-    const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
-
+const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryProp) => {
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -34,21 +30,25 @@ const VolunteerApplicationHistory = ({history} : VolunteerApplicationHistoryProp
 
             <Grid item>
                 <Demo>
-                <List dense={dense}>
-                        {history && history.map((h:any)=>{
-                            return(
+                    <List>
+                        {history &&
+                            history.map((campaign) => (
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar>
-                                            <ContactPage/>
+                                            <ContactPage />
                                         </Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary={h.campaign_id} secondary={h.organization} />
-                                    <ListItemText sx={{display:'flex', justifyContent:'flex-end'}} primary={h.status}/>
+                                    <ListItemText
+                                        primary={campaign.campaign_name ?? 'Campaign Name'}
+                                        secondary={campaign.organization_name ?? 'Organization Name'}
+                                    />
+                                    <ListItemText
+                                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                                        primary={campaign.status}
+                                    />
                                 </ListItem>
-                            )
-                        })
-                        }
+                            ))}
                     </List>
                 </Demo>
             </Grid>

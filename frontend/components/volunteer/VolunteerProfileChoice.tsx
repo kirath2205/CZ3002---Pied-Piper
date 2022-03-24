@@ -12,8 +12,8 @@ import VolunteerApplicationHistory from '@/components/volunteer/VolunteerApplica
 import useLoadUserProfile from '@/components/volunteer/useLoadUserProfile';
 //type
 import { UserProfile } from '@/interfaces/User';
-
 type ProfileType = 'PROFILE' | 'PENDING' | 'HISTORY';
+
 /**
  * Renders the profile choice component
  *
@@ -21,7 +21,7 @@ type ProfileType = 'PROFILE' | 'PENDING' | 'HISTORY';
  */
 const UserProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const {profile, pendingApps, campaignsHistory , loading } = useLoadUserProfile(tab);
+    const { profile, pendingApps, campaignsHistory, loading } = useLoadUserProfile(tab);
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
     };
@@ -37,12 +37,12 @@ const UserProfileChoice = (): JSX.Element => {
                 <Tabs value={tab} onChange={changeTab} variant='scrollable' allowScrollButtonsMobile>
                     <Tab label='Profile Info' value='PROFILE' />
                     <Tab label='Pending Application' value='PENDING' />
-                    <Tab label='Campaign History' value='HISTORY'/>
+                    <Tab label='Campaign History' value='HISTORY' />
                 </Tabs>
             </Box>
             {tab === 'PROFILE' && !loading && profile && <VolunteerProfileInfo profile={profile as UserProfile} />}
-            {tab === 'PENDING' && pendingApps && <VolunteerPendingApplication pendingList={pendingApps}/>}
-            {tab === 'HISTORY' && campaignsHistory && <VolunteerApplicationHistory history={campaignsHistory}/>}
+            {tab === 'PENDING' && pendingApps && <VolunteerPendingApplication pendingList={pendingApps} />}
+            {tab === 'HISTORY' && campaignsHistory && <VolunteerApplicationHistory history={campaignsHistory} />}
         </Container>
     );
 };

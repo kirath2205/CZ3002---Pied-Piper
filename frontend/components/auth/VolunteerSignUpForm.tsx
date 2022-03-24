@@ -25,6 +25,7 @@ import { Gender } from '@/interfaces/User';
 import { UserWithPW } from '@/interfaces/User';
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
+import SuccessAlert from '@/components/shared/SuccessAlert';
 
 /**
  * The yup validation for the sign up form for volunteers
@@ -79,7 +80,6 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 type: 'USER',
             };
             dispatch(clearError());
-            console.log(user);
             await dispatch(register(user as UserWithPW));
         },
     });
@@ -90,6 +90,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                 <Typography variant='h6' align='center'>
                     Sign up
                 </Typography>
+                <SuccessAlert>{authState.message}</SuccessAlert>
                 <ErrorAlert>{authState.error}</ErrorAlert>
                 <FormGroup row sx={{ mt: 2, gap: 2, flexWrap: 'nowrap' }}>
                     <TextField
