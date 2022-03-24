@@ -5,7 +5,7 @@ import FilterButton from '@/components/campaigns/FilterButton';
 //misc
 import styles from '@/styles/campaigns.module.css';
 //lib
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';
 //types
@@ -15,6 +15,7 @@ import { InferGetServerSidePropsType } from 'next';
 
 export default function Campaigns({ data, skills }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const [filter, setFilter] = useState<string>('');
+
     return (
         <Layout title='VolunteerGoWhere - Campaigns'>
             <div className={styles.container}>
@@ -32,7 +33,6 @@ export async function getServerSideProps() {
         ...campaign.fields,
         pk: campaign.pk,
     }));
-    console.log(data);
     //Get the skills available in the fetched campaigns
     const skills = [...Array.from(new Set(data.map((campaign) => campaign.skills.flat()).flat()))];
 

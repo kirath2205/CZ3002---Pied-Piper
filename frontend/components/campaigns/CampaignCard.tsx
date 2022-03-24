@@ -17,6 +17,7 @@ import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
 
 interface CampaignCardProps {
     campaign: Campaign;
+    userRegistered?: boolean;
     detailed?: boolean;
 }
 
@@ -26,7 +27,7 @@ interface CampaignCardProps {
  * @param {CampaignCardProps} props - The campaign
  * @returns {JSX.Element} - The Campaign Card component
  */
-const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element => {
+const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps): JSX.Element => {
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
     const router = useRouter();
@@ -83,9 +84,9 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                             variant='contained'
                             sx={{ backgroundColor: '#12CDD4' }}
                             aria-label={`learn-more-${campaign.title}`}
-                            disabled={!loggedIn || userType === 'ORG'}
+                            disabled={!loggedIn || userType === 'ORG' || userRegistered}
                         >
-                            Volunteer Now
+                            {userRegistered ? 'Already applied' : 'Volunteer Now'}
                         </Button>
                     ) : (
                         <UnstyledLink href={`/campaigns/${campaign.pk}`}>

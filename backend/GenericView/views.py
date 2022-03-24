@@ -87,6 +87,7 @@ def get_campaign_using_campaign_id(request,campaign_id):
         response_data['end_time']=campaign_details.end_time
         response_data['volunteer_count']=campaign_details.volunteer_count
         response_data['minimum_age']=campaign_details.minimum_age
+        response_data['pk']=campaign_id
 
         JsonResponse.status_code=int(error_codes.api_success())
         return JsonResponse(response_data)
