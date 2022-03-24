@@ -133,6 +133,7 @@ export const authSlice = createSlice({
         builder.addCase(logout.fulfilled, (state) => {
             state.loading = false;
             state.loggedIn = false;
+            state.user = undefined;
         });
         builder.addCase(logout.rejected, (state, action) => {
             state.loading = false;

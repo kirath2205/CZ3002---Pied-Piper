@@ -24,6 +24,7 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl, userType }: ProfileMenuProps)
     const logoutHandler = () => {
         if (dispatch && dispatch !== null && dispatch !== undefined) {
             dispatch(logout());
+            router.replace('/');
         }
     };
 
