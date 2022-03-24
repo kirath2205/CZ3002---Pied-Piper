@@ -1,10 +1,6 @@
-import { Button, Typography } from '@mui/material';
+import { Button, Palette, Typography } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import React, { useState } from 'react';
-import Data from '@/pages/campaigns/data';
-import Palette from '@/components/Theme/theme'
-import { boolean } from 'yup';
-
 interface Props{
     id : number
     campaigns: any
@@ -20,9 +16,9 @@ const FilterButton = ({id, campaigns, setCampaign}:Props) => {
   } 
   const filterItem = (id:number , curskill: any)  => {
     setActiveButton(id);
-    const newCampaign = Data.filter((newVal) => {
+    const newCampaign = Data.filter((Val) => {
         for (let i = 0; i < curskill.length; i++){
-            if(!newVal.skills.includes(curskill[i]))
+            if(!Val.skills.includes(curskill[i]))
             {
                 return false;
             }

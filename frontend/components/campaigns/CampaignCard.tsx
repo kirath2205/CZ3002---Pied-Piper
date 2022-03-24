@@ -1,5 +1,5 @@
 //mui
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, Stack, Box, Modal } from '@mui/material';
+import { Card, CardActions, CardContent, CardMedia, Button, Typography, Stack, Box } from '@mui/material';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -9,9 +9,11 @@ import React, { useState } from 'react';
 import { Campaign } from '@/interfaces/Campaign';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
+
 import handleOpen from '@/pages/campaigns/[id]'
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
+
 interface CampaignCardProps {
     campaign: Campaign;
     detailed?: boolean;
@@ -24,6 +26,7 @@ interface CampaignCardProps {
  * @returns {JSX.Element} - The Campaign Card component
  */
 const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element => {
+
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -60,16 +63,10 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                     </Box>
                 </Stack>
                 {detailed && (
-                    <>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        <Typography variant='body1'>Skills required:</Typography>
-                            {campaign.skills}
-                        </Box>
-                        <Box pt={2}>
-                            <Typography variant='body1'>About the activity</Typography>
-                            <Typography variant='body2'>{campaign.description}</Typography>
-                        </Box>
-                    </>
+                    <Box pt={2}>
+                        <Typography variant='body1'>About the activity</Typography>
+                        <Typography variant='body2'>{campaign.description}</Typography>
+                    </Box>
                 )}
             </CardContent>
             <CardActions sx={{ pl: 2, mt: -1.2, mb: 0.4 }}>
@@ -84,9 +81,8 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                         Volunteer Now
                     </Button>
                 ) : (
-                    <div>
+                    <UnstyledLink href={`/campaigns/${campaign.id}`}>
                         <Button
-                            onClick={handleOpen}
                             size='small'
                             variant='contained'
                             sx={{ backgroundColor: '#12CDD4' }}
@@ -94,18 +90,7 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                         >
                             Learn More
                         </Button>
-                        <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                            >
-                            <Box px={4} pt={2}>
-                                <CampaignCard campaign={campaign} detailed />
-
-                            </Box>
-                        </Modal>
-                    </div>
+                    </UnstyledLink>
                 )}
             </CardActions>
         </Card>

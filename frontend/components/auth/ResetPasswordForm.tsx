@@ -37,7 +37,6 @@ const ResetPasswordForm = ({ email }: ResetPasswordFormProps): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log('resetpassword' + email);
             try {
                 setError('');
                 const apiRes = await axios.post(`/api/auth/get_new_password_after_otp_verification/`, {

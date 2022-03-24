@@ -5,6 +5,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import React from 'react';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
+//types
 import { UserType } from '@/app/slices/authSlice';
 
 interface SidebarProps {
@@ -28,14 +29,12 @@ const Sidebar = ({ closeSidebar, loggedIn, userType }: SidebarProps): JSX.Elemen
             </ListItem>
             {!loggedIn && (
                 <ListItem>
-                    <UnstyledLink href='/auth/signup'>Be a volunteer</UnstyledLink>
+                    <UnstyledLink href='/campaigns'>Be a volunteer</UnstyledLink>
                 </ListItem>
             )}
-            {loggedIn && userType === 'USER' && (
-                <ListItem>
-                    <UnstyledLink href='/campaigns'>Browse Campaigns</UnstyledLink>
-                </ListItem>
-            )}
+            <ListItem>
+                <UnstyledLink href='/campaigns'>Browse Campaigns</UnstyledLink>
+            </ListItem>
             {loggedIn && userType === 'ORG' && (
                 <ListItem>
                     <UnstyledLink href='/campaigns/create-campaign'>Create Campaign</UnstyledLink>

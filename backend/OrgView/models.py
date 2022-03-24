@@ -13,17 +13,12 @@ class Campaign(models.Model):
     organisation_email = models.EmailField()
     location = models.CharField(max_length=200)
     skills = JSONField(null=True)
-    date = models.DateField(default=now)
-    time = models.TimeField(default=now)
+    date_time=models.DateTimeField(default=now)
     description = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
-    duration = models.IntegerField(default=1)
+    end_time = models.DateTimeField(default=now)
     volunteer_count = models.IntegerField(default=1)
     minimum_age = models.IntegerField(default=14)
-    class Status(models.TextChoices):
-        UPCOMING = 'U',_('Upcoming')
-        COMPLETED = 'C',_('Completed')
-    status = models.CharField(max_length=1,choices=Status.choices,default=Status.UPCOMING)
 
 class OrgNotif(models.Model):
     user_id=models.IntegerField(default=None)
@@ -35,10 +30,10 @@ class OrgNotif(models.Model):
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
     org_id=models.IntegerField(default=None)
 
-class AcceptedUsers:
+class AcceptedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)
 
-class RejectedUsers:
+class RejectedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)

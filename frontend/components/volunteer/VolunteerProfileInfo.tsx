@@ -1,5 +1,17 @@
 //mui
-import { Avatar, Box, Button, Container, Divider, FormControl, FormGroup, FormHelperText, InputLabel, MenuItem, Select, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+import {
+    Button,
+    Container,
+    FormControl,
+    FormGroup,
+    FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 //lib
 import React from 'react';
 import { useFormik } from 'formik';
@@ -11,12 +23,16 @@ import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //types
-import { Gender, User, UserWithPW } from '@/interfaces/User';
+import { Gender, User, UserProfile, UserWithPW } from '@/interfaces/User';
+
+interface VolunteerProfileInfoProps {
+    profile: UserProfile;
+}
 
 /**
  * The yup validation for the sign up form for volunteers
  */
- const validationSchema = yup.object({
+const validationSchema = yup.object({
     email: yup.string().required('Email is required'),
     password: yup.string().required('Password is required'),
     firstName: yup.string().required('First Name is required'),
@@ -32,23 +48,20 @@ import { Gender, User, UserWithPW } from '@/interfaces/User';
     skills: yup.array().min(1, 'At least one skill is required'),
 });
 
-
-const VolunteerProfileInfo = (): JSX.Element => {
-    
+const VolunteerProfileInfo = ({ profile }: VolunteerProfileInfoProps): JSX.Element => {
     const dispatch = useAppDispatch();
     const authState = useAppSelector(selectAuthState);
-    const router = useRouter();
     const formik = useFormik({
         initialValues: {
-            email: '',
+            email: profile.email,
             password: '',
-            firstName: '',
-            lastName: '',
-            skills: [],
-            age: 0,
-            phone: '',
-            gender: '',
-            address: '',
+            firstName: profile.first_name,
+            lastName: profile.last_name,
+            skills: profile.skills,
+            age: profile.age,
+            phone: profile.phone_number,
+            gender: profile.gender,
+            address: profile.address,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {

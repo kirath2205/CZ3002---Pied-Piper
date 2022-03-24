@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 //mui
-import { DatePicker, LocalizationProvider, TimePicker } from '@mui/lab';
+import { DateTimePicker, LocalizationProvider, TimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Button,
@@ -30,11 +30,16 @@ import { convertDate, getHourAndMinutes } from '@/utils/datetime';
 const validationSchema = yup.object({
     location: yup.string().required('Location is required'),
     skills: yup.array().min(1, 'At least one skill is required'),
-    date: yup.date().required('Date is required'),
-    time: yup.string().required('Start time is required'),
+    date_time: yup
+        .date()
+        .min(new Date(), 'Start datetime cannot be in the past')
+        .required('Start datetime is required'),
+    end_time: yup
+        .date()
+        .min(yup.ref('date_time'), 'End datetime must be after start datetime')
+        .required('End datetime is required'),
     description: yup.string().required('Description is required'),
     title: yup.string().required('Title is required'),
-    duration: yup.string().required('Duration is required'),
     volunteer_count: yup.string().min(1, 'Enter a valid number').required('Volunteer Count is required'),
     minimum_age: yup
         .number()
@@ -57,11 +62,10 @@ const CreateCampaign = (): JSX.Element => {
         initialValues: {
             location: '',
             skills: [],
-            date: '',
-            time: '',
+            date_time: '',
+            end_time: '',
             description: '',
             title: '',
-            duration: '',
             volunteer_count: '',
             minimum_age: '',
         },
@@ -72,18 +76,16 @@ const CreateCampaign = (): JSX.Element => {
                 const apiRes = await axios.post(`/api/org_view/create_campaign/`, {
                     location: values.location,
                     skills: values.skills,
-                    date: convertDate(values.date as unknown as Date),
-                    time: getHourAndMinutes(values.time as unknown as Date),
+                    date_time: values.date_time,
+                    end_time: values.end_time,
                     description: values.description,
                     title: values.title,
-                    duration: values.duration,
                     volunteer_count: values.volunteer_count,
                     minimum_age: values.minimum_age,
                 });
                 setSuccess(true);
                 formik.resetForm();
             } catch (err: any) {
-                console.log('err');
                 setSuccess(false);
                 setError('Failed to Create Campaign. Please try again!');
             }
@@ -134,47 +136,49 @@ const CreateCampaign = (): JSX.Element => {
                     </FormControl>
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DateTimePicker
                             minDate={new Date()}
-                            value={formik.values.date}
+                            value={formik.values.date_time}
                             onChange={(value) => {
-                                formik.setFieldValue('date', value);
+                                formik.setFieldValue('date_time', value);
                             }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label='Date'
-                                    id='date'
-                                    name='date'
+                                    label='Event Datetime (Start)'
+                                    id='date_time'
+                                    name='date_time'
                                     fullWidth
                                     sx={{ mt: 2 }}
-                                    error={formik.touched.date && Boolean(formik.errors.date)}
-                                    helperText={formik.touched.date && formik.errors.date}
+                                    error={formik.touched.date_time && Boolean(formik.errors.date_time)}
+                                    helperText={formik.touched.date_time && formik.errors.date_time}
                                 />
                             )}
                         />
                     </LocalizationProvider>
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <TimePicker
-                            value={formik.values.time}
+                        <DateTimePicker
+                            minDate={new Date()}
+                            value={formik.values.end_time}
                             onChange={(value) => {
-                                formik.setFieldValue('time', value);
+                                formik.setFieldValue('end_time', value);
                             }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label='Start time'
-                                    id='time'
-                                    name='time'
+                                    label='Event Datetime (End)'
+                                    id='end_time'
+                                    name='end_time'
                                     fullWidth
                                     sx={{ mt: 2 }}
-                                    error={formik.touched.time && Boolean(formik.errors.time)}
-                                    helperText={formik.touched.time && formik.errors.time}
+                                    error={formik.touched.end_time && Boolean(formik.errors.end_time)}
+                                    helperText={formik.touched.end_time && formik.errors.end_time}
                                 />
                             )}
                         />
                     </LocalizationProvider>
+
                     <TextField
                         sx={{ mt: 2 }}
                         fullWidth
@@ -197,19 +201,6 @@ const CreateCampaign = (): JSX.Element => {
                         onChange={formik.handleChange}
                         error={formik.touched.description && Boolean(formik.errors.description)}
                         helperText={formik.touched.description && formik.errors.description}
-                    />
-
-                    <TextField
-                        sx={{ mt: 2 }}
-                        fullWidth
-                        id='duration'
-                        name='duration'
-                        label='Duration (hours)'
-                        type='number'
-                        value={formik.values.duration}
-                        onChange={formik.handleChange}
-                        error={formik.touched.duration && Boolean(formik.errors.duration)}
-                        helperText={formik.touched.duration && formik.errors.duration}
                     />
 
                     <TextField

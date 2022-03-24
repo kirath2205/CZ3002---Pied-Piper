@@ -1,7 +1,9 @@
-from backend.OrgView.models import Campaign
-from backend.Authentication.models import UserAccount
-from datetime import date
+from Authentication.models import UserAccount
+from OrgView.models import Campaign
+from Authentication.models import *
+from datetime import date,timedelta
 from django.db.models import fields
+from django.db.models import Q
 
 from django.http.response import JsonResponse
 from Authentication.views import verify_jwt_token_local
@@ -73,7 +75,7 @@ def register_for_campaign(request):
 
             try:
                 user_account = UserAccount.objects.get(email=email)
-            except OrgAccount.DoesNotExist as e:
+            except UserAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
@@ -83,12 +85,12 @@ def register_for_campaign(request):
             except Campaign.DoesNotExist as e:
                 HttpResponse.status_code = int(error_codes.bad_request())
                 return HttpResponse('404 error')
-            
-            user_id=user_account.get('user_id')
+
+            user_id=user_account.user_id
 
             try:
                 check_if_tried_registration = OrgNotif.objects.get(user_id=user_id)
-                status=check_if_tried_registration.get('status')
+                status=check_if_tried_registration.status
                 if(status=='P'):
                     HttpResponse.status_code=int(error_codes.pending_request())
                     return HttpResponse('Pending Request') 
@@ -104,22 +106,29 @@ def register_for_campaign(request):
             except OrgNotif.DoesNotExist as e:
                 pass
             
-            date=campaign.get('date')
-            time=campaign.get('time')
-            duration=campaign.get('duration')
-            campaign_slot_clashes=UserCampaign.objects.filter(date==date ,time__gte=time , time__lte=(time+duration))
+            #TODO test this
+            date_time_current_campaign=campaign.date_time
+            end_time_current_campaign=campaign.end_time
             
-            if not campaign_slot_clashes:
-                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date=date,time=time,duration=duration)
+            try:
+                campaign_slot_clashes=UserCampaign.objects.get( 
+                    Q(user_id=user_id) & 
+                    Q( 
+                        Q(date_time__gte=date_time_current_campaign) & Q(date_time__lte=end_time_current_campaign) |
+                        Q(end_time__gte=date_time_current_campaign) & Q(end_time__lte=end_time_current_campaign) 
+                    ) 
+                )
+                HttpResponse.status_code=int(error_codes.campaign_time_clash())
+                return HttpResponse('User campaign clash')
+
+            except UserCampaign.DoesNotExist as e:
+                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign)
                 new_user_campaign.save()
-                org_id = OrgAccount.objects.get(email=email)
+                org_id = (OrgAccount.objects.get(email=email)).user_id
                 new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())
                 return HttpResponse('User campaign Created')
-            
-            HttpResponse.status_code=int(error_codes.campaign_time_clash())
-            return HttpResponse('User campaign clash')
         
         except Exception as e:
             HttpResponse.status_code = int(error_codes.bad_request())
@@ -128,3 +137,79 @@ def register_for_campaign(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+
+@csrf_exempt
+def get_all_pending_application_for_user(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            user_id=user_account.user_id
+
+            all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id, status='P')
+
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def get_all_past_campaigns_for_user(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            user_id=user_account.user_id
+
+            all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id).exclude(status ='P')
+
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+
+
+@csrf_exempt
+def unregister_for_campaign(request):
+    pass

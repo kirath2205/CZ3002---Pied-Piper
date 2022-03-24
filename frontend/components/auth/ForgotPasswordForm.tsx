@@ -39,7 +39,6 @@ const ForgotPasswordForm = ({ sentOTP, sentEmail }: ForgotPasswordFormProps): JS
                 const apiRes = await axios.post(`/api/auth/initiate_password_reset/`, { email: values.email });
                 sentOTP();
                 sentEmail(values.email);
-                console.log('initiate password reset' + values.email);
                 formik.resetForm();
             } catch (err: any) {
                 setError(err.message);

@@ -96,7 +96,11 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                                 >
                                     <AccountCircle />
                                 </IconButton>
-                                <ProfileMenu closeAccountMenu={closeAccountMenu} anchorEl={anchorEl} />
+                                <ProfileMenu
+                                    closeAccountMenu={closeAccountMenu}
+                                    anchorEl={anchorEl}
+                                    userType={userType}
+                                />
                             </>
                         ) : (
                             <IconButton size='large' color='inherit' onClick={() => Router.push('/auth/signin')}>

@@ -19,6 +19,14 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import * as React from 'react';
 
+//types
+import { OrganizationWithPW } from '@/interfaces/Organization';
+import { OrganizationNotification } from '@/interfaces/Organization';
+
+interface OrganizationNotificationProps {
+    notificationList: string[];
+}
+
 function generate(element: React.ReactElement) {
     return [0, 1, 2].map((value) =>
         React.cloneElement(element, {
@@ -37,7 +45,7 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Approve Application page
  */
-const ApproveApplication = () => {
+const ApproveApplication = ({ notificationList }: OrganizationNotificationProps) => {
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
 
@@ -50,14 +58,15 @@ const ApproveApplication = () => {
             <Grid item>
                 <Demo>
                     <List dense={dense}>
-                        {generate(
-                            <ListItem>
+                        {notificationList && notificationList.map((c:any)=>{
+                            return(
+                            <ListItem key={c.pk}>
                                 <ListItemAvatar>
                                     <Avatar>
                                         <FaceIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText primary='Volunteer Name' secondary='Applying Campaign Name' />
+                                <ListItemText primary={c.user_name??"Wei Hong"} secondary={c.campaign_name??"NTU Volunteer Campaign"} />
                                 <IconButton edge='end' aria-label='delete'>
                                     <CancelIcon />
                                 </IconButton>
@@ -65,7 +74,9 @@ const ApproveApplication = () => {
                                     <CheckCircleIcon />
                                 </IconButton>
                             </ListItem>
-                        )}
+                            )
+                        })
+                        }
                     </List>
                 </Demo>
             </Grid>

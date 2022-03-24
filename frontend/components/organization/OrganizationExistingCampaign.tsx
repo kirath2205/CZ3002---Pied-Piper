@@ -31,10 +31,10 @@ const Demo = styled('div')(({ theme }) => ({
 }));
 
 /**
- * Renders the Approve Application page
+ * Renders the Organization Existing Campaign page
  *
  *
- * @returns {JSX.Element} - The Approve Application page
+ * @returns {JSX.Element} - The Organization Existing Campaign page
  */
 const OrganizationExistingCampaign = () => {
     const [dense, setDense] = React.useState(false);

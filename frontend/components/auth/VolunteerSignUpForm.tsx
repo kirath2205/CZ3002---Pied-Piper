@@ -70,9 +70,16 @@ const VolunteerSignUpForm = (): JSX.Element => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const { firstName, lastName, phone } = values;
-            const user = { ...values, first_name: firstName, last_name: lastName, phone_number: phone, type: 'USER' };
+            const { firstName, lastName, phone, age } = values;
+            const user = {
+                ...values,
+                first_name: firstName,
+                last_name: lastName,
+                phone_number: phone,
+                type: 'USER',
+            };
             dispatch(clearError());
+            console.log(user);
             await dispatch(register(user as UserWithPW));
         },
     });

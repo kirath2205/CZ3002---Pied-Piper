@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const apiRes = await axios.post(`${API_URL}/auth/verify_jwt_token/`, {
                 access_token,
             });
-            console.log(apiRes);
+
             const data = await apiRes.data;
 
             if (apiRes.status === 200) {

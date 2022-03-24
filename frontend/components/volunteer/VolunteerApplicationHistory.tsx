@@ -8,12 +8,8 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import * as React from 'react';
 
-function generate(element: React.ReactElement) {
-    return [0, 1, 2].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        })
-    );
+interface VolunteerApplicationHistoryProp {
+    history: string[];
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -26,7 +22,7 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Application History page
  */
-const VolunteerApplicationHistory = () => {
+const VolunteerApplicationHistory = ({history} : VolunteerApplicationHistoryProp) => {
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
 
@@ -38,18 +34,21 @@ const VolunteerApplicationHistory = () => {
 
             <Grid item>
                 <Demo>
-                    <List dense={dense}>
-                        {generate(
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ContactPage />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary='Campaign Name' secondary='Organization Name' />
-                                <ListItemText sx={{display:'flex', justifyContent:'flex-end'}} primary='Approved / Rejected'/>
-                            </ListItem>
-                        )}
+                <List dense={dense}>
+                        {history && history.map((h:any)=>{
+                            return(
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <ContactPage/>
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary={h.campaign_id} secondary={h.organization} />
+                                    <ListItemText sx={{display:'flex', justifyContent:'flex-end'}} primary={h.status}/>
+                                </ListItem>
+                            )
+                        })
+                        }
                     </List>
                 </Demo>
             </Grid>
