@@ -1,19 +1,25 @@
 //mui
-import {Typography,Container,Grid,Avatar,IconButton,List,ListItem,ListItemAvatar,ListItemText} from '@mui/material';
-import FaceIcon from '@mui/icons-material/Face';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import {
+    Typography,
+    Container,
+    Grid,
+    Avatar,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+} from '@mui/material';
+import ContactPage from '@mui/icons-material/ContactPage';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { styled } from '@mui/material/styles';
 //lib
-import axios from 'axios';
 import * as React from 'react';
+import { UserCampaign } from '@/interfaces/User';
+//types
 
-function generate(element: React.ReactElement) {
-    return [0, 1, 2].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        })
-    );
+interface VolunteerPendingApplicationProp {
+    pendingList: UserCampaign[];
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -26,10 +32,7 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Pending Application page
  */
-const VolunteerPendingApplication = () => {
-    const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
-
+const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicationProp): JSX.Element => {
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -38,20 +41,25 @@ const VolunteerPendingApplication = () => {
 
             <Grid item>
                 <Demo>
-                    <List dense={dense}>
-                        {generate(
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <FaceIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary='Campaign Name' secondary='Campaign Organization Name' />
-                                <IconButton edge='end' aria-label='delete'>
-                                    <CancelIcon />
-                                </IconButton>
-                            </ListItem>
-                        )}
+                    <List>
+                        {pendingList &&
+                            pendingList.map((campaign) => (
+                                <ListItem key={campaign.pk}>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <ContactPage />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    {/**TODO: Add the corresponding fields to interface once API is created */}
+                                    <ListItemText
+                                        primary={campaign.campaign_name ?? 'Campaign Name'}
+                                        secondary={campaign.organization_name ?? 'Organization Name'}
+                                    />
+                                    <IconButton edge='end' aria-label='delete'>
+                                        <CancelIcon />
+                                    </IconButton>
+                                </ListItem>
+                            ))}
                     </List>
                 </Demo>
             </Grid>

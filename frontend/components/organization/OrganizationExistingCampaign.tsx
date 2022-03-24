@@ -15,7 +15,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContactPage from '@mui/icons-material/ContactPage';
 import { styled } from '@mui/material/styles';
 //lib
-import axios from 'axios';
 import * as React from 'react';
 
 function generate(element: React.ReactElement) {
@@ -37,9 +36,6 @@ const Demo = styled('div')(({ theme }) => ({
  * @returns {JSX.Element} - The Organization Existing Campaign page
  */
 const OrganizationExistingCampaign = () => {
-    const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
-
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -48,7 +44,7 @@ const OrganizationExistingCampaign = () => {
 
             <Grid item>
                 <Demo>
-                    <List dense={dense}>
+                    <List>
                         {generate(
                             <ListItem
                                 secondaryAction={

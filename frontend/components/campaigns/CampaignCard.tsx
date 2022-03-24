@@ -4,11 +4,15 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 //libs
-import React from 'react';
+import React, { useState } from 'react';
 //types
 import { Campaign } from '@/interfaces/Campaign';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
+
+import handleOpen from '@/pages/campaigns/[id]'
+import { useAppSelector } from '@/app/hooks';
+import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
 
 interface CampaignCardProps {
     campaign: Campaign;
@@ -22,6 +26,12 @@ interface CampaignCardProps {
  * @returns {JSX.Element} - The Campaign Card component
  */
 const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element => {
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const loggedIn = useAppSelector(selectLoggedIn);
+    const userType = useAppSelector(selectUserType);
     return (
         <Card raised>
             <CardMedia
@@ -66,6 +76,7 @@ const CampaignCard = ({ campaign, detailed }: CampaignCardProps): JSX.Element =>
                         variant='contained'
                         sx={{ backgroundColor: '#12CDD4' }}
                         aria-label={`learn-more-${campaign.title}`}
+                        disabled = {loggedIn && userType === 'ORG'}
                     >
                         Volunteer Now
                     </Button>

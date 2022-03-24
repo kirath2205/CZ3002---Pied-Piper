@@ -139,5 +139,77 @@ def register_for_campaign(request):
         return HttpResponse('404 error')
 
 @csrf_exempt
+def get_all_pending_application_for_user(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            user_id=user_account.user_id
+
+            all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id, status='P')
+
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+@csrf_exempt
+def get_all_past_campaigns_for_user(request):
+    if(request.method=="GET"):
+        
+        try:
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            user_id=user_account.user_id
+
+            all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id).exclude(status ='P')
+
+            JsonResponse.status_code=int(error_codes.api_success())
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            return JsonResponse(serialized_campaign_data,safe=False)
+            
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
+
+
+@csrf_exempt
 def unregister_for_campaign(request):
     pass

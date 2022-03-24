@@ -21,6 +21,12 @@ import {
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
+//types
+import { Campaign } from '@/interfaces/Campaign';
+
+interface OrganizationUpdateCampaignProps {
+    campaign: Campaign;
+}
 
 /**
  * The yup validation for the create campaign form
@@ -47,12 +53,12 @@ const validationSchema = yup.object({
 });
 
 /**
- * Renders the create campaign page for organisation
+ * Renders the update campaign page for organisation
  *
  *
- * @returns {JSX.Element} - The create campaign page for organisation
+ * @returns {JSX.Element} - The update campaign page for organisation
  */
-const CreateCampaign = (): JSX.Element => {
+const UpdateCampaign = (): JSX.Element => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -71,7 +77,7 @@ const CreateCampaign = (): JSX.Element => {
         onSubmit: async (values) => {
             try {
                 setError('');
-                const apiRes = await axios.post(`/api/org_view/create_campaign/`, {
+                const apiRes = await axios.post(`/api/org_view/update_campaign_details/`, {
                     location: values.location,
                     skills: values.skills,
                     date_time: values.date_time,
@@ -85,7 +91,7 @@ const CreateCampaign = (): JSX.Element => {
                 formik.resetForm();
             } catch (err: any) {
                 setSuccess(false);
-                setError('Failed to Create Campaign. Please try again!');
+                setError('Failed to Update Campaign. Please try again!');
             }
         },
     });
@@ -94,10 +100,10 @@ const CreateCampaign = (): JSX.Element => {
         <Container maxWidth='sm' sx={{ mt: 1 }}>
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
-                    Create Campaign
+                    Update Campaign (Campaign Name)
                 </Typography>
                 {error && <ErrorAlert>{error}</ErrorAlert>}
-                {success && <SuccessAlert>Campaign created Successfully</SuccessAlert>}
+                {success && <SuccessAlert>Campaign updated Successfully</SuccessAlert>}
                 <Stack gap={0.5}>
                     <TextField
                         sx={{ mt: 2 }}
@@ -235,9 +241,9 @@ const CreateCampaign = (): JSX.Element => {
                         variant='contained'
                         fullWidth
                         type='submit'
-                        aria-label='create-campaign'
+                        aria-label='update-campaign'
                     >
-                        Create Campaign
+                        Update Campaign
                     </Button>
                 </Stack>
             </form>
@@ -245,4 +251,4 @@ const CreateCampaign = (): JSX.Element => {
     );
 };
 
-export default CreateCampaign;
+export default UpdateCampaign;

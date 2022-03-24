@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { API_URL } from '@/utils/constants/config';
 import axios from 'axios';
-import { getLatestAccessToken } from '@/utils/cookieParser';
+import { getCookieValue, getLatestAccessToken } from '@/utils/cookieParser';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
@@ -12,11 +12,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         try {
-            const apiRes = await axios.get(`${API_URL}/org_view/view_org_notifs`, {
+            const apiRes = await axios.get(`${API_URL}/user_view/get_all_past_campaigns_for_user/`, {
                 headers: {
                     Authorization: access,
                 },
             });
+
             const data = await apiRes.data;
 
             if (apiRes.status === 200) {
