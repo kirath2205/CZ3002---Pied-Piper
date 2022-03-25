@@ -11,7 +11,7 @@ import Layout from '@/components/shared/Layout';
 import { Campaign } from '@/interfaces/Campaign';
 import { UserCampaign } from '@/interfaces/User';
 import { APIResponse } from '@/interfaces/Response';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 //redux
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '@/app/slices/authSlice';
@@ -44,13 +44,17 @@ export default function IndividualCampaignPage({ campaign }: InferGetServerSideP
     return (
         <Layout>
             <Container maxWidth='lg'>
-                <CampaignCard campaign={campaign} detailed userRegistered={userCampaigns.includes(campaign.pk)} />
+                <CampaignCard
+                    campaign={campaign}
+                    detailed
+                    userRegistered={userCampaigns.includes(campaign.pk as number)}
+                />
             </Container>
         </Layout>
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     const { id } = context.query;
 
     const response = await axios.get(`${API_URL}/generic_view/get_campaign_using_campaign_id/${id}`);

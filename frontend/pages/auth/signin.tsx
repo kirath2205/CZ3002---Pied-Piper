@@ -1,12 +1,15 @@
 import SignInForm from '@/components/auth/SignInForm';
 import Layout from '@/components/shared/Layout';
+import Fade from 'react-reveal/Fade';
 import { redirectToHome } from '@/utils/redirect';
 import { GetServerSidePropsContext } from 'next';
 
 export default function SignIn() {
     return (
         <Layout title='VolunteerGoWhere - Sign In'>
-            <SignInForm />
+            <Fade bottom>
+                <SignInForm />
+            </Fade>
         </Layout>
     );
 }
