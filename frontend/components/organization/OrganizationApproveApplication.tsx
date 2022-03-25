@@ -49,8 +49,8 @@ const ApproveApplication = ({ notificationList, approveApplication }: Organizati
                     <List>
                         {notificationList &&
                             notificationList.map((notification) => (
-                                <Fade bottom duration={600}>
-                                    <ListItem key={notification.pk}>
+                                <Fade bottom duration={600} key={notification.pk}>
+                                    <ListItem>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FaceIcon />

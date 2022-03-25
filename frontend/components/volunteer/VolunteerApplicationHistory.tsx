@@ -44,8 +44,8 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
                         )}
                         {history &&
                             history.map((campaign) => (
-                                <Fade bottom duration={600}>
-                                    <ListItem key={campaign.pk}>
+                                <Fade bottom duration={600} key={campaign.pk}>
+                                    <ListItem>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <ContactPage />
