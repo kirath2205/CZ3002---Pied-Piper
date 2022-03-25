@@ -142,6 +142,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                         onChange={formik.handleChange}
                         error={formik.touched.age && Boolean(formik.errors.age)}
                         helperText={formik.touched.age && formik.errors.age}
+                        onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     />
                 </FormGroup>
                 <TextField
@@ -156,6 +157,7 @@ const VolunteerSignUpForm = (): JSX.Element => {
                     type='number'
                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                     helperText={formik.touched.phone && formik.errors.phone}
+                    onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                 />
                 <TextField
                     sx={{ mt: 2 }}

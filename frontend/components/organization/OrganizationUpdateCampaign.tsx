@@ -231,6 +231,7 @@ const OrganizationUpdateCampaign = ({ campaign }: OrganizationUpdateCampaignProp
                         onChange={formik.handleChange}
                         error={formik.touched.volunteer_count && Boolean(formik.errors.volunteer_count)}
                         helperText={formik.touched.volunteer_count && formik.errors.volunteer_count}
+                        onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     />
 
                     <TextField
@@ -244,6 +245,7 @@ const OrganizationUpdateCampaign = ({ campaign }: OrganizationUpdateCampaignProp
                         onChange={formik.handleChange}
                         error={formik.touched.minimum_age && Boolean(formik.errors.minimum_age)}
                         helperText={formik.touched.minimum_age && formik.errors.minimum_age}
+                        onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     />
                 </Stack>
 
