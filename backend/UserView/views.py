@@ -244,6 +244,50 @@ def get_all_past_campaigns_for_user(request):
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
 
+@csrf_exempt
+def update_user_details(request):
+    if(request.method=="POST"):
+    
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            print(data)
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+            skills = data.get('skills')
+            age = data.get('age')
+            gender = data.get('gender')        
+            address=data.get('address')
+            user_account.first_name = first_name
+            user_account.last_name = last_name
+            user_account.address = address
+            user_account.age = age
+            user_account.gender = gender
+            user_account.skills = skills
+            user_account.save()
+            HttpResponse.status_code=int(error_codes.api_success())
+            return HttpResponse('Details Changed')
+        
+        except Exception as e:
+            print(e)
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
 
 
 @csrf_exempt

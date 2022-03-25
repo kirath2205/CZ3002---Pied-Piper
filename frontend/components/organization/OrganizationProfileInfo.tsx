@@ -1,19 +1,14 @@
 //lib
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useState } from 'react';
 //mui
 import { Button, TextField, Typography, Container, Stack } from '@mui/material';
-//services
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { register, selectAuthState, clearError } from '@/app/slices/authSlice';
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
 //types
-import { OrganizationWithPW } from '@/interfaces/Organization';
 import { OrganizationProfile } from '@/interfaces/Organization';
 
 interface OrganizationProfileInfoProps {
@@ -38,9 +33,8 @@ const validationSchema = yup.object({
  */
 const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX.Element => {
     const [error, setError] = useState('');
-    const dispatch = useAppDispatch();
-    const authState = useAppSelector(selectAuthState);
     const [success, setSuccess] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             email: profile.email,
@@ -61,6 +55,7 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                 setError(err.message);
             }
         },
+        enableReinitialize: true,
     });
 
     return (
@@ -70,8 +65,6 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
                     Organization Profile
                 </Typography>
                 {success && <SuccessAlert>Profile Updated successfully</SuccessAlert>}
-                {authState.message && console.log(authState.message)}
-                <ErrorAlert>{authState.error}</ErrorAlert>
                 {error && <ErrorAlert>{error}</ErrorAlert>}
                 <TextField
                     fullWidth

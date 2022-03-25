@@ -1,9 +1,11 @@
 //mui
-import { Grid, Avatar, Container, Typography, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Box, Grid, Avatar, Container, Typography, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import ContactPage from '@mui/icons-material/ContactPage';
 import { styled } from '@mui/material/styles';
 //lib
 import * as React from 'react';
+//components
+import StyledLink from '@/components/shared/StyledLink';
 //types
 import { UserCampaign } from '@/interfaces/User';
 
@@ -31,6 +33,14 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
             <Grid item>
                 <Demo>
                     <List>
+                        {!history.length && (
+                            <Box>
+                                <Typography align='center'>You have not registered for any campaigns.</Typography>
+                                <Typography align='center'>
+                                    View current campaigns <StyledLink href='/campaigns'>here</StyledLink>
+                                </Typography>
+                            </Box>
+                        )}
                         {history &&
                             history.map((campaign) => (
                                 <ListItem key={campaign.pk}>

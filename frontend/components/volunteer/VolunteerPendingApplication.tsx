@@ -1,5 +1,6 @@
 //mui
 import {
+    Box,
     Typography,
     Container,
     Grid,
@@ -15,8 +16,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { styled } from '@mui/material/styles';
 //lib
 import * as React from 'react';
-import { UserCampaign } from '@/interfaces/User';
+//components
+import StyledLink from '@/components/shared/StyledLink';
+
 //types
+import { UserCampaign } from '@/interfaces/User';
 
 interface VolunteerPendingApplicationProp {
     pendingList: UserCampaign[];
@@ -42,6 +46,14 @@ const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicatio
             <Grid item>
                 <Demo>
                     <List>
+                        {!pendingList.length && (
+                            <Box>
+                                <Typography align='center'>There are no pending applications currently.</Typography>
+                                <Typography align='center'>
+                                    View current campaigns <StyledLink href='/campaigns'>here</StyledLink>
+                                </Typography>
+                            </Box>
+                        )}
                         {pendingList &&
                             pendingList.map((campaign) => (
                                 <ListItem key={campaign.pk}>

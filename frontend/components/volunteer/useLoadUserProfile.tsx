@@ -9,7 +9,7 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
     const [loading, setLoading] = useState<boolean>(true);
     const [profile, setProfile] = useState<UserProfile>();
     const [pendingApps, setPendingApps] = useState<UserCampaign[]>([]);
-    const [campaignsHistory, setCampaignsHistory] = useState<UserCampaign[]>();
+    const [campaignsHistory, setCampaignsHistory] = useState<UserCampaign[]>([]);
 
     /**
      * Gets the user profile from the API
