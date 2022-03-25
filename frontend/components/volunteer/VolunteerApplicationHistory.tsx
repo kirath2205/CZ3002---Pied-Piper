@@ -4,6 +4,7 @@ import ContactPage from '@mui/icons-material/ContactPage';
 import { styled } from '@mui/material/styles';
 //lib
 import * as React from 'react';
+import Fade from 'react-reveal/Fade';
 //components
 import StyledLink from '@/components/shared/StyledLink';
 //types
@@ -43,21 +44,23 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
                         )}
                         {history &&
                             history.map((campaign) => (
-                                <ListItem key={campaign.pk}>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <ContactPage />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={campaign.campaign_name ?? 'Campaign Name'}
-                                        secondary={campaign.organization_name ?? 'Organization Name'}
-                                    />
-                                    <ListItemText
-                                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                                        primary={campaign.status}
-                                    />
-                                </ListItem>
+                                <Fade bottom duration={600}>
+                                    <ListItem key={campaign.pk}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <ContactPage />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={campaign.campaign_name ?? 'Campaign Name'}
+                                            secondary={campaign.organization_name ?? 'Organization Name'}
+                                        />
+                                        <ListItemText
+                                            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                                            primary={campaign.status}
+                                        />
+                                    </ListItem>
+                                </Fade>
                             ))}
                     </List>
                 </Demo>

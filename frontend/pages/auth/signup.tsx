@@ -7,7 +7,7 @@ import Fade from 'react-reveal/Fade';
 export default function SignUp() {
     return (
         <Layout title='VolunteerGoWhere - Sign Up'>
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <SignUpChoice />
             </Fade>
         </Layout>

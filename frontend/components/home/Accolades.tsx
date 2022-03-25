@@ -21,7 +21,7 @@ const h3Styles = {
 const Accolades = (): JSX.Element => {
     return (
         <Stack marginTop={'2%'} marginX={'5%'} sx={{ textAlign: 'center' }} gap={4}>
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <Box>
                     <Typography variant='h2' style={{ fontWeight: 300, fontSize: '6vmin' }}>
                         All in One Application
@@ -56,7 +56,7 @@ const Accolades = (): JSX.Element => {
                     </UnstyledLink>
                 </Box>
             </Fade>
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <Box>
                     <Image src='/home-heart.png' width={250} height={250} alt='' />
                     <Typography variant='h4' style={h3Styles} marginTop={4}>
@@ -65,7 +65,7 @@ const Accolades = (): JSX.Element => {
                     </Typography>
                 </Box>
             </Fade>
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <Box marginTop={10}>
                     <Image src='/hands-raised.png' width={250} height={250} alt='' />
                     <Typography variant='h4' style={h3Styles} marginTop={4}>
@@ -75,7 +75,7 @@ const Accolades = (): JSX.Element => {
                 </Box>
             </Fade>
 
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <Box marginTop={10}>
                     <Image src='/hands-heart.png' width={250} height={250} alt='' />
                     <Typography variant='h4' style={h3Styles} marginTop={4}>

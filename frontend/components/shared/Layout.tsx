@@ -3,7 +3,17 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 //mui
-import { AppBar, Box, Toolbar, IconButton, Typography, CssBaseline, Drawer } from '@mui/material';
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    CssBaseline,
+    Drawer,
+    Backdrop,
+    CircularProgress,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
@@ -13,7 +23,7 @@ import UnstyledLink from '@/components/shared/UnstyledLink';
 import ProfileMenu from '@/components/shared/ProfileMenu';
 //state
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { selectLoggedIn, refreshToken, selectUserType } from '@/app/slices/authSlice';
+import { selectLoggedIn, refreshToken, selectUserType, selectAuthState } from '@/app/slices/authSlice';
 import Footer from '@/components/shared/Footer';
 
 interface LayoutProps {
@@ -34,6 +44,7 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
+    const { loading } = useAppSelector(selectAuthState);
     const dispatch = useAppDispatch();
 
     const openAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -68,7 +79,9 @@ const Layout = ({ children, title, content }: LayoutProps): JSX.Element => {
                     content={content ?? 'All in one platform to find volunteering opportunities'}
                 />
             </Head>
-
+            <Backdrop open={loading} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <CircularProgress color='primary' />
+            </Backdrop>
             <Box component='main' sx={{ position: 'relative', minHeight: '100vh' }}>
                 <CssBaseline />
 

@@ -10,12 +10,14 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
+    Tooltip,
 } from '@mui/material';
 import ContactPage from '@mui/icons-material/ContactPage';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { styled } from '@mui/material/styles';
 //lib
 import * as React from 'react';
+import Fade from 'react-reveal/Fade';
 //components
 import StyledLink from '@/components/shared/StyledLink';
 
@@ -56,21 +58,32 @@ const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicatio
                         )}
                         {pendingList &&
                             pendingList.map((campaign) => (
-                                <ListItem key={campaign.pk}>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <ContactPage />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    {/**TODO: Add the corresponding fields to interface once API is created */}
-                                    <ListItemText
-                                        primary={campaign.campaign_name ?? 'Campaign Name'}
-                                        secondary={campaign.organization_name ?? 'Organization Name'}
-                                    />
-                                    <IconButton edge='end' aria-label='delete'>
-                                        <CancelIcon />
-                                    </IconButton>
-                                </ListItem>
+                                <Fade bottom duration={600}>
+                                    <ListItem key={campaign.pk}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <ContactPage />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        {/**TODO: Add the corresponding fields to interface once API is created */}
+                                        <ListItemText
+                                            primary={campaign.campaign_name ?? 'Campaign Name'}
+                                            secondary={campaign.organization_name ?? 'Organization Name'}
+                                        />
+                                        {/*TODO: Button for deregistering campaign on click*/}
+                                        <Tooltip title='Deregister from campaign'>
+                                            <IconButton edge='end' aria-label='delete' size='small'>
+                                                <CancelIcon
+                                                    sx={{
+                                                        '&:hover': {
+                                                            fill: '#691c33',
+                                                        },
+                                                    }}
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </ListItem>
+                                </Fade>
                             ))}
                     </List>
                 </Demo>

@@ -7,7 +7,7 @@ import { GetServerSidePropsContext } from 'next';
 export default function SignIn() {
     return (
         <Layout title='VolunteerGoWhere - Sign In'>
-            <Fade bottom>
+            <Fade bottom duration={600}>
                 <SignInForm />
             </Fade>
         </Layout>
