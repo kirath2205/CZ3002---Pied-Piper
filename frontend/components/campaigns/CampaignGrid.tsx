@@ -8,7 +8,7 @@ import { Campaign } from '@/interfaces/Campaign';
 
 interface CampaignGridProps {
     campaigns: Campaign[];
-    filter: string;
+    filter: string[];
 }
 
 /**
@@ -23,7 +23,16 @@ const CampaignGrid = ({ campaigns, filter }: CampaignGridProps): JSX.Element => 
 
     useEffect(() => {
         if (filter) {
-            setFilteredCampaigns(campaigns.filter((campaign) => campaign.skills.includes(filter)));
+            setFilteredCampaigns(campaigns.filter(function(campaign) {
+                if(filter[0] != ''){
+                    for (let i = 0; i < filter.length; i++){
+                        if (!campaign.skills.includes(filter[i])) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            } ));
         } else {
             setFilteredCampaigns(campaigns);
         }

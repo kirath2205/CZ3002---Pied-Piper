@@ -14,12 +14,12 @@ import { Campaign } from '@/interfaces/Campaign';
 import { InferGetServerSidePropsType } from 'next';
 
 export default function Campaigns({ data, skills }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-    const [filter, setFilter] = useState<string>('');
+    const [filter, setFilter] = useState<string[]>(['']);
 
     return (
         <Layout title='VolunteerGoWhere - Campaigns'>
             <div className={styles.container}>
-                <FilterButton setFilter={setFilter} skills={skills} />
+                <FilterButton setFilter={setFilter} filter = {filter} skills={skills} />
                 <CampaignGrid campaigns={data} filter={filter} />
             </div>
         </Layout>

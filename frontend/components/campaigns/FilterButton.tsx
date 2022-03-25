@@ -7,8 +7,9 @@ import Palette from '@/components/Theme/theme';
 
 //types
 interface FilterButtonProps {
-    setFilter: React.Dispatch<React.SetStateAction<string>>;
+    setFilter: React.Dispatch<React.SetStateAction<string[]>>;
     skills: string[];
+    filter: string[];
 }
 
 /**
@@ -18,14 +19,13 @@ interface FilterButtonProps {
  * @param {FilterButtonProps} props - The setfilter function and the skills array
  * @returns {JSX.Element} - The filter buttons
  */
-const FilterButton = ({ setFilter, skills }: FilterButtonProps): JSX.Element => {
+const FilterButton = ({ setFilter, skills, filter }: FilterButtonProps): JSX.Element => {
     const [selected, setSelected] = useState(skills.map((_) => false));
-
     /**
      * Sets the selected flag to false for all skills
      */
     const showAllCampaign = () => {
-        setFilter('');
+        setFilter(['']);
         setSelected(selected.map((_) => false));
     };
 
@@ -36,8 +36,23 @@ const FilterButton = ({ setFilter, skills }: FilterButtonProps): JSX.Element => 
      * @param {number} selectedIndex - The index of the selected skill in the skills array
      */
     const filterItem = (skill: string, selectedIndex: number) => {
-        setSelected(selected.map((_, index) => index === selectedIndex));
-        setFilter(skill);
+        let filter_new;
+        let index = filter.indexOf('');
+        if (index > -1){
+            filter.splice(index, 1)
+        }
+        if (selected[selectedIndex] == true){
+            filter_new = filter.filter(s => s != skill);
+            setFilter(filter_new);
+            selected[selectedIndex] = false;
+        }
+        else {
+            filter_new = filter.concat(skill);
+            setFilter(filter_new);
+            selected[selectedIndex] = true;
+        }
+        let selected_new = selected;
+        setSelected(selected_new);
     };
     return (
         <>
@@ -49,7 +64,7 @@ const FilterButton = ({ setFilter, skills }: FilterButtonProps): JSX.Element => 
                             variant='contained'
                             color={selected[index] ? 'secondary' : 'primary'}
                             sx={{
-                                width: '20%',
+                                width: '5%',
                                 alignSelf: 'center',
                                 marginTop: 2,
                                 marginLeft: 2,
@@ -68,7 +83,7 @@ const FilterButton = ({ setFilter, skills }: FilterButtonProps): JSX.Element => 
                         color={selected.every((skill) => !skill) ? 'secondary' : 'primary'}
                         sx={{
                             color: '#fff',
-                            width: '20%',
+                            width: '5%',
                             alignSelf: 'center',
                             marginTop: 2,
                             marginLeft: 2,
