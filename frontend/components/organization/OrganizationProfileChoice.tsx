@@ -13,6 +13,7 @@ import useLoadOrgProfile from '@/components/organization/useLoadOrgProfile';
 
 //types
 import { OrganizationNotification, OrganizationProfile } from '@/interfaces/Organization';
+import { Campaign } from '@/interfaces/Campaign';
 type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
 
 /**
@@ -22,7 +23,7 @@ type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, loading, notifications, approveApplication } = useLoadOrgProfile(tab);
+    const { profile, notifications, campaigns, loading, approveApplication } = useLoadOrgProfile(tab);
 
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
@@ -45,7 +46,7 @@ const ProfileChoice = (): JSX.Element => {
                     approveApplication={approveApplication}
                 />
             )}
-            {tab === 'EDIT' && <OrganizationExistingCampaign />}
+            {tab === 'EDIT' && <OrganizationExistingCampaign campaigns={campaigns as Campaign[]} />}
         </Container>
     );
 };

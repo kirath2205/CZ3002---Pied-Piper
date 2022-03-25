@@ -1,4 +1,4 @@
-import CreateCampaign from '@/components/campaigns/CreateCampaign';
+import CreateCampaign from '@/components/organization/CreateCampaign';
 import Layout from '@/components/shared/Layout';
 
 export default function CreateCampaigns() {

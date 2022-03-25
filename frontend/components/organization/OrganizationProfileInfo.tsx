@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useState } from 'react';
+import Fade from 'react-reveal/Fade';
 //mui
 import { Button, TextField, Typography, Container, Stack } from '@mui/material';
 //components
@@ -59,74 +60,76 @@ const OrganizationProfileInfo = ({ profile }: OrganizationProfileInfoProps): JSX
     });
 
     return (
-        <Container maxWidth='sm' sx={{ mt: 1 }}>
-            <form onSubmit={formik.handleSubmit}>
-                <Typography variant='h6' align='center'>
-                    Organization Profile
-                </Typography>
-                {success && <SuccessAlert>Profile Updated successfully</SuccessAlert>}
-                {error && <ErrorAlert>{error}</ErrorAlert>}
-                <TextField
-                    fullWidth
-                    sx={{ mt: 2 }}
-                    id='orgName'
-                    name='orgName'
-                    label='Organization Name'
-                    value={formik.values.orgName}
-                    onChange={formik.handleChange}
-                    error={formik.touched.orgName && Boolean(formik.errors.orgName)}
-                    helperText={formik.touched.orgName && formik.errors.orgName}
-                />
-                <TextField
-                    fullWidth
-                    sx={{ mt: 2 }}
-                    id='address'
-                    name='address'
-                    label='Address'
-                    value={formik.values.address}
-                    onChange={formik.handleChange}
-                    error={formik.touched.address && Boolean(formik.errors.address)}
-                    helperText={formik.touched.address && formik.errors.address}
-                />
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='phone'
-                    name='phone'
-                    label='Phone'
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    type='phone'
-                    error={formik.touched.phone && Boolean(formik.errors.phone)}
-                    helperText={formik.touched.phone && formik.errors.phone}
-                    disabled
-                />
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id='email'
-                    name='email'
-                    label='Email'
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                    disabled
-                />
-                <Stack>
-                    <Button
-                        sx={{ mt: 2, width: '40%', backgroundColor: '#12CDD4' }}
-                        color='primary'
-                        variant='contained'
+        <Fade duration={600}>
+            <Container maxWidth='sm' sx={{ mt: 1 }}>
+                <form onSubmit={formik.handleSubmit}>
+                    <Typography variant='h6' align='center'>
+                        Organization Profile
+                    </Typography>
+                    {success && <SuccessAlert>Profile Updated successfully</SuccessAlert>}
+                    {error && <ErrorAlert>{error}</ErrorAlert>}
+                    <TextField
                         fullWidth
-                        type='submit'
-                        aria-label='edit-profile'
-                    >
-                        Edit Profile
-                    </Button>
-                </Stack>
-            </form>
-        </Container>
+                        sx={{ mt: 2 }}
+                        id='orgName'
+                        name='orgName'
+                        label='Organization Name'
+                        value={formik.values.orgName}
+                        onChange={formik.handleChange}
+                        error={formik.touched.orgName && Boolean(formik.errors.orgName)}
+                        helperText={formik.touched.orgName && formik.errors.orgName}
+                    />
+                    <TextField
+                        fullWidth
+                        sx={{ mt: 2 }}
+                        id='address'
+                        name='address'
+                        label='Address'
+                        value={formik.values.address}
+                        onChange={formik.handleChange}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address}
+                    />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='phone'
+                        name='phone'
+                        label='Phone'
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                        type='phone'
+                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                        helperText={formik.touched.phone && formik.errors.phone}
+                        disabled
+                    />
+                    <TextField
+                        sx={{ mt: 2 }}
+                        fullWidth
+                        id='email'
+                        name='email'
+                        label='Email'
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        disabled
+                    />
+                    <Stack>
+                        <Button
+                            sx={{ mt: 2, width: '40%', backgroundColor: '#12CDD4' }}
+                            color='primary'
+                            variant='contained'
+                            fullWidth
+                            type='submit'
+                            aria-label='edit-profile'
+                        >
+                            Edit Profile
+                        </Button>
+                    </Stack>
+                </form>
+            </Container>
+        </Fade>
     );
 };
 

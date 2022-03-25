@@ -9,25 +9,21 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
+    Tooltip,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ContactPage from '@mui/icons-material/ContactPage';
-import { styled } from '@mui/material/styles';
 //lib
 import * as React from 'react';
+import { useRouter } from 'next/router';
+import Fade from 'react-reveal/Fade';
+//types
+import { Campaign } from '@/interfaces/Campaign';
 
-function generate(element: React.ReactElement) {
-    return [0, 1, 2].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        })
-    );
+interface OrganizationExistingCampaignProps {
+    campaigns: Campaign[];
 }
-
-const Demo = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-}));
 
 /**
  * Renders the Organization Existing Campaign page
@@ -35,7 +31,9 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Organization Existing Campaign page
  */
-const OrganizationExistingCampaign = () => {
+const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaignProps): JSX.Element => {
+    const router = useRouter();
+
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -43,29 +41,43 @@ const OrganizationExistingCampaign = () => {
             </Typography>
 
             <Grid item>
-                <Demo>
-                    <List>
-                        {generate(
-                            <ListItem
-                                secondaryAction={
-                                    <IconButton edge='end' aria-label='delete'>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ContactPage />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <IconButton edge='end' aria-label='edit' sx={{ mr: 2 }}>
-                                    <EditIcon />
-                                </IconButton>
-                                <ListItemText primary='Campaign Name' secondary='Name' />
-                            </ListItem>
-                        )}
-                    </List>
-                </Demo>
+                <List>
+                    {campaigns &&
+                        campaigns.map((campaign) => (
+                            <Fade bottom duration={600}>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <ContactPage />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary={campaign.title} secondary={campaign.location} />
+                                    <Tooltip title='Edit campaign details'>
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            aria-label='edit'
+                                            sx={{
+                                                mr: {
+                                                    xs: 0,
+                                                    sm: 1,
+                                                    md: 1.5,
+                                                },
+                                            }}
+                                            onClick={() => router.push(`/campaigns/edit/${campaign.pk}`)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title='Delete campaign'>
+                                        <IconButton size='small' edge='end' aria-label='delete'>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </ListItem>
+                            </Fade>
+                        ))}
+                </List>
             </Grid>
         </Container>
     );

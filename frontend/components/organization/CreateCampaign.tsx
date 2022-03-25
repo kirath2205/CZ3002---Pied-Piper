@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 //mui
-import { DateTimePicker, LocalizationProvider, TimePicker } from '@mui/lab';
+import { DateTimePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Button,
@@ -23,6 +23,7 @@ import {
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
+import BackButton from '@/components/shared/BackButton';
 
 /**
  * The yup validation for the create campaign form
@@ -94,6 +95,7 @@ const CreateCampaign = (): JSX.Element => {
 
     return (
         <Container maxWidth='sm' sx={{ mt: 1 }}>
+            <BackButton />
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
                     Create Campaign

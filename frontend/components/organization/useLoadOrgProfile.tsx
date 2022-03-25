@@ -4,13 +4,14 @@ import axios from 'axios';
 //types
 import { OrganizationProfile } from '@/interfaces/Organization';
 import { OrganizationNotification } from '@/interfaces/Organization';
+import { Campaign } from '@/interfaces/Campaign';
 import { APIResponse } from '@/interfaces/Response';
 
 const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
     const [loading, setLoading] = useState<boolean>(true);
     const [profile, setProfile] = useState<OrganizationProfile>();
     const [notifications, setNotifications] = useState<OrganizationNotification[]>();
-    const [campaigns, setCampaigns] = useState();
+    const [campaigns, setCampaigns] = useState<Campaign[]>();
 
     /**
      * Loads the organization profile from API
@@ -56,20 +57,27 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
         }
     };
 
+    const getUpcomingCampaigns = async () => {
+        const response = await axios.get('/api/org_view/get_all_upcoming_campaign_details_for_org/');
+        const upcomingCampaigns = ((await response.data) as APIResponse<Campaign>[]).map((campaign) => ({
+            ...campaign.fields,
+            pk: campaign.pk,
+        }));
+        setCampaigns(upcomingCampaigns);
+        setLoading(false);
+    };
+
     useEffect(() => {
         if (tab === 'PROFILE') {
             getProfile();
         }
 
         if (tab === 'APPROVE') {
-            //TODO
-            //view org notifs
             getNotifications();
         }
 
         if (tab === 'EDIT') {
-            //TODO
-            //get all campaign details/ get upcoming for org
+            getUpcomingCampaigns();
         }
     }, [tab]);
     return { loading, profile, notifications, campaigns, approveApplication };

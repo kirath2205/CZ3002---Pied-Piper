@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         try {
             const apiRes = await axios.post(
-                `${API_URL}/org_view/update_campaign_details/`,
+                `${API_URL}/org_view/update_campaign_details`,
                 { ...req.body },
                 {
                     headers: {
@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             if (apiRes.status === 200) {
                 return res.status(200).json(data);
             } else {
-                return res.status(apiRes.status).json({
+                return res.status(400).json({
                     error: data,
                 });
             }

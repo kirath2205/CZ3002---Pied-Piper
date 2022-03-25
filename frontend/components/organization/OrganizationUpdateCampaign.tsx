@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+
 //mui
-import { DateTimePicker, LocalizationProvider, TimePicker } from '@mui/lab';
+import { DateTimePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Button,
@@ -23,6 +24,7 @@ import {
 //components
 import SuccessAlert from '@/components/shared/SuccessAlert';
 import ErrorAlert from '@/components/shared/ErrorAlert';
+import BackButton from '@/components/shared/BackButton';
 //types
 import { Campaign } from '@/interfaces/Campaign';
 
@@ -60,20 +62,20 @@ const validationSchema = yup.object({
  *
  * @returns {JSX.Element} - The update campaign page for organisation
  */
-const UpdateCampaign = (): JSX.Element => {
+const OrganizationUpdateCampaign = ({ campaign }: OrganizationUpdateCampaignProps): JSX.Element => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
     const formik = useFormik({
         initialValues: {
-            location: '',
-            skills: [],
-            date_time: '',
-            end_time: '',
-            description: '',
-            title: '',
-            volunteer_count: '',
-            minimum_age: '',
+            location: campaign.location,
+            skills: campaign.skills,
+            date_time: campaign.date_time,
+            end_time: campaign.end_time,
+            description: campaign.description,
+            title: campaign.title,
+            volunteer_count: campaign.volunteer_count,
+            minimum_age: campaign.minimum_age,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -88,6 +90,7 @@ const UpdateCampaign = (): JSX.Element => {
                     title: values.title,
                     volunteer_count: values.volunteer_count,
                     minimum_age: values.minimum_age,
+                    campaign_id: campaign.pk as number,
                 });
                 setSuccess(true);
                 formik.resetForm();
@@ -100,6 +103,7 @@ const UpdateCampaign = (): JSX.Element => {
 
     return (
         <Container maxWidth='sm' sx={{ mt: 1 }}>
+            <BackButton />
             <form onSubmit={formik.handleSubmit}>
                 <Typography variant='h6' align='center'>
                     Update Campaign (Campaign Name)
@@ -260,4 +264,4 @@ const UpdateCampaign = (): JSX.Element => {
     );
 };
 
-export default UpdateCampaign;
+export default OrganizationUpdateCampaign;
