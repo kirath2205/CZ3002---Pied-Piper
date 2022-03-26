@@ -13,12 +13,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             });
         }
 
-        const { name, address } = req.body;
+        const { campaign_id } = req.body;
 
         try {
             const apiRes = await axios.post(
                 `${API_URL}/user_view/register_for_campaign/`,
-                { name, address },
+                { campaign_id },
                 {
                     headers: {
                         Authorization: access,

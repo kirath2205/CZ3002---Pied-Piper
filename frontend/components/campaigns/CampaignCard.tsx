@@ -16,7 +16,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 //libs
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 //types
 import { Campaign } from '@/interfaces/Campaign';
@@ -25,6 +25,11 @@ import UnstyledLink from '@/components/shared/UnstyledLink';
 //redux
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
+import register from '@/pages/api/auth/register';
+import axios from 'axios';
+import { API_URL } from '@/utils/constants/config';
+import { APIResponse } from '@/interfaces/Response';
+import { number } from 'yup';
 
 interface CampaignCardProps {
     campaign: Campaign;
@@ -41,8 +46,18 @@ interface CampaignCardProps {
 const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps): JSX.Element => {
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
+    const [appliedStatus, setAppliedStatus] = useState(userRegistered);
     const router = useRouter();
-
+    const registerForCampaign = async (campaign_id: number) => {
+        try{
+            const response = await axios.post(`/api/user_view/register_for_campaign`, {campaign_id});
+            setAppliedStatus(!appliedStatus);
+        }
+        catch(err){
+            
+        }
+        
+    }
     return (
         <Stack gap={1}>
             {detailed && (
@@ -102,8 +117,9 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                             sx={{ backgroundColor: '#12CDD4' }}
                             aria-label={`learn-more-${campaign.title}`}
                             disabled={!loggedIn || userType === 'ORG' || userRegistered}
+                            onClick={() => registerForCampaign(campaign.pk as number)}
                         >
-                            {userRegistered ? 'Already applied' : 'Volunteer Now'}
+                            {appliedStatus ? 'Already applied' : 'Volunteer Now'}
                         </Button>
                     ) : (
                         <UnstyledLink href={`/campaigns/${campaign.pk}`}>
