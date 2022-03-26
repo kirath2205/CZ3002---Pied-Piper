@@ -122,7 +122,7 @@ def register_for_campaign(request):
                 HttpResponse.status_code=int(error_codes.campaign_time_clash())
                 return HttpResponse('User campaign clash')
             except UserCampaign.DoesNotExist as e:
-                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign)
+                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign,campaign_name=campaign.title,user_name=user_account.first_name)
                 new_user_campaign.save()
                 org_id = (OrgAccount.objects.get(email=org_email)).user_id
                 new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
