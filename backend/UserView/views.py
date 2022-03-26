@@ -44,7 +44,6 @@ def get_user_details(request):
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
-            
             JsonResponse.status_code=int(error_codes.api_success())
             serialized_user_data = json.loads(serializers.serialize('json',[user_account]))[0]
             return JsonResponse(serialized_user_data,safe=False)
