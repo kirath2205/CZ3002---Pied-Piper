@@ -23,21 +23,22 @@ const CampaignGrid = ({ campaigns, filter }: CampaignGridProps): JSX.Element => 
 
     useEffect(() => {
         if (filter) {
-            setFilteredCampaigns(campaigns.filter(function(campaign) {
-                if(filter[0] != ''){
-                    for (let i = 0; i < filter.length; i++){
-                        if (!campaign.skills.includes(filter[i])) {
-                            return false;
+            setFilteredCampaigns(
+                campaigns.filter(function (campaign) {
+                    if (filter[0] != '') {
+                        for (let i = 0; i < filter.length; i++) {
+                            if (!campaign.skills.includes(filter[i])) {
+                                return false;
+                            }
                         }
                     }
-                }
-                return true;
-            } ));
+                    return true;
+                })
+            );
         } else {
             setFilteredCampaigns(campaigns);
         }
     }, [filter]);
-
     return (
         <Grid container spacing={3} marginTop={1} paddingX={2}>
             {!filteredCampaigns.length && <Typography>There were no campaigns for that category :(</Typography>}

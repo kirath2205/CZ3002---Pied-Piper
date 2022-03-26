@@ -89,7 +89,7 @@ def register_for_campaign(request):
             user_id=user_account.user_id
 
             try:
-                check_if_tried_registration = OrgNotif.objects.get(user_id=user_id)
+                check_if_tried_registration = OrgNotif.objects.get(user_id=user_id, campaign_id=campaign_id)
                 status=check_if_tried_registration.status
                 if(status=='P'):
                     HttpResponse.status_code=int(error_codes.pending_request())
@@ -110,6 +110,7 @@ def register_for_campaign(request):
             date_time_current_campaign=campaign.date_time
             end_time_current_campaign=campaign.end_time
             
+            org_email = data.get('org_email')
             try:
                 campaign_slot_clashes=UserCampaign.objects.get( 
                     Q(user_id=user_id) & 
@@ -120,11 +121,10 @@ def register_for_campaign(request):
                 )
                 HttpResponse.status_code=int(error_codes.campaign_time_clash())
                 return HttpResponse('User campaign clash')
-
             except UserCampaign.DoesNotExist as e:
                 new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign)
                 new_user_campaign.save()
-                org_id = (OrgAccount.objects.get(email=email)).user_id
+                org_id = (OrgAccount.objects.get(email=org_email)).user_id
                 new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())

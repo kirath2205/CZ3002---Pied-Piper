@@ -13,12 +13,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             });
         }
 
-        const { campaign_id } = req.body;
+        const { campaign_id, org_email } = req.body;
 
         try {
             const apiRes = await axios.post(
                 `${API_URL}/user_view/register_for_campaign/`,
-                { campaign_id },
+                { campaign_id, org_email },
                 {
                     headers: {
                         Authorization: access,
@@ -31,7 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             if (apiRes.status === 229) {
                 return res.status(229).json({ message: 'Registered for campaign succesfully' });
             } else {
-                return res.status(apiRes.status).json({
+                return res.status(400).json({
                     error: data,
                 });
             }

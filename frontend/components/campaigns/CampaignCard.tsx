@@ -16,20 +16,17 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 //libs
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 //types
 import { Campaign } from '@/interfaces/Campaign';
 //components
 import UnstyledLink from '@/components/shared/UnstyledLink';
+import Toast from '@/components/shared/Toast';
 //redux
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
-import register from '@/pages/api/auth/register';
-import axios from 'axios';
-import { API_URL } from '@/utils/constants/config';
-import { APIResponse } from '@/interfaces/Response';
-import { number } from 'yup';
 
 interface CampaignCardProps {
     campaign: Campaign;
@@ -47,17 +44,23 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
     const [appliedStatus, setAppliedStatus] = useState(userRegistered);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState('');
     const router = useRouter();
-    const registerForCampaign = async (campaign_id: number) => {
-        try{
-            const response = await axios.post(`/api/user_view/register_for_campaign`, {campaign_id});
-            setAppliedStatus(!appliedStatus);
+
+    const registerForCampaign = async () => {
+        try {
+            const response = await axios.post(`/api/user_view/register_for_campaign`, {
+                campaign_id: campaign.pk,
+                org_email: campaign.org_email,
+            });
+            setAppliedStatus(true);
+            setSuccess(true);
+        } catch (err: any) {
+            console.log(err);
+            setError(err);
         }
-        catch(err){
-            
-        }
-        
-    }
+    };
     return (
         <Stack gap={1}>
             {detailed && (
@@ -66,6 +69,10 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                         <ArrowBackRoundedIcon />
                     </IconButton>
                 </Box>
+            )}
+            {success && <Toast severity='success' initialize={success} message='Registered for campaign!' />}
+            {error && (
+                <Toast severity='error' initialize={Boolean(error)} message='Something went wrong, try again later.' />
             )}
             <Card raised>
                 <CardMedia
@@ -80,7 +87,7 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                         {campaign.title}
                     </Typography>
                     <Typography variant='caption' component='p' gutterBottom>
-                        by {campaign.organization ?? 'Organization Name'}
+                        by {campaign.org_name ?? 'Organization Name'}
                     </Typography>
                     <Stack marginTop={1} spacing={0.5}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
@@ -116,8 +123,8 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                             variant='contained'
                             sx={{ backgroundColor: '#12CDD4' }}
                             aria-label={`learn-more-${campaign.title}`}
-                            disabled={!loggedIn || userType === 'ORG' || userRegistered}
-                            onClick={() => registerForCampaign(campaign.pk as number)}
+                            disabled={!loggedIn || userType === 'ORG' || appliedStatus}
+                            onClick={() => registerForCampaign()}
                         >
                             {appliedStatus ? 'Already applied' : 'Volunteer Now'}
                         </Button>

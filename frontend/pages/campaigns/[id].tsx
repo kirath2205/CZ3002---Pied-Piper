@@ -16,39 +16,14 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '@/app/slices/authSlice';
 
-export default function IndividualCampaignPage({ campaign }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-    const authState = useSelector(selectAuthState);
-    const [userCampaigns, setUserCampaigns] = useState<number[]>([]);
-    /**
-     * Get user campaigns
-     * In conjunction with useEffect in order to disable button if already applied for the campaign
-     */
-    const getUserCampaigns = async () => {
-        try {
-            const response = await axios.get('/api/user_view/get_all_campaigns/');
-            const data = ((await response.data) as APIResponse<UserCampaign>[]).map(
-                (campaign) => campaign.fields.campaign_id
-            );
-            setUserCampaigns(data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    useEffect(() => {
-        if (authState.user === 'USER') {
-            getUserCampaigns();
-        }
-    }, []);
-
+export default function IndividualCampaignPage({
+    campaign,
+    userRegistered,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
     return (
         <Layout>
             <Container maxWidth='lg'>
-                <CampaignCard
-                    campaign={campaign}
-                    detailed
-                    userRegistered={userCampaigns.includes(campaign.pk as number)}
-                />
+                <CampaignCard campaign={campaign} detailed userRegistered={userRegistered} />
             </Container>
         </Layout>
     );
@@ -61,6 +36,18 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
     const campaign = (await response.data) as Campaign;
 
-    return { props: { campaign } };
+    //Check if already registered for user
+    try {
+        const access = context.req.cookies['access'] ?? false;
+        const res = await axios.get(`${API_URL}/user_view/get_all_campaigns/`, { headers: { Authorization: access } });
+        const userCampaigns = (JSON.parse(await res.data) as APIResponse<UserCampaign>[]).map(
+            (campaign) => campaign.fields.campaign_id
+        );
+        const userRegistered = userCampaigns.includes(campaign.pk as number);
+        return { props: { campaign, userRegistered } };
+    } catch {
+        return { props: { campaign } };
+    }
+
     // ...
 };
