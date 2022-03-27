@@ -77,6 +77,11 @@ def get_campaign_using_campaign_id(request,campaign_id):
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('404 error')
         
+        
+        org_account = OrgAccount.objects.get(email=campaign_details.organisation_email)
+        org_name = org_account.name
+
+        
         response_data={}
         response_data['org_email']=campaign_details.organisation_email
         response_data['location']=campaign_details.location
@@ -88,6 +93,7 @@ def get_campaign_using_campaign_id(request,campaign_id):
         response_data['volunteer_count']=campaign_details.volunteer_count
         response_data['minimum_age']=campaign_details.minimum_age
         response_data['pk']=campaign_id
+        response_data['org_name'] = org_name
 
         JsonResponse.status_code=int(error_codes.api_success())
         return JsonResponse(response_data)

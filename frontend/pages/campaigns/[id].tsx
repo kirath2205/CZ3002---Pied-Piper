@@ -1,7 +1,6 @@
 //mui
 import { Container } from '@mui/material';
 //lib
-import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/utils/constants/config';
 //components
@@ -12,9 +11,6 @@ import { Campaign } from '@/interfaces/Campaign';
 import { UserCampaign } from '@/interfaces/User';
 import { APIResponse } from '@/interfaces/Response';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-//redux
-import { useSelector } from 'react-redux';
-import { selectAuthState } from '@/app/slices/authSlice';
 
 export default function IndividualCampaignPage({
     campaign,
