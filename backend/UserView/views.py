@@ -161,7 +161,7 @@ def get_all_campaigns_user(request):
             all_campaigns = UserCampaign.objects.filter(user_id=user_id)
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_campaigns,fields=('campaign_id','status','campaign_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -195,9 +195,9 @@ def get_all_pending_application_for_user(request):
             user_id=user_account.user_id
 
             all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id, status='P')
-
+            
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status','campaign_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -232,7 +232,7 @@ def get_all_past_campaigns_for_user(request):
             all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id).exclude(status ='P')
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status','campaign_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
