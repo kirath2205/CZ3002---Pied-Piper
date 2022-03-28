@@ -30,7 +30,7 @@ export interface UserWithPW extends User {
 export interface UserCampaign {
     campaign_id: number;
     campaign_name: string;
-    organization_name: string;
+    organisation_name: string;
     status: string;
     pk?: number;
 }

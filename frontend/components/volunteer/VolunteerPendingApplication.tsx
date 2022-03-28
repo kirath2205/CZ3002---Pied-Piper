@@ -68,7 +68,7 @@ const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicatio
                                         {/**TODO: Add the corresponding fields to interface once API is created */}
                                         <ListItemText
                                             primary={campaign.campaign_name ?? 'Campaign Name'}
-                                            secondary={campaign.organization_name ?? 'Organization Name'}
+                                            secondary={campaign.organisation_name ?? 'Organisation Name'}
                                         />
                                         {/*TODO: Button for deregistering campaign on click*/}
                                         <Tooltip title='Deregister from campaign'>

@@ -53,7 +53,7 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={campaign.campaign_name ?? 'Campaign Name'}
-                                            secondary={campaign.organization_name ?? 'Organization Name'}
+                                            secondary={campaign.organisation_name ?? 'Organisation Name'}
                                         />
                                         <ListItemText
                                             sx={{ display: 'flex', justifyContent: 'flex-end' }}
