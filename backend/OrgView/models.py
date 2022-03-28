@@ -29,6 +29,8 @@ class OrgNotif(models.Model):
         ACCEPTED = 'A',_("Accepted")
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
     org_id=models.IntegerField(default=None)
+    user_name=models.CharField(max_length=200)
+    org_name=models.CharField(max_length=200)
 
 class AcceptedUsers(models.Model):
     user_id=models.IntegerField(default=None)
