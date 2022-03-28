@@ -75,3 +75,6 @@ def request_rejected():
 
 def request_accepted():
     return '232'
+
+def user_cannot_otp_out():
+    return '233'

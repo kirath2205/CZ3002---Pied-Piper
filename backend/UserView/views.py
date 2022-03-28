@@ -1,3 +1,4 @@
+from backend.OrgView.models import OrgNotif
 from Authentication.models import UserAccount
 from OrgView.models import Campaign
 from Authentication.models import *
@@ -292,4 +293,63 @@ def update_user_details(request):
 
 @csrf_exempt
 def unregister_for_campaign(request):
-    pass
+    if(request.method=="POST"):
+    
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            campaign_id=data.get('campaign_id')
+
+            try:
+                campaign = Campaign.objects.get(campaign_id=campaign_id)
+            except Campaign.DoesNotExist as e:
+                HttpResponse.status_code = int(error_codes.bad_request())
+                return HttpResponse('404 error')
+
+            user_id=user_account.user_id
+
+            try:
+                user_campaign=UserCampaign.objects.get(user_id=user_id,campaign_id=campaign_id)
+            
+            except Exception as e:
+                HttpResponse.status_code = int(error_codes.bad_request())
+                return HttpResponse('User has not registered')
+            
+            if(user_campaign.status!='P'):
+                HttpResponse.status_code = int(error_codes.user_cannot_otp_out())
+                return HttpResponse('User cannot opt out')
+            
+            else:
+                
+                try:
+                    delete_user_campaign=UserCampaign.objects.get(user_id=user_id,campaign_id=campaign_id)
+                    delete_user_campaign.delete()
+                    delete_org_notif=OrgNotif.objects.get(user_id=user_id,campaign_id=campaign_id)
+                    delete_org_notif.delete()
+                
+                except Exception as e:
+                    HttpResponse.status_code = int(error_codes.bad_request())
+                    return HttpResponse('Record not found')
+                HttpResponse.status_code=int(error_codes.api_success())
+                return HttpResponse("User unregistered successfully")
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
