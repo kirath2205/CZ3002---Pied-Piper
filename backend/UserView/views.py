@@ -1,9 +1,7 @@
-from backend.OrgView.models import OrgNotif
+from OrgView.models import OrgNotif
 from Authentication.models import UserAccount
 from OrgView.models import Campaign
 from Authentication.models import *
-from datetime import date,timedelta
-from django.db.models import fields
 from django.db.models import Q
 
 from django.http.response import JsonResponse
@@ -106,7 +104,6 @@ def register_for_campaign(request):
             except OrgNotif.DoesNotExist as e:
                 pass
             
-            #TODO test this
             date_time_current_campaign=campaign.date_time
             end_time_current_campaign=campaign.end_time
             
@@ -263,8 +260,7 @@ def update_user_details(request):
             except UserAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
-            
-            print(data)
+
             first_name = data.get('first_name')
             last_name = data.get('last_name')
             skills = data.get('skills')
@@ -333,7 +329,7 @@ def unregister_for_campaign(request):
                 return HttpResponse('User cannot opt out')
             
             else:
-                
+
                 try:
                     delete_user_campaign=UserCampaign.objects.get(user_id=user_id,campaign_id=campaign_id)
                     delete_user_campaign.delete()

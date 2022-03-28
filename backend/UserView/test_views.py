@@ -1,15 +1,6 @@
-from ast import Pass
-
-from datetime import datetime
-from email import header
-from wsgiref import headers
 from passlib.hash import pbkdf2_sha256
-import json
-from django import setup
-from django.http import response
 from .models import *
-from django.test import TestCase,RequestFactory,Client, client
-from . import views
+from django.test import TestCase,Client
 from django.urls import reverse
 from backend import error_codes
 from backend.constants_for_tests import *
@@ -26,6 +17,7 @@ class UserViewTests(TestCase):
         self.get_all_pending_application_for_user_url=reverse('get_all_pending_application_for_user')
         self.get_all_past_campaigns_for_user_url=reverse('get_all_past_campaigns_for_user')
         self.update_user_details_url=reverse('update_user_details')
+        self.unregister_for_campaign_url=reverse('unregister_for_campaign')
         UserAccount.objects.create(first_name='Kirath',last_name='Singh',email='singhkirath@gmail.com',
         phone_number='85138731',skills={},age=21,gender='M',address='address')
         
@@ -169,7 +161,6 @@ class UserViewTests(TestCase):
         self.assertEquals(response.status_code,int(error_codes.bad_request()))
         self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
         
-    
     def test_update_user_details_url_return_invalid_token(self):
         header = {
         'HTTP_AUTHORIZATION':VALID_JWT_USER_DOES_NOT_EXIST}
@@ -181,5 +172,29 @@ class UserViewTests(TestCase):
         header = {
         'HTTP_AUTHORIZATION':VALID_JWT}
         response=self.client.post(self.update_user_details_url,**header,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.invalid_jwt_token()))
+        self.assertEquals((response.content).decode("utf-8") ,'Invalid jwt token')
+    
+    def test_unregister_for_campaign_url_return_deserialisation_error(self):
+        response=self.client.get(self.unregister_for_campaign_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_unregister_for_campaign_url_return_bad_request(self):
+        response=self.client.post(self.unregister_for_campaign_url)
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8")[:21] ,'Deserialisation error')
+        
+    def test_unregister_for_campaign_url_return_invalid_token(self):
+        header = {
+        'HTTP_AUTHORIZATION':VALID_JWT_USER_DOES_NOT_EXIST}
+        response=self.client.post(self.unregister_for_campaign_url,**header,content_type="application/json")
+        self.assertEquals(response.status_code,int(error_codes.bad_request()))
+        self.assertEquals((response.content).decode("utf-8") ,'404 error')
+    
+    def test_unregister_for_campaign_url_return_invalid_token(self):
+        header = {
+        'HTTP_AUTHORIZATION':VALID_JWT}
+        response=self.client.post(self.unregister_for_campaign_url,**header,content_type="application/json")
         self.assertEquals(response.status_code,int(error_codes.invalid_jwt_token()))
         self.assertEquals((response.content).decode("utf-8") ,'Invalid jwt token')
