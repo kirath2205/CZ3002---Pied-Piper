@@ -23,4 +23,5 @@ class UserCampaign(models.Model):
     end_time=models.DateTimeField(default=now)
     campaign_name=models.CharField(max_length=200)
     user_name=models.CharField(max_length=200)
+    organisation_name=models.CharField(max_length=200)
 
