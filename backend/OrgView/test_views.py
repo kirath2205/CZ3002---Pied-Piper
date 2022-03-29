@@ -10,6 +10,9 @@ class OrgViewTests(TestCase):
 
     def setUp(self):
         self.get_org_details_url=reverse('get_org_details')
+        OrgAccount.objects.create(name='Org1',email='kirath001@e.ntu.edu.sg',
+        phone_number='85138732',address='address')
+        Login.objects.create(email='kirath001@e.ntu.edu.sg',password=pbkdf2_sha256.hash('Login@1234'),account_type='ORG')
 
     def test_get_org_details_for_invalid_request_return_bad_request(self):
         response=self.client.post(self.get_org_details_url)
@@ -30,8 +33,8 @@ class OrgViewTests(TestCase):
     
     def test_get_org_details_for_valid_jwt(self):
         header = {
-            'HTTP_AUTHORIZATION' : VALID_JWT
+            'HTTP_AUTHORIZATION' : VALID_JWT_ORG_VIEW
         }
         response=self.client.get(self.get_org_details_url,**header,content_type="application/json")
-        self.assertEquals(response.status_code,int(error_codes.invalid_jwt_token()))
-        self.assertEquals((response.content).decode("utf-8") ,'Invalid jwt token')
+        self.assertEquals(response.status_code,int(error_codes.api_success()))
+        self.assertGreater(len((response.content).decode("utf-8")) ,1)
