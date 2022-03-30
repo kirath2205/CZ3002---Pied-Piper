@@ -15,6 +15,7 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import BoyIcon from '@mui/icons-material/Boy';
 //libs
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -103,6 +104,10 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                             <LocationOnOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
                             {campaign.location}
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                            <BoyIcon fontSize='small' sx={{ opacity: 0.8 }} />
+                            {campaign.volunteer_count} vacancies left
                         </Box>
                     </Stack>
                     <Box pt={0.5} sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
