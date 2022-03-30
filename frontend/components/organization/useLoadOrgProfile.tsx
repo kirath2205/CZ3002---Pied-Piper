@@ -12,8 +12,8 @@ import { setLoading, unsetLoading } from '@/app/slices/authSlice';
 
 const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
     const [profile, setProfile] = useState<OrganizationProfile>();
-    const [notifications, setNotifications] = useState<OrganizationNotification[]>();
-    const [campaigns, setCampaigns] = useState<Campaign[]>();
+    const [notifications, setNotifications] = useState<OrganizationNotification[]>([]);
+    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     const dispatch = useAppDispatch();
 
     /**

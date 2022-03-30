@@ -10,6 +10,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
+    Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,6 +19,8 @@ import ContactPage from '@mui/icons-material/ContactPage';
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import Fade from 'react-reveal/Fade';
+//components
+import StyledLink from '@/components/shared/StyledLink';
 //types
 import { Campaign } from '@/interfaces/Campaign';
 
@@ -41,6 +44,14 @@ const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaig
             </Typography>
 
             <Grid item>
+                {!campaigns.length && (
+                    <Box>
+                        <Typography align='center'>Your organisation has no existing campaigns.</Typography>
+                        <Typography align='center'>
+                            Create one <StyledLink href='/campaigns/create-campaign'>here</StyledLink>
+                        </Typography>
+                    </Box>
+                )}
                 <List>
                     {campaigns &&
                         campaigns.map((campaign) => (
