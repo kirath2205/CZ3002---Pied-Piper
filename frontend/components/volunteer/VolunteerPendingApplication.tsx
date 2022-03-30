@@ -26,6 +26,7 @@ import { UserCampaign } from '@/interfaces/User';
 
 interface VolunteerPendingApplicationProp {
     pendingList: UserCampaign[];
+    unregisterForCampaign: (campaign_id: number) => Promise<void>;
 }
 
 const Demo = styled('div')(({ theme }) => ({
@@ -38,7 +39,10 @@ const Demo = styled('div')(({ theme }) => ({
  *
  * @returns {JSX.Element} - The Pending Application page
  */
-const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicationProp): JSX.Element => {
+const VolunteerPendingApplication = ({
+    pendingList,
+    unregisterForCampaign,
+}: VolunteerPendingApplicationProp): JSX.Element => {
     return (
         <Container maxWidth='sm' sx={{ mt: 2 }}>
             <Typography variant='h6' align='center'>
@@ -72,7 +76,12 @@ const VolunteerPendingApplication = ({ pendingList }: VolunteerPendingApplicatio
                                         />
                                         {/*TODO: Button for deregistering campaign on click*/}
                                         <Tooltip title='Deregister from campaign'>
-                                            <IconButton edge='end' aria-label='delete' size='small'>
+                                            <IconButton
+                                                edge='end'
+                                                aria-label='delete'
+                                                size='small'
+                                                onClick={() => unregisterForCampaign(campaign.campaign_id)}
+                                            >
                                                 <CancelIcon
                                                     sx={{
                                                         '&:hover': {

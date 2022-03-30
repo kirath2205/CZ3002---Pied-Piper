@@ -44,6 +44,15 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
         }));
         setCampaignsHistory(historyList);
     };
+
+    const unregisterForCampaign = async (campaign_id: number) => {
+        try {
+            const response = await axios.post('/api/user_view/unregister_for_campaign', { campaign_id });
+            setPendingApps(pendingApps.filter((campaign) => campaign.campaign_id !== campaign_id));
+        } catch (err) {
+            console.log(err);
+        }
+    };
     useEffect(() => {
         if (tab === 'PROFILE') {
             getProfile();
@@ -61,7 +70,7 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
             getCampaignsHistory();
         }
     }, [tab]);
-    return { loading, profile, pendingApps, campaignsHistory };
+    return { loading, profile, pendingApps, campaignsHistory, unregisterForCampaign };
 };
 
 export default useLoadUserProfile;
