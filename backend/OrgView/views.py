@@ -340,7 +340,7 @@ def approve_or_reject_user_campaign_registration(request):
             user_id=data.get('user_id')
 
             try:
-                check_if_org_created_campaign=Campaign.objects.get(campaign_id=campaign_id,organisation_email=email)
+                campaign=Campaign.objects.get(campaign_id=campaign_id,organisation_email=email)
             except Campaign.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
@@ -354,7 +354,7 @@ def approve_or_reject_user_campaign_registration(request):
                 return HttpResponse('Access denied')
             
             try:
-                user_campaign = UserCampaign.objects.get(user_id=user_id)
+                user_campaign = UserCampaign.objects.get(user_id=user_id, campaign_id=campaign_id)
             except UserCampaign.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
@@ -374,6 +374,8 @@ def approve_or_reject_user_campaign_registration(request):
                 add_accepted_user.save()
                 user_campaign.status = UserCampaign.Status.APPROVED
                 user_campaign.save()
+                campaign.volunteer_count -= 1
+                campaign.save()
                 HttpResponse.status_code=int(error_codes.request_accepted())
                 return HttpResponse('User added to accepted')
             
