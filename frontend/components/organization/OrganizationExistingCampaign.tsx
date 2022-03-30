@@ -44,7 +44,7 @@ const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaig
                 <List>
                     {campaigns &&
                         campaigns.map((campaign) => (
-                            <Fade bottom duration={600}>
+                            <Fade bottom duration={600} key={campaign.pk}>
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar>

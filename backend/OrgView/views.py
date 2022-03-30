@@ -7,6 +7,7 @@ from Authentication.models import OrgAccount
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from UserView.models import UserCampaign
 from backend.settings import *
 import json
 import jwt
@@ -303,7 +304,7 @@ def view_org_notifs(request):
             ##org_id=OrgAccount.objects.get(email=email)
             notifs_for_current_org=OrgNotif.objects.filter(org_id=org_id)
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status'))
+            serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status', 'user_name'))
             return JsonResponse(serialized_notif_data,safe=False)
         
         except Exception as e:
@@ -351,11 +352,19 @@ def approve_or_reject_user_campaign_registration(request):
             except OrgNotif.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
+            
+            try:
+                user_campaign = UserCampaign.objects.get(user_id=user_id)
+            except UserCampaign.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
 
             if(status=='R'):
                 notif.delete()
                 add_rejected_user = RejectedUsers(campaign_id=campaign_id,user_id=user_id)
                 add_rejected_user.save()
+                user_campaign.status = UserCampaign.Status.REJECT
+                user_campaign.save()
                 HttpResponse.status_code=int(error_codes.request_rejected())
                 return HttpResponse('User added to rejected')
 
@@ -363,6 +372,8 @@ def approve_or_reject_user_campaign_registration(request):
                 notif.delete()
                 add_accepted_user = AcceptedUsers(campaign_id=campaign_id,user_id=user_id)
                 add_accepted_user.save()
+                user_campaign.status = UserCampaign.Status.APPROVED
+                user_campaign.save()
                 HttpResponse.status_code=int(error_codes.request_accepted())
                 return HttpResponse('User added to accepted')
             

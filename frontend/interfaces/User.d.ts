@@ -31,6 +31,6 @@ export interface UserCampaign {
     campaign_id: number;
     campaign_name: string;
     organisation_name: string;
-    status: string;
+    status: 'A' | 'R';
     pk?: number;
 }

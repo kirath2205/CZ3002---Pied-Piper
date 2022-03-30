@@ -53,6 +53,8 @@ const ApproveApplication = ({ notificationList, approveApplication }: Organizati
                                     <ListItem>
                                         <ListItemAvatar>
                                             <Avatar>
+                                                {console.log(notification)}
+
                                                 <FaceIcon />
                                             </Avatar>
                                         </ListItemAvatar>
