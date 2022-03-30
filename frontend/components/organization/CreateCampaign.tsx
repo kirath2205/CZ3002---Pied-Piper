@@ -37,16 +37,18 @@ const validationSchema = yup.object({
         .required('Start datetime is required'),
     end_time: yup
         .date()
-        .required('End datetime is required')
         .when('date_time', (date_time, schema) => {
-            const currentDay = new Date(date_time.getTime());
-            const nextDay = new Date(date_time.getTime() + 86400000);
-            console.log(currentDay);
-            console.log(nextDay);
-            return schema
-                .min(currentDay, 'End time must be after start time')
-                .max(nextDay, 'End time cannot be more than 24 hours after start time');
-        }),
+            if (date_time) {
+                const currentDay = new Date(date_time.getTime());
+                const nextDay = new Date(date_time.getTime() + 86400000);
+                return schema
+                    .min(currentDay, 'End time must be after start time')
+                    .max(nextDay, 'End time cannot be more than 24 hours after start time');
+            } else {
+                return schema;
+            }
+        })
+        .required('End datetime is required'),
     description: yup.string().required('Description is required'),
     title: yup.string().required('Title is required'),
     volunteer_count: yup.string().min(1, 'Enter a valid number').required('Volunteer Count is required'),

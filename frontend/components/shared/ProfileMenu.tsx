@@ -45,7 +45,9 @@ const ProfileMenu = ({ closeAccountMenu, anchorEl, userType }: ProfileMenuProps)
             onClose={closeAccountMenu}
         >
             <MenuItem onClick={() => router.push(`/profile/${userType?.toLocaleLowerCase()}`)}>Profile</MenuItem>
-            <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
+            {userType === 'ORG' && (
+                <MenuItem onClick={() => router.push(`/campaigns/create-campaign}`)}>Create campaign</MenuItem>
+            )}
             <MenuItem onClick={logoutHandler}>Sign out</MenuItem>
         </Menu>
     );
