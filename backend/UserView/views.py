@@ -74,7 +74,6 @@ def register_for_campaign(request):
             try:
                 user_account = UserAccount.objects.get(email=email)
             except UserAccount.DoesNotExist as e:
-                print(e)
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             
@@ -82,7 +81,6 @@ def register_for_campaign(request):
             try:
                 campaign = Campaign.objects.get(campaign_id=campaign_id)
             except Campaign.DoesNotExist as e:
-                print(e)
                 HttpResponse.status_code = int(error_codes.bad_request())
                 return HttpResponse('404 error')
 
@@ -122,7 +120,6 @@ def register_for_campaign(request):
                 HttpResponse.status_code=int(error_codes.campaign_time_clash())
                 return HttpResponse('User campaign clash')
             except UserCampaign.DoesNotExist as e:
-                print(e)
                 new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign,campaign_name=campaign.title,user_name=user_account.first_name,organisation_name=org_account.name)
                 new_user_campaign.save()
                 org_id = (OrgAccount.objects.get(email=org_email)).user_id
@@ -132,7 +129,6 @@ def register_for_campaign(request):
                 return HttpResponse('User campaign Created')
         
         except Exception as e:
-            print(e)
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('Deserialisation error '+str(e))
 
@@ -282,7 +278,6 @@ def update_user_details(request):
             return HttpResponse('Details Changed')
         
         except Exception as e:
-            print(e)
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('Deserialisation error '+str(e))
 

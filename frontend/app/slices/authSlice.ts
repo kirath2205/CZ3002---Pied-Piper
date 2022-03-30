@@ -105,6 +105,12 @@ export const authSlice = createSlice({
         clearError: (state) => {
             return { ...state, error: undefined, message: undefined };
         },
+        setLoading: (state) => {
+            return { ...state, loading: true };
+        },
+        unsetLoading: (state) => {
+            return { ...state, loading: false };
+        },
     },
     extraReducers: (builder) => {
         //Login cases
@@ -183,7 +189,7 @@ export const authSlice = createSlice({
     },
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, setLoading, unsetLoading } = authSlice.actions;
 
 export { login, logout, register, refreshToken, checkAuthStatus };
 
