@@ -1,8 +1,7 @@
+from OrgView.models import OrgNotif
 from Authentication.models import UserAccount
 from OrgView.models import Campaign
 from Authentication.models import *
-from datetime import date,timedelta
-from django.db.models import fields
 from django.db.models import Q
 
 from django.http.response import JsonResponse
@@ -43,7 +42,6 @@ def get_user_details(request):
             except UserAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
-            
             
             JsonResponse.status_code=int(error_codes.api_success())
             serialized_user_data = json.loads(serializers.serialize('json',[user_account]))[0]
@@ -106,11 +104,11 @@ def register_for_campaign(request):
             except OrgNotif.DoesNotExist as e:
                 pass
             
-            #TODO test this
             date_time_current_campaign=campaign.date_time
             end_time_current_campaign=campaign.end_time
             
             org_email = data.get('org_email')
+            org_account=OrgAccount.objects.get(email=org_email)
             try:
                 campaign_slot_clashes=UserCampaign.objects.get( 
                     Q(user_id=user_id) & 
@@ -122,10 +120,10 @@ def register_for_campaign(request):
                 HttpResponse.status_code=int(error_codes.campaign_time_clash())
                 return HttpResponse('User campaign clash')
             except UserCampaign.DoesNotExist as e:
-                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign)
+                new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign,campaign_name=campaign.title,user_name=user_account.first_name,organisation_name=org_account.name)
                 new_user_campaign.save()
                 org_id = (OrgAccount.objects.get(email=org_email)).user_id
-                new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id)
+                new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id,org_name=org_account.name,user_name=user_account.first_name)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())
                 return HttpResponse('User campaign Created')
@@ -162,7 +160,7 @@ def get_all_campaigns_user(request):
             all_campaigns = UserCampaign.objects.filter(user_id=user_id)
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_campaigns,fields=('campaign_id','status','campaign_name','organisation_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -196,9 +194,9 @@ def get_all_pending_application_for_user(request):
             user_id=user_account.user_id
 
             all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id, status='P')
-
+            
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status','campaign_name','organisation_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -233,7 +231,7 @@ def get_all_past_campaigns_for_user(request):
             all_pending_campaigns_of_current_user = UserCampaign.objects.filter(user_id=user_id).exclude(status ='P')
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status'))
+            serialized_campaign_data = serializers.serialize('json',all_pending_campaigns_of_current_user,fields=('campaign_id','status','campaign_name','organisation_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -262,8 +260,7 @@ def update_user_details(request):
             except UserAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
-            
-            print(data)
+
             first_name = data.get('first_name')
             last_name = data.get('last_name')
             skills = data.get('skills')
@@ -281,7 +278,6 @@ def update_user_details(request):
             return HttpResponse('Details Changed')
         
         except Exception as e:
-            print(e)
             HttpResponse.status_code = int(error_codes.bad_request())
             return HttpResponse('Deserialisation error '+str(e))
 
@@ -292,4 +288,63 @@ def update_user_details(request):
 
 @csrf_exempt
 def unregister_for_campaign(request):
-    pass
+    if(request.method=="POST"):
+    
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                user_account = UserAccount.objects.get(email=email)
+            except UserAccount.DoesNotExist as e:
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            campaign_id=data.get('campaign_id')
+
+            try:
+                campaign = Campaign.objects.get(campaign_id=campaign_id)
+            except Campaign.DoesNotExist as e:
+                HttpResponse.status_code = int(error_codes.bad_request())
+                return HttpResponse('404 error')
+
+            user_id=user_account.user_id
+
+            try:
+                user_campaign=UserCampaign.objects.get(user_id=user_id,campaign_id=campaign_id)
+            
+            except Exception as e:
+                HttpResponse.status_code = int(error_codes.bad_request())
+                return HttpResponse('User has not registered')
+            
+            if(user_campaign.status!='P'):
+                HttpResponse.status_code = int(error_codes.user_cannot_otp_out())
+                return HttpResponse('User cannot opt out')
+            
+            else:
+
+                try:
+                    delete_user_campaign=UserCampaign.objects.get(user_id=user_id,campaign_id=campaign_id)
+                    delete_user_campaign.delete()
+                    delete_org_notif=OrgNotif.objects.get(user_id=user_id,campaign_id=campaign_id)
+                    delete_org_notif.delete()
+                
+                except Exception as e:
+                    HttpResponse.status_code = int(error_codes.bad_request())
+                    return HttpResponse('Record not found')
+                HttpResponse.status_code=int(error_codes.api_success())
+                return HttpResponse("User unregistered successfully")
+        
+        except Exception as e:
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')

@@ -1,7 +1,13 @@
 export const convertDate = (date: Date) => {
-    return date.toLocaleDateString('fr-ca');
+    return date.toLocaleDateString('en-us', { month: 'short', year: 'numeric', day: 'numeric', weekday: 'short' });
 };
 
-export const getHourAndMinutes = (date: Date) => {
-    return date.toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit' }).split(' ')[0];
+export const getDuration = (start: Date, end: Date) => {
+    return `${start.toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })} to ${end.toLocaleTimeString(
+        'en-us',
+        {
+            hour: 'numeric',
+            minute: '2-digit',
+        }
+    )}`;
 };

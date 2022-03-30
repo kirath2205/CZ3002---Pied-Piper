@@ -18,6 +18,16 @@ const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
+const statusText = {
+    A: 'Approved',
+    R: 'Rejected',
+};
+
+const statusTextColor = {
+    A: 'green',
+    R: 'red',
+};
+
 /**
  * Renders the Application History page
  *
@@ -53,11 +63,15 @@ const VolunteerApplicationHistory = ({ history }: VolunteerApplicationHistoryPro
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={campaign.campaign_name ?? 'Campaign Name'}
-                                            secondary={campaign.organization_name ?? 'Organization Name'}
+                                            secondary={campaign.organisation_name ?? 'Organisation Name'}
                                         />
                                         <ListItemText
-                                            sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                                            primary={campaign.status}
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'flex-end',
+                                                color: statusTextColor[campaign.status],
+                                            }}
+                                            primary={statusText[campaign.status]}
                                         />
                                     </ListItem>
                                 </Fade>

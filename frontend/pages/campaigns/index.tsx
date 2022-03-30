@@ -19,7 +19,7 @@ export default function Campaigns({ data, skills }: InferGetServerSidePropsType<
     return (
         <Layout title='VolunteerGoWhere - Campaigns'>
             <div className={styles.container}>
-                <FilterButton setFilter={setFilter} filter = {filter} skills={skills} />
+                <FilterButton setFilter={setFilter} filter={filter} skills={skills} />
                 <CampaignGrid campaigns={data} filter={filter} />
             </div>
         </Layout>

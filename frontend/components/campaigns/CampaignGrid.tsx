@@ -22,18 +22,9 @@ const CampaignGrid = ({ campaigns, filter }: CampaignGridProps): JSX.Element => 
     const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>(campaigns);
 
     useEffect(() => {
-        if (filter) {
+        if (filter[0]) {
             setFilteredCampaigns(
-                campaigns.filter(function (campaign) {
-                    if (filter[0] != '') {
-                        for (let i = 0; i < filter.length; i++) {
-                            if (!campaign.skills.includes(filter[i])) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                })
+                campaigns.filter((campaign) => filter.some((skill) => campaign.skills.includes(skill)))
             );
         } else {
             setFilteredCampaigns(campaigns);

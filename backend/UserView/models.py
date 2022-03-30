@@ -21,3 +21,7 @@ class UserCampaign(models.Model):
     status = models.CharField(max_length=1,choices=Status.choices,default=Status.PENDING)
     date_time=models.DateTimeField(default=now)
     end_time=models.DateTimeField(default=now)
+    campaign_name=models.CharField(max_length=200)
+    user_name=models.CharField(max_length=200)
+    organisation_name=models.CharField(max_length=200)
+

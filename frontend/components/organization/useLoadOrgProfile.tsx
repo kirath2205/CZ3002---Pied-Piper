@@ -6,12 +6,15 @@ import { OrganizationProfile } from '@/interfaces/Organization';
 import { OrganizationNotification } from '@/interfaces/Organization';
 import { Campaign } from '@/interfaces/Campaign';
 import { APIResponse } from '@/interfaces/Response';
+//redux
+import { useAppDispatch } from '@/app/hooks';
+import { setLoading, unsetLoading } from '@/app/slices/authSlice';
 
 const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
-    const [loading, setLoading] = useState<boolean>(true);
     const [profile, setProfile] = useState<OrganizationProfile>();
-    const [notifications, setNotifications] = useState<OrganizationNotification[]>();
-    const [campaigns, setCampaigns] = useState<Campaign[]>();
+    const [notifications, setNotifications] = useState<OrganizationNotification[]>([]);
+    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+    const dispatch = useAppDispatch();
 
     /**
      * Loads the organization profile from API
@@ -20,7 +23,6 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
         const response = await axios.get('/api/org_view/get_org_details');
         const orgProfile = ((await response.data) as APIResponse<OrganizationProfile>).fields;
         setProfile(orgProfile);
-        setLoading(false);
     };
 
     /**
@@ -28,12 +30,12 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
      */
     const getNotifications = async () => {
         const response = await axios.get('/api/org_view/view_org_notifs');
+        console.log(await response.data);
         const orgNotifs = ((await response.data) as APIResponse<OrganizationNotification>[]).map((notification) => ({
             ...notification.fields,
             pk: notification.pk,
         }));
         setNotifications(orgNotifs);
-        setLoading(false);
     };
 
     /**
@@ -45,6 +47,7 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
      * @param {string} status - R | A for Reject or Approve
      */
     const approveApplication = async (pk: number, user_id: number, campaign_id: number, status: string) => {
+        dispatch(setLoading());
         try {
             const response = await axios.post('/api/org_view/approve_or_reject_user_campaign_registration/', {
                 user_id,
@@ -55,6 +58,7 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
         } catch (err) {
             console.log(err);
         }
+        dispatch(unsetLoading());
     };
 
     const getUpcomingCampaigns = async () => {
@@ -64,7 +68,6 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
             pk: campaign.pk,
         }));
         setCampaigns(upcomingCampaigns);
-        setLoading(false);
     };
 
     useEffect(() => {
@@ -80,7 +83,7 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
             getUpcomingCampaigns();
         }
     }, [tab]);
-    return { loading, profile, notifications, campaigns, approveApplication };
+    return { profile, notifications, campaigns, approveApplication };
 };
 
 export default useLoadOrgProfile;

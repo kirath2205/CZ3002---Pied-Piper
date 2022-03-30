@@ -15,6 +15,7 @@ import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import BoyIcon from '@mui/icons-material/Boy';
 //libs
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -27,6 +28,8 @@ import Toast from '@/components/shared/Toast';
 //redux
 import { useAppSelector } from '@/app/hooks';
 import { selectLoggedIn, selectUserType } from '@/app/slices/authSlice';
+//utils
+import { convertDate, getDuration } from '@/utils/datetime';
 
 interface CampaignCardProps {
     campaign: Campaign;
@@ -92,15 +95,19 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                     <Stack marginTop={1} spacing={0.5}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                             <EventOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
-                            {campaign.date_time}
+                            {convertDate(new Date(campaign.date_time))}
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                             <AccessTimeOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
-                            {campaign.end_time}
+                            {getDuration(new Date(campaign.date_time), new Date(campaign.end_time))}
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                             <LocationOnOutlinedIcon fontSize='small' sx={{ opacity: 0.8 }} />
                             {campaign.location}
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                            <BoyIcon fontSize='small' sx={{ opacity: 0.8 }} />
+                            {campaign.volunteer_count} vacancies left
                         </Box>
                     </Stack>
                     <Box pt={0.5} sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>

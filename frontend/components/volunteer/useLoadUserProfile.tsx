@@ -4,12 +4,15 @@ import axios from 'axios';
 //types
 import { UserCampaign, UserProfile } from '@/interfaces/User';
 import { APIResponse } from '@/interfaces/Response';
+//redux
+import { useAppDispatch } from '@/app/hooks';
+import { setLoading, unsetLoading } from '@/app/slices/authSlice';
 
 const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
-    const [loading, setLoading] = useState<boolean>(true);
     const [profile, setProfile] = useState<UserProfile>();
     const [pendingApps, setPendingApps] = useState<UserCampaign[]>([]);
     const [campaignsHistory, setCampaignsHistory] = useState<UserCampaign[]>([]);
+    const dispatch = useAppDispatch();
 
     /**
      * Gets the user profile from the API
@@ -18,7 +21,6 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
         const response = await axios.get('/api/user_view/get_user_details');
         const volunteerProfile = ((await response.data) as APIResponse<UserProfile>).fields;
         setProfile(volunteerProfile);
-        setLoading(false);
     };
 
     /**
@@ -44,6 +46,17 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
         }));
         setCampaignsHistory(historyList);
     };
+
+    const unregisterForCampaign = async (campaign_id: number) => {
+        dispatch(setLoading());
+        try {
+            const response = await axios.post('/api/user_view/unregister_for_campaign', { campaign_id });
+            setPendingApps(pendingApps.filter((campaign) => campaign.campaign_id !== campaign_id));
+        } catch (err) {
+            console.log(err);
+        }
+        dispatch(unsetLoading());
+    };
     useEffect(() => {
         if (tab === 'PROFILE') {
             getProfile();
@@ -61,7 +74,7 @@ const useLoadUserProfile = (tab: 'PROFILE' | 'PENDING' | 'HISTORY') => {
             getCampaignsHistory();
         }
     }, [tab]);
-    return { loading, profile, pendingApps, campaignsHistory };
+    return { profile, pendingApps, campaignsHistory, unregisterForCampaign };
 };
 
 export default useLoadUserProfile;

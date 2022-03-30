@@ -11,3 +11,7 @@ urlpatterns = [
     path('user_view/',include('UserView.urls')),
     path('generic_view/',include('GenericView.urls'))
 ]
+
+admin.site.site_header = "Volunteer.com"
+admin.site.index_title = "Welcome to Volunteer.com admin panel"
+admin.site.site_title = "Volunteer.com"

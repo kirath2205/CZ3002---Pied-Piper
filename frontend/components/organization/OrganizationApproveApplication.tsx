@@ -10,6 +10,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
+    Box,
 } from '@mui/material';
 import FaceIcon from '@mui/icons-material/Face';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -46,6 +47,11 @@ const ApproveApplication = ({ notificationList, approveApplication }: Organizati
 
             <Grid item>
                 <Demo>
+                    {!notificationList.length && (
+                        <Box>
+                            <Typography align='center'>There are no pending applications currently.</Typography>
+                        </Box>
+                    )}
                     <List>
                         {notificationList &&
                             notificationList.map((notification) => (
@@ -53,6 +59,8 @@ const ApproveApplication = ({ notificationList, approveApplication }: Organizati
                                     <ListItem>
                                         <ListItemAvatar>
                                             <Avatar>
+                                                {console.log(notification)}
+
                                                 <FaceIcon />
                                             </Avatar>
                                         </ListItemAvatar>

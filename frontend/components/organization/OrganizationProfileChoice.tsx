@@ -23,7 +23,7 @@ type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, notifications, campaigns, loading, approveApplication } = useLoadOrgProfile(tab);
+    const { profile, notifications, campaigns, approveApplication } = useLoadOrgProfile(tab);
 
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
