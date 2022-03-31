@@ -19,6 +19,7 @@ class Campaign(models.Model):
     end_time = models.DateTimeField(default=now)
     volunteer_count = models.IntegerField(default=1)
     minimum_age = models.IntegerField(default=14)
+    org_name=models.CharField(max_length=200)
 
 class OrgNotif(models.Model):
     user_id=models.IntegerField(default=None)

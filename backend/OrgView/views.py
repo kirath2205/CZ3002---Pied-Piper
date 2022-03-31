@@ -48,7 +48,7 @@ def create_campaign(request):
             end_time=data.get('end_time')
             volunteer_count=int(data.get('volunteer_count'))
             minimum_age=int(data.get('minimum_age'))
-            new_campaign = Campaign(organisation_email=email,location=location,skills=skills,date_time=date_time, end_time=end_time,description=description,title=title,volunteer_count=volunteer_count,minimum_age=minimum_age)
+            new_campaign = Campaign(organisation_email=email,location=location,skills=skills,date_time=date_time, end_time=end_time,description=description,title=title,volunteer_count=volunteer_count,minimum_age=minimum_age,org_name=org_account.name)
             new_campaign.save()
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Campaign Created')
@@ -119,6 +119,7 @@ def update_org_details(request):
             org_account.address=address
             org_account.save()
             OrgNotif.objects.filter(org_id=org_account.user_id).update(org_name=name)
+            Campaign.objects.filter(organisation_email=email).update(org_name=name)
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Details Changed')
         
@@ -205,7 +206,7 @@ def get_all_campaign_details_for_org(request):
             
             all_campaigns_of_current_org = Campaign.objects.filter(organisation_email=email)
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','status'))
+            serialized_campaign_data = serializers.serialize('json',all_campaigns_of_current_org,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','status','org_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -238,7 +239,7 @@ def get_all_past_campaign_details_for_org(request):
             past_campaigns = Campaign.objects.filter(organisation_email=email,datetime__lte=datetime.now())
 
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
+            serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','org_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:
@@ -270,7 +271,7 @@ def get_all_upcoming_campaign_details_for_org(request):
             
             upcoming_campaigns = Campaign.objects.filter(organisation_email=email,date_time__gte=datetime.now())
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_campaign_data = serializers.serialize('json',upcoming_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
+            serialized_campaign_data = serializers.serialize('json',upcoming_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','org_name'))
             return JsonResponse(serialized_campaign_data,safe=False)
             
         except Exception as e:

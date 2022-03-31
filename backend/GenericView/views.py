@@ -23,7 +23,7 @@ def get_current_campaigns(request):
     if(request.method=='GET'):
         current_campaigns=Campaign.objects.filter(date_time__gt=datetime.now(), volunteer_count__gt=0)
         JsonResponse.status_code=int(error_codes.api_success())
-        serialized_campaign_data = serializers.serialize('json',current_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
+        serialized_campaign_data = serializers.serialize('json',current_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','org_name'))
         return JsonResponse(serialized_campaign_data,safe=False)
     
     else:
@@ -35,7 +35,7 @@ def get_past_campaigns(request):
     if(request.method=='GET'):
         past_campaigns=Campaign.objects.filter(end_time__lte=datetime.now())
         JsonResponse.status_code=int(error_codes.api_success())
-        serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age'))
+        serialized_campaign_data = serializers.serialize('json',past_campaigns,fields=('campaign_id','organisation_email','location','skills','date_time','description','title','end_time','volunteer_count','minimum_age','org_name'))
         return JsonResponse(serialized_campaign_data,safe=False)
     
     else:
