@@ -1,4 +1,4 @@
-from backend.Authentication.models import UserAccount
+from Authentication.models import UserAccount
 from datetime import date
 from django.db.models import fields
 
