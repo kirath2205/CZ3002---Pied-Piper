@@ -123,7 +123,7 @@ def register_for_campaign(request):
                 new_user_campaign = UserCampaign(campaign_id=campaign_id,user_id=user_id,date_time=date_time_current_campaign,end_time=end_time_current_campaign,campaign_name=campaign.title,user_name=user_account.first_name,organisation_name=org_account.name)
                 new_user_campaign.save()
                 org_id = (OrgAccount.objects.get(email=org_email)).user_id
-                new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id,org_name=org_account.name,user_name=user_account.first_name)
+                new_notification = OrgNotif(campaign_id=campaign_id,user_id=user_id,org_id=org_id,org_name=org_account.name,user_name=user_account.first_name,campaign_name=campaign.title)
                 new_notification.save()
                 HttpResponse.status_code=int(error_codes.user_campaign_created())
                 return HttpResponse('User campaign Created')

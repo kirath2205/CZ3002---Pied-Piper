@@ -31,6 +31,7 @@ class OrgNotif(models.Model):
     org_id=models.IntegerField(default=None)
     user_name=models.CharField(max_length=200)
     org_name=models.CharField(max_length=200)
+    campaign_name=models.CharField(max_length=200)
 
 class AcceptedUsers(models.Model):
     user_id=models.IntegerField(default=None)

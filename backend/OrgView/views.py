@@ -305,7 +305,7 @@ def view_org_notifs(request):
             ##org_id=OrgAccount.objects.get(email=email)
             notifs_for_current_org=OrgNotif.objects.filter(org_id=org_id)
             JsonResponse.status_code=int(error_codes.api_success())
-            serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status', 'user_name'))
+            serialized_notif_data = serializers.serialize('json',notifs_for_current_org,fields=('campaign_id','user_id','status', 'user_name','campaign_name'))
             return JsonResponse(serialized_notif_data,safe=False)
         
         except Exception as e:
