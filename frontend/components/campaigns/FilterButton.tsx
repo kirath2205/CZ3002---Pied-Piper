@@ -38,15 +38,14 @@ const FilterButton = ({ setFilter, skills, filter }: FilterButtonProps): JSX.Ele
     const filterItem = (skill: string, selectedIndex: number) => {
         let filter_new;
         let index = filter.indexOf('');
-        if (index > -1){
-            filter.splice(index, 1)
+        if (index > -1) {
+            filter.splice(index, 1);
         }
-        if (selected[selectedIndex] == true){
-            filter_new = filter.filter(s => s != skill);
+        if (selected[selectedIndex] == true) {
+            filter_new = filter.filter((s) => s != skill);
             setFilter(filter_new);
             selected[selectedIndex] = false;
-        }
-        else {
+        } else {
             filter_new = filter.concat(skill);
             setFilter(filter_new);
             selected[selectedIndex] = true;
@@ -64,7 +63,6 @@ const FilterButton = ({ setFilter, skills, filter }: FilterButtonProps): JSX.Ele
                             variant='contained'
                             color={selected[index] ? 'secondary' : 'primary'}
                             sx={{
-                                width: '5%',
                                 alignSelf: 'center',
                                 marginTop: 2,
                                 marginLeft: 2,
