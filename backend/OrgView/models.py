@@ -37,6 +37,11 @@ class AcceptedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)
 
+    campaign_name=models.CharField(max_length=200)
+    user_name=models.CharField(max_length=200)
+    phone_number=models.IntegerField()
+    org_name=models.CharField(max_length=200)
+
 class RejectedUsers(models.Model):
     user_id=models.IntegerField(default=None)
     campaign_id=models.IntegerField(default=None)

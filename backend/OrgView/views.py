@@ -1,3 +1,4 @@
+from backend.Authentication.models import UserAccount
 from datetime import date
 from django.db.models import fields
 
@@ -371,7 +372,8 @@ def approve_or_reject_user_campaign_registration(request):
 
             elif(status=='A'):
                 notif.delete()
-                add_accepted_user = AcceptedUsers(campaign_id=campaign_id,user_id=user_id)
+                user_account=UserAccount.objects.get(user_id=user_id)
+                add_accepted_user = AcceptedUsers(campaign_id=campaign_id,user_id=user_id,campaign_name=user_campaign.campaign_name,user_name=user_account.first_name,phone_number=user_account.phone_number,org_name=org_account.name)
                 add_accepted_user.save()
                 user_campaign.status = UserCampaign.Status.APPROVED
                 user_campaign.save()
