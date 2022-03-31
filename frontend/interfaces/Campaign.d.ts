@@ -11,3 +11,13 @@ export interface Campaign {
     org_email: string;
     org_name?: string;
 }
+
+export interface ApprovedUser {
+    user_id: number;
+    campaign_id: number;
+    campaign_name: string;
+    user_name: string;
+    org_name: string;
+    phone_number: number;
+    pk?: number;
+}

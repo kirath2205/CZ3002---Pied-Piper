@@ -113,3 +113,16 @@ def get_all_orgs(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+    
+@csrf_exempt
+def get_approved_users_by_campaign_id(request, campaign_id):
+    if(request.method=='GET'):
+        
+        approved_users = AcceptedUsers.objects.filter(campaign_id=campaign_id)
+        JsonResponse.status_code=int(error_codes.api_success())
+        serialized_users_data = serializers.serialize('json',approved_users)
+        return JsonResponse(serialized_users_data,safe=False)
+    
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')

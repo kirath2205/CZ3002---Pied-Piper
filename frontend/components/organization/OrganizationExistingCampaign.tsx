@@ -58,9 +58,14 @@ const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaig
                             <Fade bottom duration={600} key={campaign.pk}>
                                 <ListItem>
                                     <ListItemAvatar>
-                                        <Avatar>
-                                            <ContactPage />
-                                        </Avatar>
+                                        <IconButton
+                                            sx={{ mr: 1 }}
+                                            onClick={() => router.push(`/campaigns/approved_users/${campaign.pk}`)}
+                                        >
+                                            <Avatar>
+                                                <ContactPage />
+                                            </Avatar>
+                                        </IconButton>
                                     </ListItemAvatar>
                                     <ListItemText primary={campaign.title} secondary={campaign.location} />
                                     <Tooltip title='Edit campaign details'>

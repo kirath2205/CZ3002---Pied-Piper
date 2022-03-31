@@ -9,4 +9,6 @@ urlpatterns = [
     path("get_org_details/<int:org_id>/",views.get_org_details,name="get_org_details"),
     path("get_campaign_using_campaign_id/<int:campaign_id>",views.get_campaign_using_campaign_id,name="get_campaign_using_campaign_id"),
     path("get_all_orgs/",views.get_all_orgs,name="get_all_orgs"),
+    path("get_approved_users_by_campaign_id/<int:campaign_id>/",views.get_approved_users_by_campaign_id,name="get_approved_users_by_campaign_id"),
+    
 ]
