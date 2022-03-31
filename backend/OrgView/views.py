@@ -113,6 +113,7 @@ def update_org_details(request):
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
             UserCampaign.objects.filter(organisation_name=org_account.org_name).update(data.get('name'))
+            AcceptedUsers.objects.filter(org_name=org_account.org_name).update(data.get('name'))
             name=data.get('name')
             address=data.get('address')
             org_account.name=name
