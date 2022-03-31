@@ -111,12 +111,13 @@ def update_org_details(request):
             except OrgAccount.DoesNotExist as e:
                 HttpResponse.status_code=int(error_codes.bad_request())
                 return HttpResponse('Access denied')
-            
+            UserCampaign.objects.filter(organisation_name=org_account.org_name).update(data.get('name'))
             name=data.get('name')
             address=data.get('address')
             org_account.name=name
             org_account.address=address
             org_account.save()
+            OrgNotif.objects.filter(org_id=org_account.user_id).update(org_name=name)
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Details Changed')
         

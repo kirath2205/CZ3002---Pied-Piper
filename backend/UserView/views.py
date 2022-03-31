@@ -1,6 +1,6 @@
 from OrgView.models import OrgNotif
 from Authentication.models import UserAccount
-from OrgView.models import Campaign
+from OrgView.models import Campaign,OrgNotif
 from Authentication.models import *
 from django.db.models import Q
 
@@ -274,6 +274,10 @@ def update_user_details(request):
             user_account.gender = gender
             user_account.skills = skills
             user_account.save()
+
+            UserCampaign.objects.filter(user_id=user_account.user_id).update(user_name=first_name)
+            OrgNotif.objects.filter(user_id=user_account.user_id).update(user_name=first_name)
+
             HttpResponse.status_code=int(error_codes.api_success())
             return HttpResponse('Details Changed')
         
