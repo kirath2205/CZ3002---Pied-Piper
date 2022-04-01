@@ -1,10 +1,8 @@
 //mui
-import { Box, Typography, Avatar, Tooltip, Grid } from '@mui/material';
+import { Box, Typography, Avatar, Tooltip } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 //lib
 import React from 'react';
-//components
-import BackButton from '@/components/shared/BackButton';
 //types
 import { ApprovedUser } from '@/interfaces/Campaign';
 
@@ -17,6 +15,9 @@ const ApprovedUsersList = ({ approvedUsers }: ApprovedUsersListProps): JSX.Eleme
         <Box mt={1}>
             <Typography variant='h6'>Approved Users</Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {!approvedUsers.length && (
+                    <Typography variant='body1'>There are currently no approved users</Typography>
+                )}
                 {approvedUsers.map((user) => (
                     <Tooltip title={`${user.user_name} ${user.phone_number}`} key={user.pk}>
                         <Avatar>
