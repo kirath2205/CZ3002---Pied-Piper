@@ -54,13 +54,16 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
                 campaign_id,
                 status,
             });
-            setNotifications(notifications?.filter((notification) => notification.pk !== pk));
+            setNotifications(notifications.filter((notification) => notification.pk !== pk));
         } catch (err) {
             console.log(err);
         }
         dispatch(unsetLoading());
     };
 
+    /**
+     * Gets the upcoming campaigns for the organisation
+     */
     const getUpcomingCampaigns = async () => {
         const response = await axios.get('/api/org_view/get_all_upcoming_campaign_details_for_org/');
         const upcomingCampaigns = ((await response.data) as APIResponse<Campaign>[]).map((campaign) => ({
@@ -68,6 +71,24 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
             pk: campaign.pk,
         }));
         setCampaigns(upcomingCampaigns);
+    };
+
+    /**
+     * Deletes a campaign
+     *
+     * @param {number} campaign_id - The id of the campaign to delete
+     */
+    const deleteCampaign = async (campaign_id: number) => {
+        dispatch(setLoading());
+        try {
+            const response = await axios.post('/api/org_view/delete_campaign/', {
+                campaign_id,
+            });
+            setCampaigns(campaigns.filter((campaign) => campaign.pk !== campaign_id));
+        } catch (err) {
+            console.log(err);
+        }
+        dispatch(unsetLoading());
     };
 
     useEffect(() => {
@@ -83,7 +104,7 @@ const useLoadOrgProfile = (tab: 'PROFILE' | 'APPROVE' | 'EDIT') => {
             getUpcomingCampaigns();
         }
     }, [tab]);
-    return { profile, notifications, campaigns, approveApplication };
+    return { profile, notifications, campaigns, approveApplication, deleteCampaign };
 };
 
 export default useLoadOrgProfile;

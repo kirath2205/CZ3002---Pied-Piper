@@ -23,6 +23,7 @@ class UserAccount(models.Model):
     gender = models.CharField(max_length=1,choices=Gender.choices,default=Gender.MALE)
     address = models.CharField(max_length=200)
     strikes = models.IntegerField(default=0)
+    ban=models.BooleanField(default=False)
 
 class Login(models.Model):
     email = models.EmailField(max_length=254,unique=True)

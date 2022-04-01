@@ -23,7 +23,7 @@ type ProfileType = 'PROFILE' | 'APPROVE' | 'EDIT';
  */
 const ProfileChoice = (): JSX.Element => {
     const [tab, setTab] = React.useState<ProfileType>('PROFILE');
-    const { profile, notifications, campaigns, approveApplication } = useLoadOrgProfile(tab);
+    const { profile, notifications, campaigns, approveApplication, deleteCampaign } = useLoadOrgProfile(tab);
 
     const changeTab = (event: React.SyntheticEvent, newTab: ProfileType) => {
         setTab(newTab);
@@ -31,7 +31,6 @@ const ProfileChoice = (): JSX.Element => {
     return (
         <Container>
             <Avatar sx={{ mx: 'auto', width: 150, height: 150, mt: 2 }} alt='Remy Sharp' />
-            <Box sx={{ textAlign: 'center', mt: 2 }}>NTU</Box>
             <Box display='flex' justifyContent='center' sx={{ width: '100%', bgcolor: 'background.paper', mt: 1 }}>
                 <Tabs value={tab} onChange={changeTab} variant='scrollable' allowScrollButtonsMobile>
                     <Tab label='Profile Info' value='PROFILE' />
@@ -46,7 +45,9 @@ const ProfileChoice = (): JSX.Element => {
                     approveApplication={approveApplication}
                 />
             )}
-            {tab === 'EDIT' && <OrganizationExistingCampaign campaigns={campaigns as Campaign[]} />}
+            {tab === 'EDIT' && (
+                <OrganizationExistingCampaign campaigns={campaigns as Campaign[]} deleteCampaign={deleteCampaign} />
+            )}
         </Container>
     );
 };

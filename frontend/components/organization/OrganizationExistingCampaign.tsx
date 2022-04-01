@@ -26,6 +26,7 @@ import { Campaign } from '@/interfaces/Campaign';
 
 interface OrganizationExistingCampaignProps {
     campaigns: Campaign[];
+    deleteCampaign: (campaign_id: number) => Promise<void>;
 }
 
 /**
@@ -34,7 +35,10 @@ interface OrganizationExistingCampaignProps {
  *
  * @returns {JSX.Element} - The Organization Existing Campaign page
  */
-const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaignProps): JSX.Element => {
+const OrganizationExistingCampaign = ({
+    campaigns,
+    deleteCampaign,
+}: OrganizationExistingCampaignProps): JSX.Element => {
     const router = useRouter();
 
     return (
@@ -86,7 +90,12 @@ const OrganizationExistingCampaign = ({ campaigns }: OrganizationExistingCampaig
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title='Delete campaign'>
-                                        <IconButton size='small' edge='end' aria-label='delete'>
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            aria-label='delete'
+                                            onClick={() => deleteCampaign(campaign.pk as number)}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </Tooltip>

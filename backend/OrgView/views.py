@@ -285,7 +285,8 @@ def get_all_upcoming_campaign_details_for_org(request):
         
 @csrf_exempt
 def delete_org_account(request):
-    pass
+    HttpResponse.status_code=int(error_codes.api_success())
+    return HttpResponse('')
 
 @csrf_exempt
 def view_org_notifs(request):
@@ -395,6 +396,56 @@ def approve_or_reject_user_campaign_registration(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+
+@csrf_exempt
+def delete_campaign(request):
+    if(request.method=="POST"):
+        
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            token = request.headers['Authorization']
+
+            if(not verify_jwt_token_local(token)):
+                HttpResponse.status_code=int(error_codes.invalid_jwt_token())
+                return HttpResponse("Invalid jwt token")
+            
+            email=__get_email_from_token(token)
+
+            try:
+                org_account = OrgAccount.objects.get(email=email)
+
+            except OrgAccount.DoesNotExist as e:
+                print(e)
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            campaign_id=data.get('campaign_id')
+            
+            try:
+                campaign=Campaign.objects.get(campaign_id=campaign_id,organisation_email=email)
+            except Campaign.DoesNotExist as e:
+                print(e)
+                HttpResponse.status_code=int(error_codes.bad_request())
+                return HttpResponse('Access denied')
+            
+            campaign.delete()
+            OrgNotif.objects.filter(campaign_id=campaign_id).delete()
+            UserCampaign.objects.filter(campaign_id=campaign_id).delete()
+            AcceptedUsers.objects.filter(campaign_id=campaign_id).delete()
+            RejectedUsers.objects.filter(campaign_id=campaign_id).delete()
+            HttpResponse.status_code=int(error_codes.api_success())
+            return HttpResponse('Campaign Deleted')
+            
+        
+        except Exception as e:
+            print(e)
+            HttpResponse.status_code = int(error_codes.bad_request())
+            return HttpResponse('Deserialisation error '+str(e))
+
+    else:
+        HttpResponse.status_code = int(error_codes.bad_request())
+        return HttpResponse('404 error')
+
 
 @csrf_exempt
 def mark_volunteer_as_present_or_absent(request):
