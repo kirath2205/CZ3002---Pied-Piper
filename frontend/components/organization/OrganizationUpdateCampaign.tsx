@@ -144,10 +144,13 @@ const OrganizationUpdateCampaign = ({ campaign }: OrganizationUpdateCampaignProp
                                 </Box>
                             )}
                         >
+                            <MenuItem value={'Arts & Music'}>Arts & Music</MenuItem>
+                            <MenuItem value={'Medical & Health'}>Medical & Health</MenuItem>
+                            <MenuItem value={'Coaching & Training'}>Coaching & Training</MenuItem>
+                            <MenuItem value={'Counselling & Mentoring'}>Counselling & Mentoring</MenuItem>
                             <MenuItem value={'IT'}>IT</MenuItem>
-                            <MenuItem value={'Elderly'}>Elderly</MenuItem>
-                            <MenuItem value={'Environment'}>Environment</MenuItem>
-                            <MenuItem value={'NIL'}>NIL</MenuItem>
+                            <MenuItem value={'Volunteer Management'}>Volunteer Management</MenuItem>
+                            <MenuItem value={'Others'}>Others</MenuItem>
                         </Select>
                         <FormHelperText>{formik.touched.skills && formik.errors.skills}</FormHelperText>
                     </FormControl>

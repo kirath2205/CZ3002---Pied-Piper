@@ -44,6 +44,7 @@ interface CampaignCardProps {
  * @returns {JSX.Element} - The Campaign Card component
  */
 const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps): JSX.Element => {
+    console.log(campaign);
     const loggedIn = useAppSelector(selectLoggedIn);
     const userType = useAppSelector(selectUserType);
     const [appliedStatus, setAppliedStatus] = useState(userRegistered);
@@ -78,14 +79,116 @@ const CampaignCard = ({ campaign, detailed, userRegistered }: CampaignCardProps)
                 <Toast severity='error' initialize={Boolean(error)} message='Something went wrong, try again later.' />
             )}
             <Card raised>
+                {campaign.pk == '7' && (
                 <CardMedia
                     component='img'
                     height={200}
-                    image='https://picsum.photos/400/300'
+                    image='/v5.jpg'
+                    
                     alt={campaign.title}
                     sx={{ paddingX: 1, paddingY: 1 }}
                 />
+                )}
+                {campaign.pk == '8' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v2.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}
+                {campaign.pk == '9' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v3.jpg'
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}
+                {campaign.pk == '10' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v4.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}
+                {campaign.pk == '11' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v6.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}
+                {campaign.pk == '12' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v7.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}
+                {campaign.pk == '13' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v8.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )} 
+                {campaign.pk == '14' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v9.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )} 
+                {campaign.pk == '15' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v10.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )} 
+                {campaign.pk == '16' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v11.jpg'
+                    
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )} 
+                {campaign.pk == '17' && (
+                <CardMedia
+                    component='img'
+                    height={200}
+                    image='/v12.jpg'
+                    alt={campaign.title}
+                    sx={{ paddingX: 1, paddingY: 1 }}
+                />
+                )}              
                 <CardContent>
+                    
                     <Typography variant='h6' component='p'>
                         {campaign.title}
                     </Typography>
