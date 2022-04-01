@@ -13,5 +13,6 @@ urlpatterns = [
     path("get_all_upcoming_campaign_details_for_org/",views.get_all_upcoming_campaign_details_for_org,name="get_all_upcoming_campaign_details_for_org"),
     path("view_org_notifs",views.view_org_notifs,name="view_org_notifs"),
     path("approve_or_reject_user_campaign_registration",views.approve_or_reject_user_campaign_registration,name="approve_or_reject_user_campaign_registration"),
-    path("delete_org_account",views.delete_org_account,name="delete_org_account")
+    path("delete_org_account",views.delete_org_account,name="delete_org_account"),
+    path("delete_campaign/", views.delete_campaign,name="delete_campaign")
 ]
