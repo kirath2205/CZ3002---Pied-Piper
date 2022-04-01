@@ -285,7 +285,8 @@ def get_all_upcoming_campaign_details_for_org(request):
         
 @csrf_exempt
 def delete_org_account(request):
-    pass
+    HttpResponse.status_code=int(error_codes.api_success())
+    return HttpResponse('')
 
 @csrf_exempt
 def view_org_notifs(request):

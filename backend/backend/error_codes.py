@@ -78,3 +78,6 @@ def request_accepted():
 
 def user_cannot_otp_out():
     return '233'
+
+def account_banned():
+    return '234'

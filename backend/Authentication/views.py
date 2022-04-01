@@ -230,6 +230,15 @@ def login(request):
             if(not pbkdf2_sha256.verify(password,current_user.password)):
                 HttpResponse.status_code=int(error_codes.invalid_credentials())
                 return HttpResponse("Invalid Credentials")
+            
+            try:
+                user_account=UserAccount.objects.get(email=email)
+                if(user_account.ban):
+                    HttpResponse.status_code=int(error_codes.account_banned())
+                    return HttpResponse("User Account is banned")
+
+            except Exception as e:
+                pass
 
             access_token_expiry=json.dumps((datetime.now()+timedelta(minutes=5)).isoformat())
             refresh_token_expiry=json.dumps((datetime.now()+timedelta(hours=200*24)).isoformat())
@@ -596,3 +605,4 @@ def get_new_password_after_otp_verification(request):
     else:
         HttpResponse.status_code = int(error_codes.bad_request())
         return HttpResponse('404 error')
+
